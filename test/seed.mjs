@@ -212,8 +212,12 @@ for (const [name, cid] of Object.entries(S)) {
   const ch = await statusOf(cid);
   if (ch.settlement.locked_wei !== "0") await step(`claim ${name} #${cid}`, "outsider", "claim_payout", [cid]);
 }
-await step("refund outsider", "outsider", "claim_refund", []);
-await step("refund advocate1", "advocate1", "claim_refund", []);
+// Every refused call left its value on the sender's refund ledger; sweep
+// every role that has one, so the books can reach zero.
+for (const r of roles) {
+  const owed = asObj(await view("get_refund", [C[r].account.address])).refund_wei;
+  if (owed !== "0") await step(`refund ${r}`, r, "claim_refund", []);
+}
 
 if (consumerAddress) {
   const K = connect({ address: consumerAddress, role: "trigger" });

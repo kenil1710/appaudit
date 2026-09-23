@@ -1,0 +1,1062 @@
+{
+  "address": "0x060cFC326B19F3DD4B839dEa75924Fd2935be61C",
+  "stats": {
+    "apps": 7,
+    "balance_wei": "0",
+    "chain_balance_wei": "8900000000000000000",
+    "challenges": 7,
+    "contests": 1,
+    "flips": 0,
+    "identity": "balance_wei == locked_wei + refundable_wei",
+    "judge_attempts": 4,
+    "judgments": 4,
+    "ledger_balanced": true,
+    "locked_wei": "0",
+    "owner": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+    "paused": false,
+    "refundable_wei": "0",
+    "refusals": 10,
+    "rubric_version": "1.0.0",
+    "status_counts": {
+      "DEFAULTED": 1,
+      "FILED": 0,
+      "FINALIZED": 4,
+      "RESPONDED": 0,
+      "SETTLED": 0,
+      "STALLED": 1,
+      "WITHDRAWN": 1
+    },
+    "total_paid_wei": "8900000000000000000",
+    "total_protocol_wei": "150000000000000000",
+    "total_staked_wei": "6300000000000000000",
+    "undelivered_wei": "8900000000000000000",
+    "unsettled_attempts": 0,
+    "verdict_counts": {
+      "CLAIM_VERIFIED": 1,
+      "CONTRADICTED": 2,
+      "INCONCLUSIVE": 1
+    }
+  },
+  "rows": [
+    {
+      "ch": {
+        "advocate": "0xba28354B5D1C2542bF5C512AF76aa9e5dE96DCD4",
+        "advocate_stake_wei": "500000000000000000",
+        "allowed": [
+          "CONTRADICTED",
+          "INCONCLUSIVE"
+        ],
+        "app_key": "google_play:com.whatsapp",
+        "app_label": "com.whatsapp",
+        "case": "DIRECT",
+        "challenge_id": 1,
+        "claim": "This app does not collect location data",
+        "claim_reading": {
+          "axis": "collect",
+          "negative": true,
+          "signature": "deny:collect:location",
+          "topics": [
+            "location"
+          ]
+        },
+        "closed_at": 1790170757,
+        "content_hash": "ec6b336bea0ac1ef",
+        "contest": {
+          "at": 0,
+          "by": "",
+          "content_hash": "",
+          "evidence": "",
+          "loser": "RESPONDENT",
+          "original_outcome": "",
+          "outcome": "",
+          "result": "",
+          "section_hash": "",
+          "stake_required_wei": "300000000000000000",
+          "stake_wei": "0",
+          "strength": 0,
+          "window_ends": 1790169174
+        },
+        "contest_result": "",
+        "evidence_strength": 7,
+        "facts_hash": "8a5ad83cbe497bd6",
+        "fetch_url": "https://play.google.com/store/apps/datasafety?id=com.whatsapp&hl=en&gl=US",
+        "filed_at": 1790168235,
+        "findings": {
+          "categories": [
+            "App activity",
+            "App info and performance",
+            "Contacts",
+            "Device or other IDs",
+            "Financial info",
+            "Location",
+            "Personal info"
+          ],
+          "categories_bucket": 4,
+          "collection": [
+            "App activity: App interactions, In-app search history, and Other user-generated content",
+            "App info and performance: Crash logs, Diagnostics, and Other app performance data",
+            "Contacts: Contacts",
+            "Device or other IDs: Device or other IDs",
+            "Financial info: User payment info and Purchase history",
+            "Location: Approximate location",
+            "Personal info: Email address, User IDs, and Phone number"
+          ],
+          "collection_bucket": 5,
+          "sharing": [],
+          "sharing_bucket": 0,
+          "tracking": [],
+          "tracking_bucket": 0
+        },
+        "found": true,
+        "judge_attempts": 1,
+        "judged_at": 1790168574,
+        "matched": [
+          "location"
+        ],
+        "model_called": true,
+        "outcome": "CONTRADICTED",
+        "page_state": "OK",
+        "phase": "CLOSED",
+        "platform": "google_play",
+        "policy_url": "https://www.whatsapp.com/legal/privacy-policy",
+        "privacy_text": "none | shared\ncollected | App activity | App interactions, In-app search history, and Other user-generated content\ncollected | App info and performance | Crash logs, Diagnostics, and Other app performance data\ncollected | Contacts | Contacts\ncollected | Device or other IDs | Device or other IDs\ncollected | Financial info | User payment info and Purchase history\ncollected | Location | Approximate location\ncollected | Personal info | Email address, User IDs, and Phone number",
+        "reason": "The listing declares Location as collected. Verdict: the listing CONTRADICTS the claim.",
+        "respond_by": 1790168835,
+        "responded_at": 1790168475,
+        "respondent": "0x3c792109FE1Ce745BaCD902Bc24f0B14C4Fd0ab5",
+        "respondent_stake_wei": "500000000000000000",
+        "response": "Our listing is correct: location is only used for nearby features the user opts in to.",
+        "section_hash": "720122d2d3abe672",
+        "settlement": {
+          "fee_recipient": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+          "locked_wei": "0",
+          "owed_advocate_wei": "900000000000000000",
+          "owed_protocol_wei": "50000000000000000",
+          "owed_respondent_wei": "50000000000000000",
+          "paid_advocate": true,
+          "paid_protocol": true,
+          "paid_respondent": true,
+          "protocol_bps": 1000,
+          "winner_bps": 8000
+        },
+        "status": "FINALIZED",
+        "strength_ranges": "6-7/3-4",
+        "windows": {
+          "contest_s": 600,
+          "min_stake_wei": "500000000000000000",
+          "response_s": 600,
+          "stall_s": 600
+        },
+        "winner": "ADVOCATE"
+      },
+      "verified": true
+    },
+    {
+      "ch": {
+        "advocate": "0x4e3CFe4Fb96cCc5Ef1E2f4E6d164D70B412dCD39",
+        "advocate_stake_wei": "500000000000000000",
+        "allowed": [
+          "CLAIM_VERIFIED",
+          "INCONCLUSIVE"
+        ],
+        "app_key": "app_store:389801252",
+        "app_label": "instagram",
+        "case": "DIRECT",
+        "challenge_id": 2,
+        "claim": "This app collects user content",
+        "claim_reading": {
+          "axis": "collect",
+          "negative": false,
+          "signature": "assert:collect:content",
+          "topics": [
+            "content"
+          ]
+        },
+        "closed_at": 1790170776,
+        "content_hash": "1efce5d3fa504625",
+        "contest": {
+          "at": 0,
+          "by": "",
+          "content_hash": "",
+          "evidence": "",
+          "loser": "ADVOCATE",
+          "original_outcome": "",
+          "outcome": "",
+          "result": "",
+          "section_hash": "",
+          "stake_required_wei": "300000000000000000",
+          "stake_wei": "0",
+          "strength": 0,
+          "window_ends": 1790169222
+        },
+        "contest_result": "",
+        "evidence_strength": 7,
+        "facts_hash": "208769adb3ba1bfc",
+        "fetch_url": "https://apps.apple.com/us/app/instagram/id389801252",
+        "filed_at": 1790168259,
+        "findings": {
+          "categories": [
+            "Contact Info",
+            "Identifiers",
+            "Other Data",
+            "Browsing History",
+            "Contacts",
+            "Diagnostics",
+            "Financial Info",
+            "Health & Fitness",
+            "Location",
+            "Purchases",
+            "Search History",
+            "Sensitive Info",
+            "Usage Data",
+            "User Content"
+          ],
+          "categories_bucket": 7,
+          "collection": [
+            "Browsing History",
+            "Contact Info",
+            "Contacts",
+            "Diagnostics",
+            "Financial Info",
+            "Health & Fitness",
+            "Identifiers",
+            "Location",
+            "Other Data",
+            "Purchases",
+            "Search History",
+            "Sensitive Info",
+            "Usage Data",
+            "User Content"
+          ],
+          "collection_bucket": 7,
+          "sharing": [
+            "Contact Info",
+            "Identifiers",
+            "Other Data"
+          ],
+          "sharing_bucket": 3,
+          "tracking": [
+            "Contact Info",
+            "Identifiers",
+            "Other Data"
+          ],
+          "tracking_bucket": 3
+        },
+        "found": true,
+        "judge_attempts": 1,
+        "judged_at": 1790168622,
+        "matched": [
+          "content"
+        ],
+        "model_called": true,
+        "outcome": "CLAIM_VERIFIED",
+        "page_state": "OK",
+        "phase": "CLOSED",
+        "platform": "app_store",
+        "policy_url": "",
+        "privacy_text": "tracking | Contact Info\ntracking | Identifiers\ntracking | Other Data\nlinked | Browsing History\nlinked | Contact Info\nlinked | Contacts\nlinked | Diagnostics\nlinked | Financial Info\nlinked | Health & Fitness\nlinked | Identifiers\nlinked | Location\nlinked | Other Data\nlinked | Purchases\nlinked | Search History\nlinked | Sensitive Info\nlinked | Usage Data\nlinked | User Content",
+        "reason": "The listing declares User content as collected. Verdict: the listing SUPPORTS the claim.",
+        "respond_by": 1790168859,
+        "responded_at": 1790168486,
+        "respondent": "0x43529Ee4B62B8b527463609FfbE34251085190A0",
+        "respondent_stake_wei": "500000000000000000",
+        "response": "The claim is accurate and our App Privacy label discloses user content as linked data.",
+        "section_hash": "3df05bdd8796d2e7",
+        "settlement": {
+          "fee_recipient": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+          "locked_wei": "0",
+          "owed_advocate_wei": "50000000000000000",
+          "owed_protocol_wei": "50000000000000000",
+          "owed_respondent_wei": "900000000000000000",
+          "paid_advocate": true,
+          "paid_protocol": true,
+          "paid_respondent": true,
+          "protocol_bps": 1000,
+          "winner_bps": 8000
+        },
+        "status": "FINALIZED",
+        "strength_ranges": "6-7/3-4",
+        "windows": {
+          "contest_s": 600,
+          "min_stake_wei": "500000000000000000",
+          "response_s": 600,
+          "stall_s": 600
+        },
+        "winner": "RESPONDENT"
+      },
+      "verified": true
+    },
+    {
+      "ch": {
+        "advocate": "0x35b54caD8d0257be04872e562756e26c6A03c5B9",
+        "advocate_stake_wei": "500000000000000000",
+        "allowed": [
+          "INCONCLUSIVE"
+        ],
+        "app_key": "google_play:com.spotify.music",
+        "app_label": "com.spotify.music",
+        "case": "ABSENT",
+        "challenge_id": 3,
+        "claim": "This app shares browsing history with advertisers",
+        "claim_reading": {
+          "axis": "share",
+          "negative": false,
+          "signature": "assert:share:browsing",
+          "topics": [
+            "browsing"
+          ]
+        },
+        "closed_at": 1790168731,
+        "content_hash": "d0d5bda9b8617c82",
+        "contest": {
+          "at": 0,
+          "by": "",
+          "content_hash": "",
+          "evidence": "",
+          "loser": "NONE",
+          "original_outcome": "",
+          "outcome": "",
+          "result": "",
+          "section_hash": "",
+          "stake_required_wei": "300000000000000000",
+          "stake_wei": "0",
+          "strength": 0,
+          "window_ends": 1790169331
+        },
+        "contest_result": "",
+        "evidence_strength": 1,
+        "facts_hash": "49422d90ff7a3c7e",
+        "fetch_url": "https://play.google.com/store/apps/datasafety?id=com.spotify.music&hl=en&gl=US",
+        "filed_at": 1790168274,
+        "findings": {
+          "categories": [
+            "Device or other IDs",
+            "Location",
+            "Personal info",
+            "App activity",
+            "App info and performance",
+            "Audio",
+            "Contacts",
+            "Financial info",
+            "Photos and videos"
+          ],
+          "categories_bucket": 5,
+          "collection": [
+            "App activity: App interactions, In-app search history, Installed apps, Other user-generated content, and Other actions",
+            "App info and performance: Crash logs, Diagnostics, and Other app performance data",
+            "Audio: Voice or sound recordings",
+            "Contacts: Contacts",
+            "Device or other IDs: Device or other IDs",
+            "Financial info: Purchase history",
+            "Location: Approximate location",
+            "Personal info: Email address, User IDs, Address, Phone number, and Other info",
+            "Photos and videos: Photos"
+          ],
+          "collection_bucket": 6,
+          "sharing": [
+            "Device or other IDs: Device or other IDs",
+            "Location: Approximate location",
+            "Personal info: Other info"
+          ],
+          "sharing_bucket": 3,
+          "tracking": [],
+          "tracking_bucket": 0
+        },
+        "found": true,
+        "judge_attempts": 1,
+        "judged_at": 1790168731,
+        "matched": [],
+        "model_called": false,
+        "outcome": "INCONCLUSIVE",
+        "page_state": "OK",
+        "phase": "CLOSED",
+        "platform": "google_play",
+        "policy_url": "",
+        "privacy_text": "shared | Device or other IDs | Device or other IDs\nshared | Location | Approximate location\nshared | Personal info | Other info\ncollected | App activity | App interactions, In-app search history, Installed apps, Other user-generated content, and Other actions\ncollected | App info and performance | Crash logs, Diagnostics, and Other app performance data\ncollected | Audio | Voice or sound recordings\ncollected | Contacts | Contacts\ncollected | Device or other IDs | Device or other IDs\ncollected | Financial info | Purchase history\ncollected | Location | Approximate location\ncollected | Personal info | Email address, User IDs, Address, Phone number, and Other info\ncollected | Photos and videos | Photos",
+        "reason": "The listing never mentions Web browsing; silence in a self-declared listing is not evidence either way. Verdict: INCONCLUSIVE.",
+        "respond_by": 1790168874,
+        "responded_at": 1790168502,
+        "respondent": "0x21605d6De722C694b9b6024B1198B7cD71Ecc338",
+        "respondent_stake_wei": "500000000000000000",
+        "response": "We do not share browsing history with advertisers; the listing declares no such thing.",
+        "section_hash": "00b34560cfdd54d8",
+        "settlement": {
+          "fee_recipient": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+          "locked_wei": "0",
+          "owed_advocate_wei": "500000000000000000",
+          "owed_protocol_wei": "0",
+          "owed_respondent_wei": "500000000000000000",
+          "paid_advocate": true,
+          "paid_protocol": false,
+          "paid_respondent": true,
+          "protocol_bps": 1000,
+          "winner_bps": 8000
+        },
+        "status": "FINALIZED",
+        "strength_ranges": "1-1/1-1",
+        "windows": {
+          "contest_s": 600,
+          "min_stake_wei": "500000000000000000",
+          "response_s": 600,
+          "stall_s": 600
+        },
+        "winner": "NONE"
+      },
+      "verified": true
+    },
+    {
+      "ch": {
+        "advocate": "0x983F9d6d8B7B9106959a11CA7E40523a9f1d78a3",
+        "advocate_stake_wei": "500000000000000000",
+        "allowed": [
+          "CONTRADICTED",
+          "INCONCLUSIVE"
+        ],
+        "app_key": "google_play:com.zhiliaoapp.musically",
+        "app_label": "com.zhiliaoapp.musically",
+        "case": "DIRECT",
+        "challenge_id": 4,
+        "claim": "This app does not share photos or videos with other companies",
+        "claim_reading": {
+          "axis": "share",
+          "negative": true,
+          "signature": "deny:share:media",
+          "topics": [
+            "media"
+          ]
+        },
+        "closed_at": 1790170619,
+        "content_hash": "bdcdfa1f30c6d81e",
+        "contest": {
+          "at": 1790170619,
+          "by": "RESPONDENT",
+          "content_hash": "bdcdfa1f30c6d81e",
+          "evidence": "Shared photos only leave the device when the creator publishes a video; drafts stay private.",
+          "loser": "RESPONDENT",
+          "original_outcome": "CONTRADICTED",
+          "outcome": "CONTRADICTED",
+          "result": "HELD",
+          "section_hash": "da392400295501ff",
+          "stake_required_wei": "300000000000000000",
+          "stake_wei": "300000000000000000",
+          "strength": 7,
+          "window_ends": 1790171168
+        },
+        "contest_result": "HELD",
+        "evidence_strength": 7,
+        "facts_hash": "2c3c197ac043436d",
+        "fetch_url": "https://play.google.com/store/apps/datasafety?id=com.zhiliaoapp.musically&hl=en&gl=US",
+        "filed_at": 1790168286,
+        "findings": {
+          "categories": [
+            "App activity",
+            "Audio",
+            "Personal info",
+            "Photos and videos",
+            "App info and performance",
+            "Contacts",
+            "Device or other IDs",
+            "Financial info",
+            "Location",
+            "Messages",
+            "Web browsing"
+          ],
+          "categories_bucket": 6,
+          "collection": [
+            "App activity: App interactions, In-app search history, Other user-generated content, and Other actions",
+            "App info and performance: Crash logs, Diagnostics, and Other app performance data",
+            "Audio: Voice or sound recordings",
+            "Contacts: Contacts",
+            "Device or other IDs: Device or other IDs",
+            "Financial info: User payment info, Purchase history, and Other financial info",
+            "Location: Approximate location and Precise location",
+            "Messages: Other in-app messages",
+            "Personal info: Name, Email address, User IDs, Address, Phone number, and Other info",
+            "Photos and videos: Photos and Videos",
+            "Web browsing: Web browsing history"
+          ],
+          "collection_bucket": 7,
+          "sharing": [
+            "App activity: Other user-generated content",
+            "Audio: Voice or sound recordings",
+            "Personal info: Name and User IDs",
+            "Photos and videos: Photos and Videos"
+          ],
+          "sharing_bucket": 4,
+          "tracking": [],
+          "tracking_bucket": 0
+        },
+        "found": true,
+        "judge_attempts": 1,
+        "judged_at": 1790170568,
+        "matched": [
+          "media"
+        ],
+        "model_called": true,
+        "outcome": "CONTRADICTED",
+        "page_state": "OK",
+        "phase": "CLOSED",
+        "platform": "google_play",
+        "policy_url": "",
+        "privacy_text": "shared | App activity | Other user-generated content\nshared | Audio | Voice or sound recordings\nshared | Personal info | Name and User IDs\nshared | Photos and videos | Photos and Videos\ncollected | App activity | App interactions, In-app search history, Other user-generated content, and Other actions\ncollected | App info and performance | Crash logs, Diagnostics, and Other app performance data\ncollected | Audio | Voice or sound recordings\ncollected | Contacts | Contacts\ncollected | Device or other IDs | Device or other IDs\ncollected | Financial info | User payment info, Purchase history, and Other financial info\ncollected | Location | Approximate location and Precise location\ncollected | Messages | Other in-app messages\ncollected | Personal info | Name, Email address, User IDs, Address, Phone number, and Other info\ncollected | Photos and videos | Photos and Videos\ncollected | Web browsing | Web browsing history",
+        "reason": "The listing declares Photos and videos as shared. Verdict: the listing CONTRADICTS the claim.",
+        "respond_by": 1790168886,
+        "responded_at": 1790168520,
+        "respondent": "0x3A6Df73eA4A9FC6F131Cc0Cd352baCfac5984563",
+        "respondent_stake_wei": "500000000000000000",
+        "response": "Photos and videos are only shared when a user chooses to post them publicly.",
+        "section_hash": "da392400295501ff",
+        "settlement": {
+          "fee_recipient": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+          "locked_wei": "0",
+          "owed_advocate_wei": "1200000000000000000",
+          "owed_protocol_wei": "50000000000000000",
+          "owed_respondent_wei": "50000000000000000",
+          "paid_advocate": true,
+          "paid_protocol": true,
+          "paid_respondent": true,
+          "protocol_bps": 1000,
+          "winner_bps": 8000
+        },
+        "status": "FINALIZED",
+        "strength_ranges": "6-7/3-4",
+        "windows": {
+          "contest_s": 600,
+          "min_stake_wei": "500000000000000000",
+          "response_s": 600,
+          "stall_s": 600
+        },
+        "winner": "ADVOCATE"
+      },
+      "verified": true
+    },
+    {
+      "ch": {
+        "advocate": "0x477d0c51F510F2D80Db486974030a7D4e4371D02",
+        "advocate_stake_wei": "500000000000000000",
+        "allowed": [],
+        "app_key": "google_play:com.facebook.katana",
+        "app_label": "com.facebook.katana",
+        "case": "",
+        "challenge_id": 5,
+        "claim": "This app does not collect your contacts",
+        "claim_reading": {
+          "axis": "collect",
+          "negative": true,
+          "signature": "deny:collect:contacts",
+          "topics": [
+            "contacts"
+          ]
+        },
+        "closed_at": 1790170659,
+        "content_hash": "",
+        "contest": {
+          "at": 0,
+          "by": "",
+          "content_hash": "",
+          "evidence": "",
+          "loser": "NONE",
+          "original_outcome": "",
+          "outcome": "",
+          "result": "",
+          "section_hash": "",
+          "stake_required_wei": "300000000000000000",
+          "stake_wei": "0",
+          "strength": 0,
+          "window_ends": 0
+        },
+        "contest_result": "",
+        "evidence_strength": 0,
+        "facts_hash": "",
+        "fetch_url": "https://play.google.com/store/apps/datasafety?id=com.facebook.katana&hl=en&gl=US",
+        "filed_at": 1790168305,
+        "findings": {
+          "categories": [],
+          "categories_bucket": 0,
+          "collection": [],
+          "collection_bucket": 0,
+          "sharing": [],
+          "sharing_bucket": 0,
+          "tracking": [],
+          "tracking_bucket": 0
+        },
+        "found": true,
+        "judge_attempts": 0,
+        "judged_at": 0,
+        "matched": [],
+        "model_called": false,
+        "outcome": "",
+        "page_state": "",
+        "phase": "CLOSED",
+        "platform": "google_play",
+        "policy_url": "",
+        "privacy_text": "",
+        "reason": "No response was filed within the response window; the advocate wins by default. No listing was read.",
+        "respond_by": 1790168905,
+        "responded_at": 0,
+        "respondent": "0x0000000000000000000000000000000000000000",
+        "respondent_stake_wei": "0",
+        "response": "",
+        "section_hash": "",
+        "settlement": {
+          "fee_recipient": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+          "locked_wei": "0",
+          "owed_advocate_wei": "500000000000000000",
+          "owed_protocol_wei": "0",
+          "owed_respondent_wei": "0",
+          "paid_advocate": true,
+          "paid_protocol": false,
+          "paid_respondent": false,
+          "protocol_bps": 1000,
+          "winner_bps": 8000
+        },
+        "status": "DEFAULTED",
+        "strength_ranges": "",
+        "windows": {
+          "contest_s": 600,
+          "min_stake_wei": "500000000000000000",
+          "response_s": 600,
+          "stall_s": 600
+        },
+        "winner": "ADVOCATE"
+      },
+      "verified": null
+    },
+    {
+      "ch": {
+        "advocate": "0x752ca299dfc19e114d89670609F7Ab298170faAe",
+        "advocate_stake_wei": "500000000000000000",
+        "allowed": [],
+        "app_key": "google_play:org.telegram.messenger",
+        "app_label": "org.telegram.messenger",
+        "case": "",
+        "challenge_id": 6,
+        "claim": "This app does not share location with third parties",
+        "claim_reading": {
+          "axis": "share",
+          "negative": true,
+          "signature": "deny:share:location",
+          "topics": [
+            "location"
+          ]
+        },
+        "closed_at": 1790168464,
+        "content_hash": "",
+        "contest": {
+          "at": 0,
+          "by": "",
+          "content_hash": "",
+          "evidence": "",
+          "loser": "NONE",
+          "original_outcome": "",
+          "outcome": "",
+          "result": "",
+          "section_hash": "",
+          "stake_required_wei": "300000000000000000",
+          "stake_wei": "0",
+          "strength": 0,
+          "window_ends": 0
+        },
+        "contest_result": "",
+        "evidence_strength": 0,
+        "facts_hash": "",
+        "fetch_url": "https://play.google.com/store/apps/datasafety?id=org.telegram.messenger&hl=en&gl=US",
+        "filed_at": 1790168322,
+        "findings": {
+          "categories": [],
+          "categories_bucket": 0,
+          "collection": [],
+          "collection_bucket": 0,
+          "sharing": [],
+          "sharing_bucket": 0,
+          "tracking": [],
+          "tracking_bucket": 0
+        },
+        "found": true,
+        "judge_attempts": 0,
+        "judged_at": 0,
+        "matched": [],
+        "model_called": false,
+        "outcome": "",
+        "page_state": "",
+        "phase": "CLOSED",
+        "platform": "google_play",
+        "policy_url": "",
+        "privacy_text": "",
+        "reason": "Withdrawn by the advocate before any response.",
+        "respond_by": 1790168922,
+        "responded_at": 0,
+        "respondent": "0x0000000000000000000000000000000000000000",
+        "respondent_stake_wei": "0",
+        "response": "",
+        "section_hash": "",
+        "settlement": {
+          "fee_recipient": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+          "locked_wei": "0",
+          "owed_advocate_wei": "500000000000000000",
+          "owed_protocol_wei": "0",
+          "owed_respondent_wei": "0",
+          "paid_advocate": true,
+          "paid_protocol": false,
+          "paid_respondent": false,
+          "protocol_bps": 1000,
+          "winner_bps": 8000
+        },
+        "status": "WITHDRAWN",
+        "strength_ranges": "",
+        "windows": {
+          "contest_s": 600,
+          "min_stake_wei": "500000000000000000",
+          "response_s": 600,
+          "stall_s": 600
+        },
+        "winner": "NONE"
+      },
+      "verified": null
+    },
+    {
+      "ch": {
+        "advocate": "0xba28354B5D1C2542bF5C512AF76aa9e5dE96DCD4",
+        "advocate_stake_wei": "500000000000000000",
+        "allowed": [],
+        "app_key": "google_play:com.snapchat.android",
+        "app_label": "com.snapchat.android",
+        "case": "",
+        "challenge_id": 7,
+        "claim": "This app does not collect photos or videos",
+        "claim_reading": {
+          "axis": "collect",
+          "negative": true,
+          "signature": "deny:collect:media",
+          "topics": [
+            "media"
+          ]
+        },
+        "closed_at": 1790170702,
+        "content_hash": "",
+        "contest": {
+          "at": 0,
+          "by": "",
+          "content_hash": "",
+          "evidence": "",
+          "loser": "NONE",
+          "original_outcome": "",
+          "outcome": "",
+          "result": "",
+          "section_hash": "",
+          "stake_required_wei": "300000000000000000",
+          "stake_wei": "0",
+          "strength": 0,
+          "window_ends": 0
+        },
+        "contest_result": "",
+        "evidence_strength": 0,
+        "facts_hash": "",
+        "fetch_url": "https://play.google.com/store/apps/datasafety?id=com.snapchat.android&hl=en&gl=US",
+        "filed_at": 1790168344,
+        "findings": {
+          "categories": [],
+          "categories_bucket": 0,
+          "collection": [],
+          "collection_bucket": 0,
+          "sharing": [],
+          "sharing_bucket": 0,
+          "tracking": [],
+          "tracking_bucket": 0
+        },
+        "found": true,
+        "judge_attempts": 0,
+        "judged_at": 0,
+        "matched": [],
+        "model_called": false,
+        "outcome": "",
+        "page_state": "",
+        "phase": "CLOSED",
+        "platform": "google_play",
+        "policy_url": "",
+        "privacy_text": "",
+        "reason": "No agreed judgment within 600s of the response; both stakes refunded in full.",
+        "respond_by": 1790168944,
+        "responded_at": 1790168535,
+        "respondent": "0x3c792109FE1Ce745BaCD902Bc24f0B14C4Fd0ab5",
+        "respondent_stake_wei": "500000000000000000",
+        "response": "Media is processed on device unless the user sends a snap to a friend.",
+        "section_hash": "",
+        "settlement": {
+          "fee_recipient": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+          "locked_wei": "0",
+          "owed_advocate_wei": "500000000000000000",
+          "owed_protocol_wei": "0",
+          "owed_respondent_wei": "500000000000000000",
+          "paid_advocate": true,
+          "paid_protocol": false,
+          "paid_respondent": true,
+          "protocol_bps": 1000,
+          "winner_bps": 8000
+        },
+        "status": "STALLED",
+        "strength_ranges": "",
+        "windows": {
+          "contest_s": 600,
+          "min_stake_wei": "500000000000000000",
+          "response_s": 600,
+          "stall_s": 600
+        },
+        "winner": "NONE"
+      },
+      "verified": null
+    }
+  ],
+  "apps": {
+    "items": [
+      {
+        "app_key": "google_play:com.whatsapp",
+        "badge": "FLAGGED",
+        "contradicted": true,
+        "counts": {
+          "contradicted": 1,
+          "defaulted": 0,
+          "inconclusive": 0,
+          "open": 0,
+          "pending_verdicts": 0,
+          "stalled": 0,
+          "total": 1,
+          "verified": 0,
+          "withdrawn": 0
+        },
+        "judged": 1,
+        "label": "com.whatsapp",
+        "last_judged_at": 1790168574,
+        "platform": "google_play"
+      },
+      {
+        "app_key": "app_store:389801252",
+        "badge": "CLEAN",
+        "contradicted": false,
+        "counts": {
+          "contradicted": 0,
+          "defaulted": 0,
+          "inconclusive": 0,
+          "open": 0,
+          "pending_verdicts": 0,
+          "stalled": 0,
+          "total": 1,
+          "verified": 1,
+          "withdrawn": 0
+        },
+        "judged": 1,
+        "label": "instagram",
+        "last_judged_at": 1790168622,
+        "platform": "app_store"
+      },
+      {
+        "app_key": "google_play:com.spotify.music",
+        "badge": "CLEAN",
+        "contradicted": false,
+        "counts": {
+          "contradicted": 0,
+          "defaulted": 0,
+          "inconclusive": 1,
+          "open": 0,
+          "pending_verdicts": 0,
+          "stalled": 0,
+          "total": 1,
+          "verified": 0,
+          "withdrawn": 0
+        },
+        "judged": 1,
+        "label": "com.spotify.music",
+        "last_judged_at": 1790168731,
+        "platform": "google_play"
+      },
+      {
+        "app_key": "google_play:com.zhiliaoapp.musically",
+        "badge": "FLAGGED",
+        "contradicted": true,
+        "counts": {
+          "contradicted": 1,
+          "defaulted": 0,
+          "inconclusive": 0,
+          "open": 0,
+          "pending_verdicts": 0,
+          "stalled": 0,
+          "total": 1,
+          "verified": 0,
+          "withdrawn": 0
+        },
+        "judged": 1,
+        "label": "com.zhiliaoapp.musically",
+        "last_judged_at": 1790170568,
+        "platform": "google_play"
+      },
+      {
+        "app_key": "google_play:com.facebook.katana",
+        "badge": "UNAUDITED",
+        "contradicted": false,
+        "counts": {
+          "contradicted": 0,
+          "defaulted": 1,
+          "inconclusive": 0,
+          "open": 0,
+          "pending_verdicts": 0,
+          "stalled": 0,
+          "total": 1,
+          "verified": 0,
+          "withdrawn": 0
+        },
+        "judged": 0,
+        "label": "com.facebook.katana",
+        "last_judged_at": 0,
+        "platform": "google_play"
+      },
+      {
+        "app_key": "google_play:org.telegram.messenger",
+        "badge": "UNAUDITED",
+        "contradicted": false,
+        "counts": {
+          "contradicted": 0,
+          "defaulted": 0,
+          "inconclusive": 0,
+          "open": 0,
+          "pending_verdicts": 0,
+          "stalled": 0,
+          "total": 1,
+          "verified": 0,
+          "withdrawn": 1
+        },
+        "judged": 0,
+        "label": "org.telegram.messenger",
+        "last_judged_at": 0,
+        "platform": "google_play"
+      },
+      {
+        "app_key": "google_play:com.snapchat.android",
+        "badge": "UNAUDITED",
+        "contradicted": false,
+        "counts": {
+          "contradicted": 0,
+          "defaulted": 0,
+          "inconclusive": 0,
+          "open": 0,
+          "pending_verdicts": 0,
+          "stalled": 1,
+          "total": 1,
+          "verified": 0,
+          "withdrawn": 0
+        },
+        "judged": 0,
+        "label": "com.snapchat.android",
+        "last_judged_at": 0,
+        "platform": "google_play"
+      }
+    ],
+    "total": 7
+  },
+  "consumer": {
+    "https://play.google.com/store/apps/details?id=com.whatsapp": {
+      "is_contradicted": true,
+      "trust": {
+        "app_key": "google_play:com.whatsapp",
+        "badge": "FLAGGED",
+        "counts": {
+          "contradicted": 1,
+          "defaulted": 0,
+          "inconclusive": 0,
+          "open": 0,
+          "pending_verdicts": 0,
+          "stalled": 0,
+          "total": 1,
+          "verified": 0,
+          "withdrawn": 0
+        },
+        "policy": "70 + 10*verified - 35*contradicted - 5*defaulted, clamped 0..100",
+        "reachable": true,
+        "trust_score": 35
+      }
+    },
+    "https://apps.apple.com/us/app/instagram/id389801252": {
+      "is_contradicted": false,
+      "trust": {
+        "app_key": "app_store:389801252",
+        "badge": "CLEAN",
+        "counts": {
+          "contradicted": 0,
+          "defaulted": 0,
+          "inconclusive": 0,
+          "open": 0,
+          "pending_verdicts": 0,
+          "stalled": 0,
+          "total": 1,
+          "verified": 1,
+          "withdrawn": 0
+        },
+        "policy": "70 + 10*verified - 35*contradicted - 5*defaulted, clamped 0..100",
+        "reachable": true,
+        "trust_score": 80
+      }
+    },
+    "https://play.google.com/store/apps/details?id=com.spotify.music": {
+      "is_contradicted": false,
+      "trust": {
+        "app_key": "google_play:com.spotify.music",
+        "badge": "CLEAN",
+        "counts": {
+          "contradicted": 0,
+          "defaulted": 0,
+          "inconclusive": 1,
+          "open": 0,
+          "pending_verdicts": 0,
+          "stalled": 0,
+          "total": 1,
+          "verified": 0,
+          "withdrawn": 0
+        },
+        "policy": "70 + 10*verified - 35*contradicted - 5*defaulted, clamped 0..100",
+        "reachable": true,
+        "trust_score": 70
+      }
+    }
+  },
+  "listings": {
+    "items": [
+      {
+        "app_key": "google_play:com.whatsapp",
+        "contradicted": 1,
+        "decided_by": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+        "listed": false,
+        "reason": "refused: 1 privacy claim(s) about this app were contradicted by its own store listing",
+        "trust_score": 35,
+        "verified": 0
+      },
+      {
+        "app_key": "app_store:389801252",
+        "contradicted": 0,
+        "decided_by": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+        "listed": true,
+        "reason": "listed: no contradicted privacy claim; trust score 80",
+        "trust_score": 80,
+        "verified": 1
+      },
+      {
+        "app_key": "google_play:com.whatsapp",
+        "contradicted": 1,
+        "decided_by": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+        "listed": false,
+        "reason": "refused: 1 privacy claim(s) about this app were contradicted by its own store listing",
+        "trust_score": 35,
+        "verified": 0
+      },
+      {
+        "app_key": "app_store:389801252",
+        "contradicted": 0,
+        "decided_by": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+        "listed": true,
+        "reason": "listed: no contradicted privacy claim; trust score 80",
+        "trust_score": 80,
+        "verified": 1
+      }
+    ],
+    "listed": 2,
+    "refused": 2
+  }
+}
