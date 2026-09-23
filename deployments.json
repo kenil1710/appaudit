@@ -1,0 +1,51 @@
+{
+  "deployments": {
+    "studiodev": {
+      "network": "studiodev",
+      "chain_id": 61997,
+      "AppAuditDemo": {
+        "address": "0x060cFC326B19F3DD4B839dEa75924Fd2935be61C",
+        "deploy_tx": "0x2626d8bd1681bb80ea8c86f25dcb44fb44ae9c6d2aaa4baf495a4aa2e91959f1",
+        "source_bytes": 127385,
+        "source_sha256": "9f64a7fc22eac0abe6b374e1e0a28283aea1d978d313242e3be4c0e789e55fd3",
+        "owner": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+        "rubric_version": "1.0.0",
+        "min_stake_wei": "500000000000000000",
+        "contest_stake_wei": "300000000000000000",
+        "response_window_s": 600,
+        "contest_window_s": 600,
+        "stall_ttl_s": 600,
+        "file_cooldown_s": 0,
+        "deployed_at": "2026-09-23T12:56:19.336Z"
+      },
+      "explorer": "https://explorer-studio-dev.genlayer.com/",
+      "AppAudit": {
+        "address": "0xbbdf68A0616e44Fb57d64386b19fa80b055d6257",
+        "deploy_tx": "0x021675a088ee5b583089b84fc8a2fcf98ca68652595dc3b1a2fa684a468bf6b6",
+        "source_bytes": 127385,
+        "source_sha256": "9f64a7fc22eac0abe6b374e1e0a28283aea1d978d313242e3be4c0e789e55fd3",
+        "owner": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+        "rubric_version": "1.0.0",
+        "min_stake_wei": "500000000000000000",
+        "contest_stake_wei": "300000000000000000",
+        "response_window_s": 172800,
+        "contest_window_s": 86400,
+        "stall_ttl_s": 172800,
+        "file_cooldown_s": 300,
+        "deployed_at": "2026-09-23T12:23:33.341Z"
+      },
+      "AppTrustConsumer": {
+        "address": "0x5b6F3FBCD4f4aFAA763Fa13Bd9eD39AfD2C5773F",
+        "deploy_tx": "0x1380780b35bd7351821dafc23dca4843d1876c0020d0473655cd422d7e71ed4f",
+        "source_bytes": 9410,
+        "source_sha256": "3f35348c183b20fb608ba13f0aaa021b5d5d8cebe4c7c9e5bc8e113e3332c3da",
+        "audit": "0x060cFC326B19F3DD4B839dEa75924Fd2935be61C",
+        "min_score": 50,
+        "owner": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+        "custody": false,
+        "payable_methods": 0,
+        "deployed_at": "2026-09-23T12:56:48.685Z"
+      }
+    }
+  }
+}
