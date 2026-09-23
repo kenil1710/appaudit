@@ -205,6 +205,10 @@ record_listing(app_url)  -> records the decision on chain
   form between filing and judging; the judged text is stored with its hash so
   what was judged is always visible, but the edit wins. If it changes between
   two validators' fetches, nothing settles and judge() is re-run.
+- Anyone except the advocate may respond, because the contract cannot verify
+  developer identity on-chain. A second wallet could take the respondent slot
+  before the real developer. The listing still decides which verdicts are
+  possible, and the attacker loses 10% as protocol fee.
 - **Vocabulary decides the data type.** Claims are mapped to data types by a
   published keyword list (`get_config().topics`); a claim outside it is refused
   before staking rather than guessed at. Negation is word-level (`not`, `never`,
