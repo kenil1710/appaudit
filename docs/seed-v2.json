@@ -66,7 +66,7 @@
       "at": "2026-09-30T11:13:54.899Z"
     },
     {
-      "label": "cross: Instagram (Play) + Facebook (App Store)",
+      "label": "cross: Instagram (Play) + Facebook (App Store) \u2014 first attempt, validators timed out, leader-only (not counted)",
       "role": "outsider",
       "from": "0x45B64F0E56e9ef420df5Fc0902B3209045ac4F8a",
       "method": "file_cross_store",
@@ -80,13 +80,7 @@
       "status": "FINALIZED",
       "hash": "0x8a50ceb59e904a1403e8e8a6f91f11ce6e91ec86fe599a3568431d037c39690a",
       "seconds": 65,
-      "returned": {
-        "bind": "the titles differ ('Instagram' vs 'Facebook')",
-        "claim_with": "withdraw()",
-        "reason": "these two listings are not the same app: the titles differ ('Instagram' vs 'Facebook')",
-        "refunded_wei": "500000000000000000",
-        "status": "REJECTED"
-      },
+      "returned": null,
       "at": "2026-09-30T11:14:59.812Z"
     },
     {
@@ -631,6 +625,945 @@
         "winner": "NONE"
       },
       "at": "2026-09-30T11:36:07.040Z"
+    },
+    {
+      "label": "policy-linkedin-identifiers#1 judge #1",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        4
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x8f6979d6c3320bd13f3ea5f8a439e9d63af6aad256ffcc9fdc4e824b45ef19b4",
+      "seconds": 523,
+      "returned": {
+        "challenge_id": 4,
+        "content_hash": "3317e6bea81d65d1",
+        "contest_until": 1790768794,
+        "filing_result": "CONTRADICTED",
+        "judged": true,
+        "judgment_result": "CONTRADICTED",
+        "outcome": "CONTRADICTED",
+        "owed_advocate_wei": "900000000000000000",
+        "owed_protocol_wei": "50000000000000000",
+        "owed_respondent_wei": "50000000000000000",
+        "status": "OK",
+        "winner": "ADVOCATE"
+      },
+      "at": "2026-09-30T11:45:16.549Z"
+    },
+    {
+      "label": "policy-capcut-personal#1 judge #1",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        5
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x993fca9202efee603dd19b67e3fee0b4dfde2e30aa3ea493f434d1b331305c85",
+      "seconds": 221,
+      "returned": {
+        "challenge_id": 5,
+        "content_hash": "a7e86cf546390047",
+        "contest_until": 1790769344,
+        "filing_result": "CONTRADICTED",
+        "judged": true,
+        "judgment_result": "CONTRADICTED",
+        "outcome": "CONTRADICTED",
+        "owed_advocate_wei": "900000000000000000",
+        "owed_protocol_wei": "50000000000000000",
+        "owed_respondent_wei": "50000000000000000",
+        "status": "OK",
+        "winner": "ADVOCATE"
+      },
+      "at": "2026-09-30T11:49:24.212Z"
+    },
+    {
+      "label": "policy-pinterest-identifiers#1 judge #1",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        6
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x0f7316aaba8f73b3466322f0843e2a88fa01dff31dba44b52e99e0e1b5afdfc1",
+      "seconds": 145,
+      "returned": {
+        "challenge_id": 6,
+        "content_hash": "942dc20813c3a7ee",
+        "contest_until": 1790769592,
+        "filing_result": "CLAIM_VERIFIED",
+        "judged": true,
+        "judgment_result": "CLAIM_VERIFIED",
+        "outcome": "CLAIM_VERIFIED",
+        "owed_advocate_wei": "50000000000000000",
+        "owed_protocol_wei": "50000000000000000",
+        "owed_respondent_wei": "900000000000000000",
+        "status": "OK",
+        "winner": "RESPONDENT"
+      },
+      "at": "2026-09-30T11:52:16.782Z"
+    },
+    {
+      "label": "label-whatsapp-location#1 judge #1",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        7
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0xd16af5a7e1fd505e327ce9d6191324a628feb8f09354f424c5eb403298da0505",
+      "seconds": 31,
+      "returned": {
+        "challenge_id": 7,
+        "content_hash": "b9caa75ca6067782",
+        "contest_until": 1790769764,
+        "filing_result": "CONTRADICTED,INCONCLUSIVE",
+        "judged": true,
+        "judgment_result": "CONTRADICTED",
+        "outcome": "CONTRADICTED",
+        "owed_advocate_wei": "900000000000000000",
+        "owed_protocol_wei": "50000000000000000",
+        "owed_respondent_wei": "50000000000000000",
+        "status": "OK",
+        "winner": "ADVOCATE"
+      },
+      "at": "2026-09-30T11:53:15.250Z"
+    },
+    {
+      "label": "snapshot whatsapp",
+      "role": "outsider",
+      "from": "0x45B64F0E56e9ef420df5Fc0902B3209045ac4F8a",
+      "method": "snapshot",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.whatsapp"
+      ],
+      "value": "10000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x744406d184f79562f51c637a5cd2206bf7c0375ba2bce7601ba9fc57f0d6d5ce",
+      "seconds": 16,
+      "returned": {
+        "app_key": "google_play:com.whatsapp",
+        "hash": "720122d2d3abe672",
+        "snapshot_id": 21,
+        "status": "OK",
+        "today": 1
+      },
+      "at": "2026-09-30T11:53:37.778Z"
+    },
+    {
+      "label": "snapshot snapchat",
+      "role": "outsider",
+      "from": "0x45B64F0E56e9ef420df5Fc0902B3209045ac4F8a",
+      "method": "snapshot",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.snapchat.android"
+      ],
+      "value": "10000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0xa9b65da124f4a0cec5c9fb252d75a0208ecd9c5ae5c61a61acb98303a0274571",
+      "seconds": 17,
+      "returned": {
+        "app_key": "google_play:com.snapchat.android",
+        "hash": "8ebba7d2aff09392",
+        "snapshot_id": 22,
+        "status": "OK",
+        "today": 1
+      },
+      "at": "2026-09-30T11:53:55.007Z"
+    },
+    {
+      "label": "snapshot linkedin",
+      "role": "outsider",
+      "from": "0x45B64F0E56e9ef420df5Fc0902B3209045ac4F8a",
+      "method": "snapshot",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.linkedin.android"
+      ],
+      "value": "10000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x8e9b849468a93b6faac384a53a00d4e1ec7f630f86f653c4d65f066cf9ba50e6",
+      "seconds": 13,
+      "returned": {
+        "app_key": "google_play:com.linkedin.android",
+        "hash": "b9583e0834384d3d",
+        "snapshot_id": 23,
+        "status": "OK",
+        "today": 1
+      },
+      "at": "2026-09-30T11:54:08.105Z"
+    },
+    {
+      "label": "snapshot WhatsApp App Store",
+      "role": "outsider",
+      "from": "0x45B64F0E56e9ef420df5Fc0902B3209045ac4F8a",
+      "method": "snapshot",
+      "args": [
+        "https://apps.apple.com/us/app/whatsapp-messenger/id310633997"
+      ],
+      "value": "10000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0xe359b6818b3efa69f7ad8672cfe3d084748974729814cfe8035e6a1aabd6fd57",
+      "seconds": 20,
+      "returned": {
+        "app_key": "app_store:310633997",
+        "hash": "9830c33aca75d028",
+        "snapshot_id": 24,
+        "status": "OK",
+        "today": 1
+      },
+      "at": "2026-09-30T11:54:28.550Z"
+    },
+    {
+      "label": "cross-snapchat-identifiers finalize",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "finalize",
+      "args": [
+        1
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x8f509565112235f705f4d62426a181bf0526e980109e296d0b94fb6f7226ca23",
+      "seconds": 5,
+      "returned": {
+        "challenge_id": 1,
+        "claim_with": "withdraw()",
+        "outcome": "CONTRADICTED",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:54:36.736Z"
+    },
+    {
+      "label": "cross-capcut-identifiers finalize",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "finalize",
+      "args": [
+        2
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0xc1b650926702588a5716dea42ac00174c9b848a140ab54a644840baf8bc606e9",
+      "seconds": 6,
+      "returned": {
+        "challenge_id": 2,
+        "claim_with": "withdraw()",
+        "outcome": "CONTRADICTED",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:54:50.520Z"
+    },
+    {
+      "label": "policy-linkedin-identifiers#1 finalize",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "finalize",
+      "args": [
+        4
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x4c58178a4ba30e051f6019df23f2a58f66c9c0eba2f8f9447129f2c0b710de72",
+      "seconds": 7,
+      "returned": {
+        "challenge_id": 4,
+        "claim_with": "withdraw()",
+        "outcome": "CONTRADICTED",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:55:07.783Z"
+    },
+    {
+      "label": "policy-capcut-personal#1 finalize",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "finalize",
+      "args": [
+        5
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x9c409ef77add9f7f4580454d00f993e2a401252d3cc5e831471f73c0d1ee8355",
+      "seconds": 7,
+      "returned": {
+        "challenge_id": 5,
+        "claim_with": "withdraw()",
+        "outcome": "CONTRADICTED",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:56:08.769Z"
+    },
+    {
+      "label": "policy-pinterest-identifiers#1 finalize",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "finalize",
+      "args": [
+        6
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0xdf55ce59389d4a165d60f78a8d6ec336c37f58af61729638ef14e6d0c57f47ce",
+      "seconds": 6,
+      "returned": {
+        "challenge_id": 6,
+        "claim_with": "withdraw()",
+        "outcome": "CLAIM_VERIFIED",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:00:14.692Z"
+    },
+    {
+      "label": "label-whatsapp-location#1 finalize",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "finalize",
+      "args": [
+        7
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x93531804b2b4d353494459012c50488ce3f886641e49babc9be151c0eff7593e",
+      "seconds": 9,
+      "returned": {
+        "challenge_id": 7,
+        "claim_with": "withdraw()",
+        "outcome": "CONTRADICTED",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:03:10.969Z"
+    },
+    {
+      "label": "policy-linkedin-identifiers#2 file #1",
+      "role": "advocate4",
+      "from": "0x983F9d6d8B7B9106959a11CA7E40523a9f1d78a3",
+      "method": "file_policy",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.linkedin.android",
+        "",
+        "identifiers",
+        "share"
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x4d5b353d77099309cfa7d5ef1ce46c1bad8d5f985aabdf3e51d6a31a474a2dcb",
+      "seconds": 90,
+      "returned": {
+        "app_key": "google_play:com.linkedin.android",
+        "app_key2": "",
+        "challenge_id": 8,
+        "filing_result": "CONTRADICTED",
+        "kind": "POLICY_LABEL",
+        "respond_by": 1790770399,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:04:47.841Z"
+    },
+    {
+      "label": "policy-linkedin-identifiers#2 respond",
+      "role": "dev4",
+      "from": "0x3A6Df73eA4A9FC6F131Cc0Cd352baCfac5984563",
+      "method": "respond",
+      "args": [
+        8,
+        "Our store declarations and policy are accurate; we contest this reading.",
+        ""
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x2b79cd2eab796ad93481794808857cbc60dcef375746b1f0017e1015c7d358d1",
+      "seconds": 8,
+      "returned": {
+        "challenge_id": 8,
+        "note": "anyone may now call judge(8)",
+        "respondent_verified": false,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:05:01.157Z"
+    },
+    {
+      "label": "policy-capcut-personal#2 file #1",
+      "role": "advocate5",
+      "from": "0x477d0c51F510F2D80Db486974030a7D4e4371D02",
+      "method": "file_policy",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.lemon.lvoverseas",
+        "",
+        "personal",
+        "share"
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x49f410f23d24449c0f3f152800bcd88b271ee3634609303ea3c9a4be95a438ee",
+      "seconds": 142,
+      "returned": {
+        "app_key": "google_play:com.lemon.lvoverseas",
+        "app_key2": "",
+        "challenge_id": 9,
+        "filing_result": "CONTRADICTED",
+        "kind": "POLICY_LABEL",
+        "respond_by": 1790770507,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:07:27.869Z"
+    },
+    {
+      "label": "policy-capcut-personal#2 respond",
+      "role": "dev1",
+      "from": "0x3c792109FE1Ce745BaCD902Bc24f0B14C4Fd0ab5",
+      "method": "respond",
+      "args": [
+        9,
+        "Our store declarations and policy are accurate; we contest this reading.",
+        ""
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x19f51f67cb37bf43c930843df3d246894255d20513836bdfe530f98bc34c0e96",
+      "seconds": 7,
+      "returned": {
+        "challenge_id": 9,
+        "note": "anyone may now call judge(9)",
+        "respondent_verified": false,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:07:40.527Z"
+    },
+    {
+      "label": "policy-pinterest-identifiers#2 file #1",
+      "role": "advocate6",
+      "from": "0x752ca299dfc19e114d89670609F7Ab298170faAe",
+      "method": "file_policy",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.pinterest",
+        "",
+        "identifiers",
+        "share"
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0xc8d11bb31f1c2660b7d244d709bb240dda22459a82732f58a313f13743986a7d",
+      "seconds": 268,
+      "returned": {
+        "app_key": "google_play:com.pinterest",
+        "app_key2": "",
+        "challenge_id": 10,
+        "filing_result": "CLAIM_VERIFIED",
+        "kind": "POLICY_LABEL",
+        "respond_by": 1790770667,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:12:14.140Z"
+    },
+    {
+      "label": "policy-pinterest-identifiers#2 respond",
+      "role": "dev2",
+      "from": "0x43529Ee4B62B8b527463609FfbE34251085190A0",
+      "method": "respond",
+      "args": [
+        10,
+        "Our store declarations and policy are accurate; we contest this reading.",
+        ""
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x4cc850faeb8bd6b6d157e539cdb5bb1468fb18ca19c4c3808e947cb91a65dfad",
+      "seconds": 28,
+      "returned": {
+        "challenge_id": 10,
+        "note": "anyone may now call judge(10)",
+        "respondent_verified": false,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:12:47.488Z"
+    },
+    {
+      "label": "label-whatsapp-location#2 file #1",
+      "role": "advocate1",
+      "from": "0xba28354B5D1C2542bF5C512AF76aa9e5dE96DCD4",
+      "method": "file_challenge",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.whatsapp",
+        "",
+        "This app does not collect location data"
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x772ea61582a00373af70435245aa99abd9c89dd9bae140a82448dce9c86d36ce",
+      "seconds": 22,
+      "returned": {
+        "app_key": "google_play:com.whatsapp",
+        "app_key2": "",
+        "challenge_id": 11,
+        "filing_result": "CONTRADICTED,INCONCLUSIVE",
+        "kind": "LABEL",
+        "respond_by": 1790770973,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:13:14.755Z"
+    },
+    {
+      "label": "label-whatsapp-location#2 respond",
+      "role": "dev3",
+      "from": "0x21605d6De722C694b9b6024B1198B7cD71Ecc338",
+      "method": "respond",
+      "args": [
+        11,
+        "Our store declarations and policy are accurate; we contest this reading.",
+        ""
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x669e507239ac18317fe9f41e814395a959b9aaaffaba9235056640d526640de2",
+      "seconds": 7,
+      "returned": {
+        "challenge_id": 11,
+        "note": "anyone may now call judge(11)",
+        "respondent_verified": false,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:13:27.017Z"
+    },
+    {
+      "label": "policy-linkedin-identifiers#2 judge #1",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        8
+      ],
+      "value": "0",
+      "status": "CANCELED",
+      "hash": "0x921139beb4a9447ef0ae9f448e03262634c88f39fa2a3d0d7a2f71a4f1220c1b",
+      "seconds": 144,
+      "returned": null,
+      "at": "2026-09-30T12:16:16.886Z"
+    },
+    {
+      "label": "policy-linkedin-identifiers#2 judge #2",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        8
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0xad84cff69af2bd00b50842b73f7e6855028ffde5d72df0122ce4889762f31169",
+      "seconds": 123,
+      "returned": {
+        "challenge_id": 8,
+        "content_hash": "01a8b8aae4249e5a",
+        "contest_until": 1790771225,
+        "filing_result": "CONTRADICTED",
+        "judged": true,
+        "judgment_result": "CONTRADICTED",
+        "outcome": "CONTRADICTED",
+        "owed_advocate_wei": "900000000000000000",
+        "owed_protocol_wei": "50000000000000000",
+        "owed_respondent_wei": "50000000000000000",
+        "status": "OK",
+        "winner": "ADVOCATE"
+      },
+      "at": "2026-09-30T12:19:07.662Z"
+    },
+    {
+      "label": "policy-capcut-personal#2 judge #1",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        9
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0xab6d921ab8ea4734f315582286ac27ed70127bb8feb08e5b2490cd7ee19b0214",
+      "seconds": 84,
+      "returned": {
+        "challenge_id": 9,
+        "content_hash": "a7e86cf546390047",
+        "contest_until": 1790771375,
+        "filing_result": "CONTRADICTED",
+        "judged": true,
+        "judgment_result": "CONTRADICTED",
+        "outcome": "CONTRADICTED",
+        "owed_advocate_wei": "900000000000000000",
+        "owed_protocol_wei": "50000000000000000",
+        "owed_respondent_wei": "50000000000000000",
+        "status": "OK",
+        "winner": "ADVOCATE"
+      },
+      "at": "2026-09-30T12:20:59.338Z"
+    },
+    {
+      "label": "policy-pinterest-identifiers#2 judge #1",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        10
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x44c46b235c0819b7c253f36fd53187a4c0f5c2c69061ad1209334a0c89beb641",
+      "seconds": 81,
+      "returned": {
+        "challenge_id": 10,
+        "content_hash": "fa0f0527bea5e587",
+        "contest_until": 1790771487,
+        "filing_result": "CLAIM_VERIFIED",
+        "judged": true,
+        "judgment_result": "CLAIM_VERIFIED",
+        "outcome": "CLAIM_VERIFIED",
+        "owed_advocate_wei": "50000000000000000",
+        "owed_protocol_wei": "50000000000000000",
+        "owed_respondent_wei": "900000000000000000",
+        "status": "OK",
+        "winner": "RESPONDENT"
+      },
+      "at": "2026-09-30T12:22:48.125Z"
+    },
+    {
+      "label": "label-whatsapp-location#2 judge #1",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        11
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x10c8d67c883c00f8a58fd6c64b411178cf529a3880751f4ce9b7c3fdccdeddcf",
+      "seconds": 26,
+      "returned": {
+        "challenge_id": 11,
+        "content_hash": "b9caa75ca6067782",
+        "contest_until": 1790771596,
+        "filing_result": "CONTRADICTED,INCONCLUSIVE",
+        "judged": true,
+        "judgment_result": "CONTRADICTED",
+        "outcome": "CONTRADICTED",
+        "owed_advocate_wei": "900000000000000000",
+        "owed_protocol_wei": "50000000000000000",
+        "owed_respondent_wei": "50000000000000000",
+        "status": "OK",
+        "winner": "ADVOCATE"
+      },
+      "at": "2026-09-30T12:23:41.294Z"
+    },
+    {
+      "label": "policy-linkedin-identifiers#2 finalize",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "finalize",
+      "args": [
+        8
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x16f71d98d4e14ce2511a501deaf182dbe51a5560b4ac02e321c97747577247a6",
+      "seconds": 7,
+      "returned": {
+        "challenge_id": 8,
+        "claim_with": "withdraw()",
+        "outcome": "CONTRADICTED",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:27:29.643Z"
+    },
+    {
+      "label": "policy-capcut-personal#2 finalize",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "finalize",
+      "args": [
+        9
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x85c6687c63190ec67863e442dc6c8cd31eafcb7884e2aceabc8e58fb229e29d4",
+      "seconds": 7,
+      "returned": {
+        "challenge_id": 9,
+        "claim_with": "withdraw()",
+        "outcome": "CONTRADICTED",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:29:59.284Z"
+    },
+    {
+      "label": "policy-pinterest-identifiers#2 finalize",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "finalize",
+      "args": [
+        10
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x8c0fcf1258108633dfa4107f967ee70054c561d1d228778d54ded1cac8a2e1f0",
+      "seconds": 5,
+      "returned": {
+        "challenge_id": 10,
+        "claim_with": "withdraw()",
+        "outcome": "CLAIM_VERIFIED",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:31:50.058Z"
+    },
+    {
+      "label": "label-whatsapp-location#2 finalize",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "finalize",
+      "args": [
+        11
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x8cd9f7d1bf2ba85a6a0ea20e8a8d395ebc8d7c49b1f0927823589cf3f205e2a7",
+      "seconds": 5,
+      "returned": {
+        "challenge_id": 11,
+        "claim_with": "withdraw()",
+        "outcome": "CONTRADICTED",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:33:39.082Z"
+    },
+    {
+      "label": "withdraw advocate1",
+      "role": "advocate1",
+      "from": "0xba28354B5D1C2542bF5C512AF76aa9e5dE96DCD4",
+      "method": "withdraw",
+      "args": [],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x80f682ed9b8678947fe8f7e8f9c73e4bd7c0d14ae10af8d2c1dd8e2672546c8b",
+      "seconds": 6,
+      "returned": {
+        "paid_wei": "2700000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:33:51.144Z"
+    },
+    {
+      "label": "withdraw advocate2",
+      "role": "advocate2",
+      "from": "0x4e3CFe4Fb96cCc5Ef1E2f4E6d164D70B412dCD39",
+      "method": "withdraw",
+      "args": [],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x26fceeaa6f156efad5a808d474dd49d8ecc42d66a310d33707657fdc9269aa97",
+      "seconds": 7,
+      "returned": {
+        "paid_wei": "900000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:33:59.000Z"
+    },
+    {
+      "label": "withdraw advocate3",
+      "role": "advocate3",
+      "from": "0x35b54caD8d0257be04872e562756e26c6A03c5B9",
+      "method": "withdraw",
+      "args": [],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x2e88a54b857f740b0f6353f593bf8005fda1d0cc39674eb39f8b86d143b706eb",
+      "seconds": 5,
+      "returned": {
+        "paid_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:34:05.090Z"
+    },
+    {
+      "label": "withdraw advocate4",
+      "role": "advocate4",
+      "from": "0x983F9d6d8B7B9106959a11CA7E40523a9f1d78a3",
+      "method": "withdraw",
+      "args": [],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x78d1d151dc8b7f6918486383c84de3cb889d466cfc2e617799993fe057fca79d",
+      "seconds": 7,
+      "returned": {
+        "paid_wei": "1800000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:34:12.948Z"
+    },
+    {
+      "label": "withdraw advocate5",
+      "role": "advocate5",
+      "from": "0x477d0c51F510F2D80Db486974030a7D4e4371D02",
+      "method": "withdraw",
+      "args": [],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x751425c043082a27b7847ad6e65a6b1947ae88b1a6eb7172f6da220ade361db2",
+      "seconds": 7,
+      "returned": {
+        "paid_wei": "1800000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:34:21.051Z"
+    },
+    {
+      "label": "withdraw advocate6",
+      "role": "advocate6",
+      "from": "0x752ca299dfc19e114d89670609F7Ab298170faAe",
+      "method": "withdraw",
+      "args": [],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x7228d1a7ac6e7d358b5c010319c836e6ef882ad2375550c7ed52b1f73e797b68",
+      "seconds": 11,
+      "returned": {
+        "paid_wei": "100000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:34:33.117Z"
+    },
+    {
+      "label": "withdraw dev1",
+      "role": "dev1",
+      "from": "0x3c792109FE1Ce745BaCD902Bc24f0B14C4Fd0ab5",
+      "method": "withdraw",
+      "args": [],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x31de814ca25311c62f5b93a22e2cd5b47601278451ad1054fd24cea0e0c9b10a",
+      "seconds": 7,
+      "returned": {
+        "paid_wei": "150000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:34:40.948Z"
+    },
+    {
+      "label": "withdraw dev2",
+      "role": "dev2",
+      "from": "0x43529Ee4B62B8b527463609FfbE34251085190A0",
+      "method": "withdraw",
+      "args": [],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x434428222ffaef8629a089990b9d67ced7aeb0894eee131349b057a7d2b1810d",
+      "seconds": 9,
+      "returned": {
+        "paid_wei": "1850000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:34:51.203Z"
+    },
+    {
+      "label": "withdraw dev3",
+      "role": "dev3",
+      "from": "0x21605d6De722C694b9b6024B1198B7cD71Ecc338",
+      "method": "withdraw",
+      "args": [],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0xb5492eae31f6b17fa8acf522b4bf62202c20b5c58771919d1806ea1fd0a78747",
+      "seconds": 7,
+      "returned": {
+        "paid_wei": "600000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:34:59.381Z"
+    },
+    {
+      "label": "withdraw dev4",
+      "role": "dev4",
+      "from": "0x3A6Df73eA4A9FC6F131Cc0Cd352baCfac5984563",
+      "method": "withdraw",
+      "args": [],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x4c9d813c64bf0c79f8939fe3b3b1a8903c2092fb6a77c0c3f201d6b446d0990f",
+      "seconds": 7,
+      "returned": {
+        "paid_wei": "100000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:35:07.699Z"
+    },
+    {
+      "label": "withdraw advocate1 again (must refuse)",
+      "role": "advocate1",
+      "from": "0xba28354B5D1C2542bF5C512AF76aa9e5dE96DCD4",
+      "method": "withdraw",
+      "args": [],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0xccd3c93674541cba4a043f97267b925b1bcd0efa1a51c81b093a743c8685a933",
+      "seconds": 7,
+      "returned": {
+        "claim_with": "",
+        "reason": "this wallet has nothing to withdraw",
+        "refunded_wei": "0",
+        "status": "REJECTED"
+      },
+      "at": "2026-09-30T12:35:15.854Z"
+    },
+    {
+      "label": "withdraw_fees (fee recipient)",
+      "role": "client",
+      "from": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+      "method": "withdraw_fees",
+      "args": [],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x5385198a5065a6e268d844d78892557876c998c4219374a87873bc3e02913ac0",
+      "seconds": 7,
+      "returned": {
+        "paid_wei": "540000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T12:35:24.067Z"
+    },
+    {
+      "label": "cross: Instagram (Play) + Facebook (App Store) \u2014 agreed",
+      "role": "outsider",
+      "method": "file_cross_store",
+      "status": "ACCEPTED",
+      "hash": "0x2e20948cf22c9cc5064268ac617986491d57d581317cbe536e324abcedef4bca",
+      "returned": {
+        "status": "REJECTED",
+        "reason": "these two listings are not the same app: the titles differ ('Instagram' vs 'Facebook')",
+        "refunded_wei": "500000000000000000"
+      }
+    },
+    {
+      "label": "withdraw outsider (stake left claimable by the refusal)",
+      "role": "outsider",
+      "method": "withdraw",
+      "status": "ACCEPTED",
+      "hash": "0xe640fd023bbae10deaf028ebe36ea37de6f169ddf17140e9e964ecb74391fe3b",
+      "returned": {
+        "status": "OK",
+        "paid_wei": "500000000000000000"
+      }
     }
   ],
   "cases": {
@@ -640,7 +1573,137 @@
     "policy-linkedin-identifiers#1": 4,
     "policy-capcut-personal#1": 5,
     "policy-pinterest-identifiers#1": 6,
-    "label-whatsapp-location#1": 7
+    "label-whatsapp-location#1": 7,
+    "policy-linkedin-identifiers#2": 8,
+    "policy-capcut-personal#2": 9,
+    "policy-pinterest-identifiers#2": 10,
+    "label-whatsapp-location#2": 11
   },
-  "reads": {}
+  "reads": {
+    "snapchat-play": {
+      "app_key": "google_play:com.snapchat.android",
+      "contradicted": 1,
+      "corrected": 0,
+      "developer_wallet": "",
+      "found": true,
+      "inconclusive": 0,
+      "last_snapshot_at": 1790769218,
+      "reachable": true,
+      "snapshots": 3,
+      "trust_score": 35,
+      "verified": 0,
+      "verified_developer": false
+    },
+    "snapchat-appstore": {
+      "app_key": "app_store:447188370",
+      "contradicted": 1,
+      "corrected": 0,
+      "developer_wallet": "",
+      "found": true,
+      "inconclusive": 0,
+      "last_snapshot_at": 1790767779,
+      "reachable": true,
+      "snapshots": 2,
+      "trust_score": 35,
+      "verified": 0,
+      "verified_developer": false
+    },
+    "capcut-play": {
+      "app_key": "google_play:com.lemon.lvoverseas",
+      "contradicted": 3,
+      "corrected": 0,
+      "developer_wallet": "",
+      "found": true,
+      "inconclusive": 0,
+      "last_snapshot_at": 1790770775,
+      "reachable": true,
+      "snapshots": 6,
+      "trust_score": 0,
+      "verified": 0,
+      "verified_developer": false
+    },
+    "whatsapp-play": {
+      "app_key": "google_play:com.whatsapp",
+      "contradicted": 2,
+      "corrected": 0,
+      "developer_wallet": "",
+      "found": true,
+      "inconclusive": 1,
+      "last_snapshot_at": 1790770996,
+      "reachable": true,
+      "snapshots": 7,
+      "trust_score": 0,
+      "verified": 0,
+      "verified_developer": false
+    },
+    "linkedin-play": {
+      "app_key": "google_play:com.linkedin.android",
+      "contradicted": 2,
+      "corrected": 0,
+      "developer_wallet": "",
+      "found": true,
+      "inconclusive": 0,
+      "last_snapshot_at": 1790770625,
+      "reachable": true,
+      "snapshots": 5,
+      "trust_score": 0,
+      "verified": 0,
+      "verified_developer": false
+    },
+    "pinterest-play": {
+      "app_key": "google_play:com.pinterest",
+      "contradicted": 0,
+      "corrected": 0,
+      "developer_wallet": "",
+      "found": true,
+      "inconclusive": 0,
+      "last_snapshot_at": 1790770887,
+      "reachable": true,
+      "snapshots": 4,
+      "trust_score": 90,
+      "verified": 2,
+      "verified_developer": false
+    },
+    "stats": {
+      "apps": 8,
+      "balance_wei": "0",
+      "cases": 11,
+      "chain_balance_wei": "11040000000000000000",
+      "claimable_wei": "0",
+      "contests": 0,
+      "flips": 0,
+      "identity": "balance_wei == locked_wei + claimable_wei + protocol_wei",
+      "judge_attempts": 11,
+      "judgments": 11,
+      "ledger_balanced": true,
+      "locked_wei": "0",
+      "owner": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+      "paused": false,
+      "protocol_wei": "0",
+      "refusals": 4,
+      "rubric_version": "2.0.0",
+      "snapshots": 32,
+      "status_counts": {
+        "DEFAULTED": 0,
+        "FILED": 0,
+        "FINALIZED": 11,
+        "RESPONDED": 0,
+        "SETTLED": 0,
+        "STALLED": 0,
+        "WITHDRAWN": 0
+      },
+      "total_protocol_wei": "540000000000000000",
+      "total_staked_wei": "11000000000000000000",
+      "total_withdrawn_wei": "11040000000000000000",
+      "undelivered_wei": "11040000000000000000",
+      "unsettled_attempts": 0,
+      "verdict_counts": {
+        "CLAIM_VERIFIED": 2,
+        "CONTRADICTED": 8,
+        "CORRECTED": 0,
+        "INCONCLUSIVE": 1
+      },
+      "verifications": 0
+    }
+  }
 }

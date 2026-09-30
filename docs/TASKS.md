@@ -35,22 +35,27 @@ addresses, and its 492-test suite still runs on every push.
 - [x] v1 suite untouched and green
 
 ## Chain
-- [ ] deploy v2 CANONICAL, DEMO, CONSUMER from committed HEAD
-- [ ] ADDRESSES.md (full addresses, commit, sha256)
-- [ ] seeds (docs/SEEDS.md), every model-decided seed run twice
-- [ ] verify_source: code read back from Studio Dev for all 3 v2 contracts
+- [x] deploy v2 CANONICAL, DEMO, CONSUMER from committed HEAD
+- [x] ADDRESSES.md (full addresses, commit, sha256)
+- [x] seeds (docs/SEEDS.md), every model-decided seed run twice (4/4 agree)
+- [x] verify_source: code read back from Studio Dev for all 3 v2 contracts
 
 ## Frontend
-- [ ] file cross-store / policy cases
-- [ ] side-by-side labels; policy quote vs label
-- [ ] verified-developer badge + registration flow with exact file content
-- [ ] timeline page with diffs
-- [ ] claimable balance + withdraw
-- [ ] app record page
-- [ ] docs / how-it-works updated for v2
+- [x] mobile (390px) and desktop: no horizontal scroll, no console errors (tools/shots.mjs)
+- [x] file cross-store / policy cases
+- [x] side-by-side labels; policy quote vs label
+- [x] verified-developer badge + registration flow with exact file content
+- [x] timeline page with diffs
+- [x] claimable balance + withdraw
+- [x] app record page
+- [x] docs / how-it-works updated for v2
 
 ## Docs
-- [ ] docs/THREAT_MODEL_V2.md
-- [ ] docs/AUDIT_V2.md
-- [ ] docs/PROBE_V2.md
-- [ ] README v2 section, v1 + v2 addresses
+- [x] docs/THREAT_MODEL_V2.md
+- [x] docs/AUDIT_V2.md
+- [x] docs/PROBE_V2.md
+- [x] README v2 section, v1 + v2 addresses
+
+## Finish
+- [x] own audit (docs/AUDIT_V2.md), findings fixed
+- [x] full suite green, commit, push, Vercel redeploy

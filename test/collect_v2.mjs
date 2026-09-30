@@ -111,6 +111,12 @@ for (const t of seed.txs.filter((t) => t.returned?.status === "REJECTED")) {
 }
 out();
 
+const unapplied = seed.txs.filter((t) => ["FINALIZED", "CANCELED", "UNDETERMINED"].includes(t.status) && /(file|judge) #\d/.test(t.label));
+out("### Rounds Studio Dev finalized without agreement");
+out();
+out(`${unapplied.length} filing/judgment rounds came back without an agreed result — FINALIZED while the validators had voted \`timeout\` ("GenVM internal error"), or CANCELED by Studio — and **no state was applied** (docs/PROBE_V2.md §6). The seed read the chain after every write, saw nothing had changed, and sent the call again; the table above links only the rounds whose state is on chain. The first Instagram + Facebook refusal was such a round (leader-only), so it was re-run until two validators agreed and the refusal counter moved: ${unapplied.map((t) => tx(t.hash)).join(" · ")}`);
+out();
+
 out("## Snapshots and timelines");
 out();
 for (const [name, url] of [["WhatsApp (Google Play)", "https://play.google.com/store/apps/details?id=com.whatsapp"],

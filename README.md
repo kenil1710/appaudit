@@ -68,7 +68,33 @@ claim reading inside v1's evidence bracket, and filling the policy enum.
 
 ### Seeded on chain (real apps only)
 
-<!-- SEEDS -->
+Demo instance, 10-minute windows, driven by `test/seed_v2.mjs`, read back by `test/collect_v2.mjs`:
+
+| # | kind | app | question | filing → judgment | verdict | settlement adv / dev / fee |
+|---|---|---|---|---|---|---|
+| 1 | cross-store | Snapchat | Identifiers, shared | Play "No data shared" vs App Store tracks Identifiers | **CONTRADICTED** | 0.9 / 0.05 / 0.05 |
+| 2 | cross-store | CapCut | Identifiers, shared | Play "No data shared" vs App Store tracks Identifiers | **CONTRADICTED** | 0.9 / 0.05 / 0.05 |
+| 3 | cross-store | WhatsApp | Location, shared | Play "No data shared" vs App Store silent | **INCONCLUSIVE** | 0.5 / 0.5 / 0 |
+| 4, 8 | policy vs label | LinkedIn | Identifiers, shared | policy SHARED ("hashed IDs or device identifiers" to advertisers) vs Play "No data shared" | **CONTRADICTED** ×2 | 0.9 / 0.05 / 0.05 |
+| 5, 9 | policy vs label | CapCut | Personal info, shared | policy SHARED (targeted advertising) vs Play "No data shared" | **CONTRADICTED** ×2 | 0.9 / 0.05 / 0.05 |
+| 6, 10 | policy vs label | Pinterest | Identifiers, shared | policy SHARED vs Play declares Device IDs shared | **CLAIM_VERIFIED** ×2 | 0.05 / 0.9 / 0.05 |
+| 7, 11 | claim vs label (v1 kind) | WhatsApp | "does not collect location data" | Play declares Approximate location | **CONTRADICTED** ×2 | 0.9 / 0.05 / 0.05 |
+
+- **Model agreement:** every model-decided question was filed and judged twice;
+  **4 of 4** reached the same verdict on both runs, with the same enum at
+  filing and at judgment each time.
+- **Refused live:** Instagram (Play) + Facebook (App Store) — "not the same app";
+  `register_developer` on Temu and Pinterest (file served, wallet absent) and
+  Snapchat (no file); a second `withdraw`.
+- **Snapshots + timelines** for WhatsApp (both stores), Snapchat and LinkedIn;
+  32 snapshots in all, diffs computed by the contract (labels did not change
+  during the run, and the timeline says so).
+- **Withdrawals:** every party withdrew; the fee recipient withdrew 0.54 GEN;
+  the books end at **balance 0 = open 0 + claimable 0 + protocol 0**.
+- **Consumer:** `app_record` reads for six listings (e.g. Snapchat 1
+  contradicted, score 35; Pinterest 2 verified, score 90).
+- **CORRECTED:** not reproducible honestly on chain (no real label changed in
+  the window); shown in tests.
 
 Everything above is read back from the chain into [`docs/SEEDS.md`](docs/SEEDS.md)
 (explorer links, model agreement across two runs, snapshots, withdrawals,
