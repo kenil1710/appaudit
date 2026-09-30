@@ -15,6 +15,7 @@ import { DevBadge, KindBadge, LabelColumn, LabelState, OutcomeBadge } from "@/co
 import { useCase2, useConfig2, useVerify2 } from "@/lib/hooks2";
 import { appName, duration, gen, short, toWei, when, ZERO } from "@/lib/format";
 import { appUrlFromKey, OUTCOME_LABEL, tx2, type Case } from "@/lib/v2";
+import { displayName, useTitles } from "@/lib/titles";
 
 function Section({ icon: Icon, title, children, color }: { icon: typeof Shield; title: string; children: React.ReactNode; color?: string }) {
   return (
@@ -177,6 +178,7 @@ export default function CaseV2({ params }: { params: Promise<{ id: string }> }) 
   const valid = Number.isInteger(id) && id > 0;
   const { data: c, error, isLoading, mutate } = useCase2(valid ? id : null);
   const { account } = useWallet();
+  const titles = useTitles(c ? [c.app_key, c.app_key2] : []);
   const [text, setText] = useState("");
   const [stake, setStake] = useState("0.5");
   const [evidence, setEvidence] = useState("");
@@ -196,12 +198,12 @@ export default function CaseV2({ params }: { params: Promise<{ id: string }> }) 
   const mayRespond = !gated || c.verified_developers.some((w) => w.toLowerCase() === me);
   const wei = toWei(stake);
   const judged = c.judged_at > 0;
-  const name = appName(c.app_key, c.app_label);
+  const name = displayName(titles, c.app_key, c.app_label);
   const corrected = c.outcome === "CORRECTED";
 
   return (
     <AppShell>
-      <Link href="/v2" className="mono muted" style={{ display: "inline-flex", gap: 6, alignItems: "center", fontSize: "0.82rem", marginBottom: 18 }}><ArrowLeft size={14} /> All v2 cases</Link>
+      <Link href="/v2" className="mono muted" style={{ display: "inline-flex", gap: 6, alignItems: "center", fontSize: "0.82rem", marginBottom: 18 }}><ArrowLeft size={14} /> All cases</Link>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center", marginBottom: 20 }}>
         <div style={{ flex: 1, minWidth: 240 }}>
           <div className="eyebrow">Case #{c.challenge_id}</div>

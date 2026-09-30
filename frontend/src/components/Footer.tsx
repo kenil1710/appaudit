@@ -14,9 +14,9 @@ export function Footer() {
         </div>
         <div style={{ display: "grid", gap: 8, fontSize: "0.86rem" }} className="mono">
           <Link href="/v2/file" style={{ display: "flex", gap: 8, alignItems: "center" }}><ShieldPlus size={14} /> File a case</Link>
-          <Link href="/v2" style={{ display: "flex", gap: 8, alignItems: "center" }}><ListChecks size={14} /> v2 cases</Link>
+          <Link href="/v2" style={{ display: "flex", gap: 8, alignItems: "center" }}><ListChecks size={14} /> Cases</Link>
           <Link href="/v2/apps" style={{ display: "flex", gap: 8, alignItems: "center" }}><LayoutGrid size={14} /> App records</Link>
-          <Link href="/challenges" style={{ display: "flex", gap: 8, alignItems: "center" }}><ListChecks size={14} /> v1 results</Link>
+          <Link href="/challenges" style={{ display: "flex", gap: 8, alignItems: "center" }}><ListChecks size={14} /> Earlier results (v1)</Link>
         </div>
         <div style={{ display: "grid", gap: 8, fontSize: "0.86rem" }} className="mono">
           <Link href="/docs" style={{ display: "flex", gap: 8, alignItems: "center" }}><BookOpen size={14} /> Docs</Link>

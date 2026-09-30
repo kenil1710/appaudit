@@ -16,8 +16,8 @@ export default function BalancePage() {
   const claim = BigInt(bal?.claimable_wei ?? "0");
   const fees = BigInt(bal?.fees_wei ?? "0");
   return (
-    <AppShell eyebrow="AppAudit v2" title="Balance"
-      blurb="v2 never pushes a payout. Every settlement, refund and returned stake is credited to a claimable balance; withdraw() zeroes it and then sends it.">
+    <AppShell title="Balance"
+      blurb="AppAudit never pushes a payout. Every settlement, refund and returned stake is credited to a claimable balance; withdraw() zeroes it and then sends it.">
       <div className="split">
         <div className="glass panel" style={{ display: "grid", gap: 14, alignContent: "start" }}>
           <div className="eyebrow" style={{ display: "flex", gap: 8, alignItems: "center" }}><Coins size={14} /> Your claimable balance</div>
@@ -29,7 +29,7 @@ export default function BalancePage() {
               <div className="mono" style={{ fontSize: "1.2rem" }}>{gen(fees.toString(), 4)} GEN</div>
               <TxButton className="btn btn-lav" label="Withdraw protocol fees" icon={<Landmark size={16} />} run={(a) => tx2.withdrawFees(a)} onDone={refresh} />
             </>)}
-            <p className="muted" style={{ margin: 0, fontSize: "0.8rem" }}>A second withdraw finds a zero balance and is refused: nothing is paid twice. Studio Dev queues value transfers without executing them (measured); the balance and the books move, the network delivery is Studio&apos;s.</p>
+            <p className="muted" style={{ margin: 0, fontSize: "0.8rem" }}>A second withdraw finds a zero balance and is refused: nothing is paid twice.</p>
           </>)}
         </div>
         <div className="glass panel" style={{ display: "grid", gap: 10, alignContent: "start" }}>
@@ -43,6 +43,9 @@ export default function BalancePage() {
             </div>
             <span className="chip chip-wrap" style={{ justifySelf: "start", color: s.ledger_balanced ? "var(--green)" : "var(--hot)" }}>{s.ledger_balanced ? "identity holds" : "identity broken"} · {s.identity}</span>
             <span className="mono muted" style={{ fontSize: "0.76rem" }}>withdrawn so far {gen(s.total_withdrawn_wei, 4)} GEN · chain balance {s.chain_balance_wei === "unknown" ? "unknown" : `${gen(s.chain_balance_wei, 4)} GEN`} · undelivered by Studio {gen(s.undelivered_wei, 4)} GEN</span>
+            <p style={{ margin: 0, fontSize: "0.88rem" }}>
+              Studio Dev records every withdrawal in the contract&apos;s books but does not actually deliver value transfers, so the contract&apos;s chain balance still shows the {gen(s.undelivered_wei, 2)} GEN that was withdrawn but never sent.
+            </p>
             <span className="hash">{V2_ADDRESS}</span>
           </>)}
         </div>

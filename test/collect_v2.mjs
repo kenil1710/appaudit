@@ -199,8 +199,10 @@ out();
 
 out("## Consumer reads (`AppTrustConsumerV2.app_record`)");
 out();
-out("| listing | contradicted | verified | corrected | inconclusive | verified developer | last snapshot | trust score |");
-out("|---|---|---|---|---|---|---|---|");
+out(`Consumer \`${consumer}\`. Each DISTINCT question (same kind, data type, axis and listing(s); the claim kind by its reading) counts once, by its latest final verdict; the per-case counts the main contract records are shown beside it.`);
+out();
+out("| listing | cases · distinct questions | contradicted | verified | corrected | inconclusive | per case C / V | verified developer | last snapshot | trust score |");
+out("|---|---|---|---|---|---|---|---|---|---|");
 for (const [name, url] of [["Snapchat · Play", "https://play.google.com/store/apps/details?id=com.snapchat.android"],
   ["Snapchat · App Store", "https://apps.apple.com/us/app/snapchat/id447188370"],
   ["CapCut · Play", "https://play.google.com/store/apps/details?id=com.lemon.lvoverseas"],
@@ -208,7 +210,7 @@ for (const [name, url] of [["Snapchat · Play", "https://play.google.com/store/a
   ["LinkedIn · Play", "https://play.google.com/store/apps/details?id=com.linkedin.android"],
   ["Pinterest · Play", "https://play.google.com/store/apps/details?id=com.pinterest"]]) {
   const r = plain(await K.view("app_record", [url]));
-  out(`| ${name} | ${r.contradicted} | ${r.verified} | ${r.corrected} | ${r.inconclusive} | ${r.verified_developer} | ${r.last_snapshot_at ? new Date(r.last_snapshot_at * 1000).toISOString().slice(0, 19) : "—"} | ${r.trust_score} |`);
+  out(`| ${name} | ${r.cases} · ${r.distinct_questions} | ${r.contradicted} | ${r.verified} | ${r.corrected} | ${r.inconclusive} | ${r.per_case_counts?.contradicted ?? 0} / ${r.per_case_counts?.verified ?? 0} | ${r.verified_developer} | ${r.last_snapshot_at ? new Date(r.last_snapshot_at * 1000).toISOString().slice(0, 19) : "—"} | ${r.trust_score} |`);
 }
 out();
 

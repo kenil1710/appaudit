@@ -22,13 +22,18 @@ export function Logomark({ size = 28 }: { size?: number }) {
   );
 }
 
-export function Wordmark() {
+export function Wordmark({ badge = true }: { badge?: boolean }) {
   return (
     <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
       <Logomark />
       <span className="mono" style={{ fontWeight: 700, fontSize: "1.05rem" }}>
         App<span style={{ color: "var(--cyan)" }}>Audit</span>
       </span>
+      {badge && (
+        <span className="mono" title="Version 2" style={{ fontSize: "0.62rem", fontWeight: 700, padding: "2px 6px", borderRadius: 6, border: "1px solid var(--line-strong)", color: "var(--lavender)", lineHeight: 1.3 }}>
+          v2
+        </span>
+      )}
     </span>
   );
 }

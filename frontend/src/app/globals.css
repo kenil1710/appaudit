@@ -332,7 +332,7 @@ a {
   }
 }
 
-/* v2 has eight destinations: the header collapses to the menu below 1100px */
+/* Eight destinations: the header collapses to the menu below 1100px */
 @media (max-width: 1100px) {
   .hide-md {
     display: none !important;

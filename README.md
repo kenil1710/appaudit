@@ -7,7 +7,7 @@
 | **Network** | GenLayer Studio Dev (chain `61997`), [explorer](https://explorer-studio-dev.genlayer.com/) |
 | **AppAudit v2 — demo** (the app and the seeds; 10-minute windows) | `0xb9141A125Ec557e77BDF7F97B409b460Cf44cd53` |
 | **AppAudit v2 — canonical** (48h / 24h / 48h, 300s cooldown) | `0xB5F63383ED934e8eAa11cCc0510266481038092F` |
-| **AppTrustConsumerV2** (custody false, zero payable methods) | `0x18a81690aF1f3485fF7d14eFfef03AcFE3522719` |
+| **AppTrustConsumerV2** (counts each distinct question once; custody false, zero payable methods) | `0xFc6fA4B816387fbbf28e73B01B67cEC710513239` |
 | **v2 round 1** (superseded after the attack round) | [`docs/superseded/v2-r1/`](docs/superseded/v2-r1/README.md) |
 | **AppAudit v1 — demo / canonical** | `0x060cFC326B19F3DD4B839dEa75924Fd2935be61C` / `0xbbdf68A0616e44Fb57d64386b19fa80b055d6257` |
 | **AppTrustConsumer v1** | `0x5b6F3FBCD4f4aFAA763Fa13Bd9eD39AfD2C5773F` |
@@ -62,8 +62,12 @@ Full addresses, deploy transactions, commit and sha256: [`ADDRESSES.md`](ADDRESS
    `withdraw()` zeroes it, then sends. `balance == open stakes + claimable +
    protocol fees` is published and checked after every offline transaction.
 6. **`AppTrustConsumerV2.app_record(app)`**: final CONTRADICTED / VERIFIED /
-   CORRECTED / INCONCLUSIVE counts, the verified-developer flag, the last
-   snapshot time. Still no value, no payable methods.
+   CORRECTED / INCONCLUSIVE counts **per distinct question** (same kind, data
+   type, axis and listing(s); the claim kind by its reading), each by its
+   latest final verdict — refiling a question three times counts once — plus
+   `cases`, `distinct_questions`, the per-case counts, the verified-developer
+   flag and the last snapshot time. Read from AppAudit v2's own views; still
+   no value, no payable methods.
 
 v1's claim type is kept inside v2 unchanged (`file_challenge`), now with
 frozen evidence and CORRECTED.
@@ -123,8 +127,9 @@ Round-2 demo instance `0xb9141A125Ec557e77BDF7F97B409b460Cf44cd53`, 10-minute wi
   99/99; the books end at **balance 0 = open 0 + claimable 0 + protocol 0**.
 - **Snapshots + timelines** for WhatsApp (both stores), Snapchat and LinkedIn;
   no label changed during the run, and the timelines say so.
-- **Consumer:** `app_record` for six listings (Snapchat 1 contradicted, score
-  35; Pinterest 2 verified, score 90).
+- **Consumer:** `app_record` for six listings, counted per distinct question
+  (Pinterest: 3 cases · 1 question → 1 verified, score 80; LinkedIn: 2 cases ·
+  1 question → 1 contradicted, score 35).
 - **CORRECTED:** not reproducible honestly on chain; shown in tests.
 - **Studio queue jams:** 5 writes sat PENDING 15+ minutes and blocked the
   contract's queue; each was cancelled by its sender. Listed in SEEDS.md.

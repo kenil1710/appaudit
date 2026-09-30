@@ -109,7 +109,8 @@ export default function Docs() {
 
           <Block id="v2integrate" icon={Code2} title="app_record for marketplaces">
             <pre className="privacy">{`consumerV2.app_record(app_url) -> {
-  contradicted, verified, corrected, inconclusive,   # FINAL verdicts only
+  contradicted, verified, corrected, inconclusive,   # per DISTINCT question, latest FINAL verdict
+  cases, distinct_questions, per_case_counts,        # refiling a question counts once
   verified_developer, developer_wallet,
   last_snapshot_at, snapshots, trust_score
 }

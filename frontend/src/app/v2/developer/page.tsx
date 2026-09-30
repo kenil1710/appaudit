@@ -35,7 +35,7 @@ function Developer() {
   const cooling = dev && dev.next_change_at > now;
 
   return (
-    <AppShell eyebrow="AppAudit v2" title="Verified developer"
+    <AppShell title="Verified developer"
       blurb="Prove you control an app's own website. Validators read the developer website OFF THE STORE LISTING — never from you — and fetch /.well-known/appaudit.txt there. Once verified, only your wallet can respond to or contest cases about that listing.">
       <div className="glass panel" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
         <input className="input" style={{ flex: 1, minWidth: 240 }} value={input} onChange={(e) => setInput(e.target.value)} placeholder="Google Play or App Store listing URL" />

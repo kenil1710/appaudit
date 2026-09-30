@@ -44,18 +44,22 @@ for (const [name, file] of Object.entries(FILES)) {
   if (!same || !recorded) bad++;
   rows.push([name, rec.address, file, sha(onChain), same ? "identical" : "DIFFERS", recorded ? "match" : "MISMATCH"]);
 }
-// The superseded r1 contracts, against the tree they were deployed from.
-for (const [name, file] of [["AppAuditV2", "contracts/AppAuditV2.py"], ["AppAuditV2Demo", "contracts/AppAuditV2.py"], ["AppTrustConsumerV2", "contracts/AppTrustConsumerV2.py"]]) {
-  const rec = dep.superseded?.v2_r1?.[name];
-  if (!rec) continue;
-  let chain = "";
-  for (let i = 0; i < 5 && !chain; i++) {
-    try { chain = await client.getContractCode(rec.address); } catch (e) { await new Promise((r) => setTimeout(r, 3000)); }
+// Superseded contracts, against the tree each was deployed from. r1 was
+// deployed from 8f9db85, which the history rewrite renamed d52d5e1 (same tree).
+const RENAMED = { "8f9db859eddea3455b4558651cea8cab2660165f": "d52d5e1" };
+for (const [group, recs] of Object.entries(dep.superseded ?? {})) {
+  for (const [name, rec] of Object.entries(recs)) {
+    const file = rec.source_path ?? (name.startsWith("AppTrustConsumer") ? "contracts/AppTrustConsumerV2.py" : "contracts/AppAuditV2.py");
+    const commit = RENAMED[rec.commit] ?? rec.commit;
+    let chain = "";
+    for (let i = 0; i < 5 && !chain; i++) {
+      try { chain = await client.getContractCode(rec.address); } catch (e) { await new Promise((r) => setTimeout(r, 3000)); }
+    }
+    const at = execFileSync("git", ["-C", root, "show", `${commit}:${file}`]);
+    const same = Buffer.from(String(chain), "utf8").equals(at);
+    if (!same || rec.source_sha256 !== sha(at)) bad++;
+    rows.push([`${name} (${group})`, rec.address, `${file} @ ${commit.slice(0, 7)}`, sha(Buffer.from(String(chain), "utf8")), same ? "identical" : "DIFFERS", rec.source_sha256 === sha(at) ? "match" : "MISMATCH"]);
   }
-  const at = execFileSync("git", ["-C", root, "show", `d52d5e1:${file}`]);
-  const same = Buffer.from(String(chain), "utf8").equals(at);
-  if (!same || rec.source_sha256 !== sha(at)) bad++;
-  rows.push([name + " (r1)", rec.address, file + " @ d52d5e1", sha(Buffer.from(String(chain), "utf8")), same ? "identical" : "DIFFERS", rec.source_sha256 === sha(at) ? "match" : "MISMATCH"]);
 }
 if (process.argv.includes("--md")) {
   console.log(`Read back from Studio Dev (\`gen_getContractCode\`) against HEAD \`${head}\`:\n`);

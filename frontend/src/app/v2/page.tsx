@@ -8,6 +8,7 @@ import { ErrorState, EmptyState } from "@/components/States";
 import { ShieldScanner } from "@/components/Scanner";
 import { CaseRow } from "@/components/V2";
 import { useCases2, useStats2 } from "@/lib/hooks2";
+import { useTitles } from "@/lib/titles";
 import { gen } from "@/lib/format";
 import { V2_ADDRESS } from "@/lib/v2";
 
@@ -23,9 +24,10 @@ export default function CasesV2() {
   const { data: stats } = useStats2();
   const [f, setF] = useState("all");
   const items = useMemo(() => (data?.items ?? []).filter((c) => f === "all" || c.kind === f), [data, f]);
+  const titles = useTitles((data?.items ?? []).flatMap((c) => [c.app_key, c.app_key2]));
   return (
-    <AppShell eyebrow="AppAudit v2" title="Cases"
-      blurb={<>Every v2 case on the demo instance <span className="hash">{V2_ADDRESS}</span>, read live from the chain. Evidence is frozen at filing and read again at judgment.</>}
+    <AppShell title="Cases"
+      blurb={<>Every case on the demo instance <span className="hash">{V2_ADDRESS}</span>, read live from the chain. Evidence is frozen at filing and read again at judgment.</>}
       actions={<Link className="btn btn-primary" href="/v2/file"><FilePlus2 size={16} /> File a case</Link>}>
       {stats && (
         <div className="grid-cards" style={{ marginBottom: 22 }}>
@@ -52,11 +54,11 @@ export default function CasesV2() {
           <button key={x.key} aria-pressed={f === x.key} onClick={() => setF(x.key)}>{x.label}</button>
         ))}
       </div>
-      {isLoading && <ShieldScanner label="Reading v2 cases…" />}
+      {isLoading && <ShieldScanner label="Reading cases…" />}
       {error && <ErrorState detail={error.message} action={<button className="btn btn-sm btn-ghost" onClick={() => void mutate()}><RotateCcw size={14} /> Retry</button>} />}
       {data && items.length === 0 && <EmptyState title="No cases here yet" action={<Link className="btn btn-sm btn-primary" href="/v2/file">File the first</Link>} />}
       <div style={{ display: "grid", gap: 12 }}>
-        {items.map((c) => <CaseRow key={c.challenge_id} c={c} />)}
+        {items.map((c) => <CaseRow key={c.challenge_id} c={c} titles={titles} />)}
       </div>
     </AppShell>
   );

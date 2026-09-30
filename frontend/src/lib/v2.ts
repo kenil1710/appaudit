@@ -13,7 +13,7 @@ import { ContractReadError, plain, type TransactionHash } from "./contract";
 
 const isAddr = (v: string | undefined): v is string => Boolean(v && /^0x[0-9a-fA-F]{40}$/.test(v));
 
-/** Deployed from commit 5e7c6b4 (ADDRESSES.md). Overridable per environment. */
+/** Main contracts from commit 5e7c6b4, consumer from 26a3284 (ADDRESSES.md). Overridable per environment. */
 export const V2_ADDRESS = (isAddr(process.env.NEXT_PUBLIC_V2_ADDRESS)
   ? process.env.NEXT_PUBLIC_V2_ADDRESS
   : "0xb9141A125Ec557e77BDF7F97B409b460Cf44cd53") as `0x${string}`;
@@ -22,7 +22,7 @@ export const V2_CANONICAL_ADDRESS = isAddr(process.env.NEXT_PUBLIC_V2_CANONICAL_
   : "0xB5F63383ED934e8eAa11cCc0510266481038092F";
 export const V2_CONSUMER_ADDRESS = isAddr(process.env.NEXT_PUBLIC_V2_CONSUMER_ADDRESS)
   ? process.env.NEXT_PUBLIC_V2_CONSUMER_ADDRESS
-  : "0x18a81690aF1f3485fF7d14eFfef03AcFE3522719";
+  : "0xFc6fA4B816387fbbf28e73B01B67cEC710513239";
 
 export type Kind = "LABEL" | "CROSS_STORE" | "POLICY_LABEL";
 export type Outcome = "CONTRADICTED" | "CLAIM_VERIFIED" | "INCONCLUSIVE" | "CORRECTED" | "";
@@ -182,6 +182,8 @@ export type ConsumerRecord = {
   reachable: boolean; found: boolean; app_key: string; contradicted: number; verified: number;
   corrected: number; inconclusive: number; verified_developer: boolean; developer_wallet: string;
   last_snapshot_at: number; snapshots: number; trust_score: number; error?: string;
+  cases: number; distinct_questions: number; decided_questions: number;
+  per_case_counts: Record<string, number>;
 };
 
 const READ_TIMEOUT_MS = 30_000;

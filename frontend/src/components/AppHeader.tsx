@@ -17,7 +17,7 @@ export const NAV = [
   { href: "/v2/developer", label: "Developer", icon: BadgeCheck },
   { href: "/v2/balance", label: "Balance", icon: Coins },
   { href: "/docs", label: "Docs", icon: BookOpen },
-  { href: "/challenges", label: "v1", icon: ShieldPlus },
+  { href: "/challenges", label: "Earlier results (v1)", icon: ShieldPlus },
 ];
 
 function isActive(href: string, path: string): boolean {

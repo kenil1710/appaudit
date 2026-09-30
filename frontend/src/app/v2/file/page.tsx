@@ -63,7 +63,7 @@ export default function FileV2() {
         : tx2.fileLabel(acc, { url: a.trim(), claim: t.trim(), stake: wei ?? 0n });
 
   return (
-    <AppShell eyebrow="AppAudit v2" title="File a case" blurb="Stake that an app's own privacy declarations contradict each other. Validators fetch every piece of evidence themselves, at filing and again at judgment.">
+    <AppShell title="File a case" blurb="Stake that an app's own privacy declarations contradict each other. Validators fetch every piece of evidence themselves, at filing and again at judgment.">
       <div className="seg" style={{ marginBottom: 18 }}>
         <button aria-pressed={mode === "CROSS_STORE"} onClick={() => setMode("CROSS_STORE")}><GitCompareArrows size={13} /> Cross-store mismatch</button>
         <button aria-pressed={mode === "POLICY_LABEL"} onClick={() => setMode("POLICY_LABEL")}><ScrollText size={13} /> Policy vs label</button>

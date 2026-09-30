@@ -25,7 +25,7 @@ function TimelineInner() {
   const fee = BigInt(config?.snapshot_fee_wei ?? "10000000000000000");
   const items = data?.items ?? [];   // newest first, one page
   return (
-    <AppShell eyebrow="AppAudit v2" title="Label timeline"
+    <AppShell title="Label timeline"
       blurb={<>Every canonical label validators agreed they read — paid snapshots always, filings and judgments only when the label changed — newest first, paginated. The diffs are computed by the contract, in a view: data types added or removed per declaration. Anyone can add a snapshot for {gen(fee.toString())} GEN (at most {config?.snapshot_cap_per_day ?? 4} per listing per UTC day).</>}>
       <div className="glass panel" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
         <input className="input" style={{ flex: 1, minWidth: 240 }} value={input} onChange={(e) => setInput(e.target.value)} />

@@ -83,10 +83,10 @@ export default function Landing() {
               </motion.p>
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 <Link href="/v2/file" className="btn btn-primary"><ShieldPlus size={16} /> File a case</Link>
-                <Link href="/v2" className="btn btn-ghost"><ListChecks size={16} /> Browse v2 cases</Link>
+                <Link href="/v2" className="btn btn-ghost"><ListChecks size={16} /> Browse cases</Link>
               </motion.div>
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }} className="muted mono" style={{ fontSize: "0.78rem", margin: "18px 0 0", maxWidth: 520 }}>
-                v2: Google Play against the App Store · the linked privacy policy against the label · verified developers · evidence frozen at filing · pull payouts. <Link href="/docs#v2" style={{ color: "var(--cyan)" }}>What&apos;s new</Link> · <Link href="/challenges" style={{ color: "var(--text-2)" }}>v1 results</Link>
+                Google Play against the App Store · the linked privacy policy against the label · verified developers · evidence frozen at filing · pull payouts. <Link href="/docs#v2" style={{ color: "var(--cyan)" }}>What&apos;s new</Link> · <Link href="/challenges" style={{ color: "var(--text-2)" }}>Earlier results (v1)</Link>
               </motion.p>
             </div>
             <HeroVisual />

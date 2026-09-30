@@ -4,6 +4,7 @@ import Link from "next/link";
 import { BadgeCheck, CircleHelp, GitCompareArrows, Layers, ScrollText, ShieldAlert, ShieldCheck, UserX, Wrench } from "lucide-react";
 import { KIND_LABEL, LABEL_STATE, OUTCOME_COLOR, OUTCOME_LABEL, parseLabel, rowHits, type CaseCard, type Diff, type Topic } from "@/lib/v2";
 import { appName } from "@/lib/format";
+import { displayName } from "@/lib/titles";
 
 export function OutcomeBadge({ outcome, big = false }: { outcome: string; big?: boolean }) {
   const color = OUTCOME_COLOR[outcome] ?? "var(--amber)";
@@ -92,8 +93,8 @@ export function DiffChips({ diff, topics }: { diff: Diff | null; topics?: Topic[
   return chips.length ? <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>{chips}</div> : <span className="muted mono" style={{ fontSize: "0.75rem" }}>no declared data type changed</span>;
 }
 
-export function CaseRow({ c }: { c: CaseCard }) {
-  const name = appName(c.app_key, c.app_label);
+export function CaseRow({ c, titles = {} }: { c: CaseCard; titles?: Record<string, string> }) {
+  const name = titles[c.app_key] || titles[c.app_key2] ? displayName(titles, titles[c.app_key] ? c.app_key : c.app_key2, c.app_label) : appName(c.app_key, c.app_label);
   return (
     <Link href={`/v2/case/${c.challenge_id}`} className="glass glass-hover panel" style={{ display: "grid", gap: 10 }}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
