@@ -18,12 +18,22 @@ const PAGES = [
   ["detail-4", "/challenge/4"],
   ["apps", "/apps"],
   ["docs", "/docs"],
+  ["v2-cases", "/v2"],
+  ["v2-file", "/v2/file"],
+  ["v2-case-1", "/v2/case/1"],
+  ["v2-case-4", "/v2/case/4"],
+  ["v2-developer", "/v2/developer?app=https://play.google.com/store/apps/details?id=com.snapchat.android"],
+  ["v2-timeline", "/v2/timeline?app=https://play.google.com/store/apps/details?id=com.snapchat.android"],
+  ["v2-balance", "/v2/balance"],
+  ["v2-apps", "/v2/apps"],
+  ["v2-app", "/v2/app?key=google_play:com.snapchat.android"],
 ];
+const ONLY = process.env.ONLY ? new RegExp(process.env.ONLY) : null;
 const problems = [];
 const browser = await chromium.launch(process.env.PW_BUNDLED ? {} : { channel: "chrome" });
 for (const [width, height, tag] of [[1440, 900, "desktop"], [390, 844, "mobile"]]) {
   const ctx = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1 });
-  for (const [name, path] of PAGES) {
+  for (const [name, path] of PAGES.filter(([n]) => !ONLY || ONLY.test(n))) {
     const page = await ctx.newPage();
     const errors = [];
     page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });

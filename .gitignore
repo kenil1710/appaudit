@@ -24,3 +24,4 @@ frontend/tsconfig.tsbuildinfo
 test/.probe_v2.json
 test/.trial_v2.json
 test/.probe_v2.old.json
+test/.seed_v2.json

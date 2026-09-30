@@ -1,0 +1,646 @@
+{
+  "address": "0xC7502668d39e8BEA9795F1cEBd705cc267420793",
+  "consumer": "0xc9a0928A910d59F23AD612fAABaEd041FE5c0294",
+  "txs": [
+    {
+      "label": "identity: Temu (file served, wallet absent)",
+      "role": "dev1",
+      "from": "0x3c792109FE1Ce745BaCD902Bc24f0B14C4Fd0ab5",
+      "method": "register_developer",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.einnovation.temu"
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0xc4e04658acb7b33ea9a33119964f6cc9c12d45a8f1e75c7407964fc62c00bf06",
+      "seconds": 10,
+      "returned": {
+        "claim_with": "",
+        "file_url": "https://www.temu.com/.well-known/appaudit.txt",
+        "reason": "the file at https://www.temu.com/.well-known/appaudit.txt does not name 0x3c792109FE1Ce745BaCD902Bc24f0B14C4Fd0ab5",
+        "refunded_wei": "0",
+        "status": "REJECTED"
+      },
+      "at": "2026-09-30T11:13:38.126Z"
+    },
+    {
+      "label": "identity: Snapchat (no file)",
+      "role": "dev2",
+      "from": "0x43529Ee4B62B8b527463609FfbE34251085190A0",
+      "method": "register_developer",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.snapchat.android"
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0xa606f22b16f8f1790cfabce779e6b2d6597d1c84311c2bdfe774973920073a7d",
+      "seconds": 7,
+      "returned": {
+        "claim_with": "",
+        "file_url": "https://www.snapchat.com/.well-known/appaudit.txt",
+        "reason": "no identity file at https://www.snapchat.com/.well-known/appaudit.txt (it must answer 200 and name your wallet)",
+        "refunded_wei": "0",
+        "status": "REJECTED"
+      },
+      "at": "2026-09-30T11:13:45.615Z"
+    },
+    {
+      "label": "identity: Pinterest App Store (file served, wallet absent)",
+      "role": "dev3",
+      "from": "0x21605d6De722C694b9b6024B1198B7cD71Ecc338",
+      "method": "register_developer",
+      "args": [
+        "https://apps.apple.com/us/app/pinterest/id429047995"
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0xa97510a9c4dff274be71c8ffd177908cafe1b4c6bec42bcee714fb12960221e6",
+      "seconds": 9,
+      "returned": {
+        "claim_with": "",
+        "file_url": "https://www.pinterest.com/.well-known/appaudit.txt",
+        "reason": "the file at https://www.pinterest.com/.well-known/appaudit.txt does not name 0x21605d6De722C694b9b6024B1198B7cD71Ecc338",
+        "refunded_wei": "0",
+        "status": "REJECTED"
+      },
+      "at": "2026-09-30T11:13:54.899Z"
+    },
+    {
+      "label": "cross: Instagram (Play) + Facebook (App Store)",
+      "role": "outsider",
+      "from": "0x45B64F0E56e9ef420df5Fc0902B3209045ac4F8a",
+      "method": "file_cross_store",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.instagram.android",
+        "https://apps.apple.com/us/app/facebook/id284882215",
+        "identifiers",
+        "share"
+      ],
+      "value": "500000000000000000",
+      "status": "FINALIZED",
+      "hash": "0x8a50ceb59e904a1403e8e8a6f91f11ce6e91ec86fe599a3568431d037c39690a",
+      "seconds": 65,
+      "returned": {
+        "bind": "the titles differ ('Instagram' vs 'Facebook')",
+        "claim_with": "withdraw()",
+        "reason": "these two listings are not the same app: the titles differ ('Instagram' vs 'Facebook')",
+        "refunded_wei": "500000000000000000",
+        "status": "REJECTED"
+      },
+      "at": "2026-09-30T11:14:59.812Z"
+    },
+    {
+      "label": "cross-snapchat-identifiers file #1",
+      "role": "advocate1",
+      "from": "0xba28354B5D1C2542bF5C512AF76aa9e5dE96DCD4",
+      "method": "file_cross_store",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.snapchat.android",
+        "https://apps.apple.com/us/app/snapchat/id447188370",
+        "identifiers",
+        "share"
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x07668f38f61b0cb522e0d3d83c086005a0d4840041e75edc66a54af6414978e8",
+      "seconds": 29,
+      "returned": {
+        "app_key": "google_play:com.snapchat.android",
+        "app_key2": "app_store:447188370",
+        "challenge_id": 1,
+        "filing_result": "CONTRADICTED",
+        "kind": "CROSS_STORE",
+        "respond_by": 1790767501,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:15:30.234Z"
+    },
+    {
+      "label": "cross-snapchat-identifiers respond",
+      "role": "dev1",
+      "from": "0x3c792109FE1Ce745BaCD902Bc24f0B14C4Fd0ab5",
+      "method": "respond",
+      "args": [
+        1,
+        "Our store declarations and policy are accurate; we contest this reading.",
+        ""
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x3b5ba0345f5462603bf22f8b05dcbdbff0c4e6cc42c4a2746ea66216fa3f250c",
+      "seconds": 9,
+      "returned": {
+        "challenge_id": 1,
+        "note": "anyone may now call judge(1)",
+        "respondent_verified": false,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:15:44.110Z"
+    },
+    {
+      "label": "cross-capcut-identifiers file #1",
+      "role": "advocate2",
+      "from": "0x4e3CFe4Fb96cCc5Ef1E2f4E6d164D70B412dCD39",
+      "method": "file_cross_store",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.lemon.lvoverseas",
+        "https://apps.apple.com/us/app/capcut-photo-video-editor/id1500855883",
+        "identifiers",
+        "share"
+      ],
+      "value": "500000000000000000",
+      "status": "FINALIZED",
+      "hash": "0xc967ca13197356cd3ff3f486902006260b25904704343612aa9c51eb005647bc",
+      "seconds": 80,
+      "returned": {
+        "app_key": "google_play:com.lemon.lvoverseas",
+        "app_key2": "app_store:1500855883",
+        "challenge_id": 2,
+        "filing_result": "CONTRADICTED",
+        "kind": "CROSS_STORE",
+        "respond_by": 1790767550,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:17:08.783Z"
+    },
+    {
+      "label": "cross-capcut-identifiers file #2",
+      "role": "advocate2",
+      "from": "0x4e3CFe4Fb96cCc5Ef1E2f4E6d164D70B412dCD39",
+      "method": "file_cross_store",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.lemon.lvoverseas",
+        "https://apps.apple.com/us/app/capcut-photo-video-editor/id1500855883",
+        "identifiers",
+        "share"
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x47c378dc5f5d34f716d50879ecb873d178e600cef247b9888cb8a093e4344354",
+      "seconds": 32,
+      "returned": {
+        "app_key": "google_play:com.lemon.lvoverseas",
+        "app_key2": "app_store:1500855883",
+        "challenge_id": 2,
+        "filing_result": "CONTRADICTED",
+        "kind": "CROSS_STORE",
+        "respond_by": 1790767680,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:18:30.903Z"
+    },
+    {
+      "label": "cross-capcut-identifiers respond",
+      "role": "dev2",
+      "from": "0x43529Ee4B62B8b527463609FfbE34251085190A0",
+      "method": "respond",
+      "args": [
+        2,
+        "Our store declarations and policy are accurate; we contest this reading.",
+        ""
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0xdf71455985f034e2d2a62f2438d5f60b3040ab3ab3f8a90d120bacb7e0bb59d2",
+      "seconds": 7,
+      "returned": {
+        "challenge_id": 2,
+        "note": "anyone may now call judge(2)",
+        "respondent_verified": false,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:18:43.174Z"
+    },
+    {
+      "label": "cross-whatsapp-location file #1",
+      "role": "advocate3",
+      "from": "0x35b54caD8d0257be04872e562756e26c6A03c5B9",
+      "method": "file_cross_store",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.whatsapp",
+        "https://apps.apple.com/us/app/whatsapp-messenger/id310633997",
+        "location",
+        "share"
+      ],
+      "value": "500000000000000000",
+      "status": "FINALIZED",
+      "hash": "0x0211c654ad722377d79a7fa84e7a1913b9e74fde8b979acb203bf538d5a05d58",
+      "seconds": 79,
+      "returned": {
+        "app_key": "google_play:com.whatsapp",
+        "app_key2": "app_store:310633997",
+        "challenge_id": 3,
+        "filing_result": "INCONCLUSIVE",
+        "kind": "CROSS_STORE",
+        "respond_by": 1790767729,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:20:07.338Z"
+    },
+    {
+      "label": "cross-whatsapp-location file #2",
+      "role": "advocate3",
+      "from": "0x35b54caD8d0257be04872e562756e26c6A03c5B9",
+      "method": "file_cross_store",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.whatsapp",
+        "https://apps.apple.com/us/app/whatsapp-messenger/id310633997",
+        "location",
+        "share"
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x7816c4cafb5acce41d1aaed68934196df41cace5f01ebc1ed096307067647ede",
+      "seconds": 27,
+      "returned": {
+        "app_key": "google_play:com.whatsapp",
+        "app_key2": "app_store:310633997",
+        "challenge_id": 3,
+        "filing_result": "INCONCLUSIVE",
+        "kind": "CROSS_STORE",
+        "respond_by": 1790767858,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:21:25.273Z"
+    },
+    {
+      "label": "cross-whatsapp-location respond",
+      "role": "dev3",
+      "from": "0x21605d6De722C694b9b6024B1198B7cD71Ecc338",
+      "method": "respond",
+      "args": [
+        3,
+        "Our store declarations and policy are accurate; we contest this reading.",
+        ""
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x7c41099a725386ea173232e9b0100fd66b0ebc3f6c8b29b1f011af1c2e9fe3c0",
+      "seconds": 7,
+      "returned": {
+        "challenge_id": 3,
+        "note": "anyone may now call judge(3)",
+        "respondent_verified": false,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:21:38.114Z"
+    },
+    {
+      "label": "policy-linkedin-identifiers#1 file #1",
+      "role": "advocate4",
+      "from": "0x983F9d6d8B7B9106959a11CA7E40523a9f1d78a3",
+      "method": "file_policy",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.linkedin.android",
+        "",
+        "identifiers",
+        "share"
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0xf2ca33dab3b7853a4beda30c707a5309a552fcd89dc7a0ad49c4de2b13612b53",
+      "seconds": 65,
+      "returned": {
+        "app_key": "google_play:com.linkedin.android",
+        "app_key2": "",
+        "challenge_id": 4,
+        "filing_result": "CONTRADICTED",
+        "kind": "POLICY_LABEL",
+        "respond_by": 1790767904,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:22:48.384Z"
+    },
+    {
+      "label": "policy-linkedin-identifiers#1 respond",
+      "role": "dev4",
+      "from": "0x3A6Df73eA4A9FC6F131Cc0Cd352baCfac5984563",
+      "method": "respond",
+      "args": [
+        4,
+        "Our store declarations and policy are accurate; we contest this reading.",
+        ""
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0xaa31b053149bca423b13674df5bec884967b8b3520b7c80c7895199be40cbd34",
+      "seconds": 10,
+      "returned": {
+        "challenge_id": 4,
+        "note": "anyone may now call judge(4)",
+        "respondent_verified": false,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:23:02.773Z"
+    },
+    {
+      "label": "policy-capcut-personal#1 file #1",
+      "role": "advocate5",
+      "from": "0x477d0c51F510F2D80Db486974030a7D4e4371D02",
+      "method": "file_policy",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.lemon.lvoverseas",
+        "",
+        "personal",
+        "share"
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x0494691b1f944b0f74c41e5dc1736c9c8364465b264939648453333f1006ecb4",
+      "seconds": 158,
+      "returned": {
+        "app_key": "google_play:com.lemon.lvoverseas",
+        "app_key2": "",
+        "challenge_id": 5,
+        "filing_result": "CONTRADICTED",
+        "kind": "POLICY_LABEL",
+        "respond_by": 1790767988,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:25:45.976Z"
+    },
+    {
+      "label": "policy-capcut-personal#1 respond",
+      "role": "dev1",
+      "from": "0x3c792109FE1Ce745BaCD902Bc24f0B14C4Fd0ab5",
+      "method": "respond",
+      "args": [
+        5,
+        "Our store declarations and policy are accurate; we contest this reading.",
+        ""
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x5e286a153202172c36c371588f0073277eb158fb1ba0119427e1c5b51a0a20ab",
+      "seconds": 7,
+      "returned": {
+        "challenge_id": 5,
+        "note": "anyone may now call judge(5)",
+        "respondent_verified": false,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:25:58.323Z"
+    },
+    {
+      "label": "policy-pinterest-identifiers#1 file #1",
+      "role": "advocate6",
+      "from": "0x752ca299dfc19e114d89670609F7Ab298170faAe",
+      "method": "file_policy",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.pinterest",
+        "",
+        "identifiers",
+        "share"
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0x5f5b60fb39f65f6f8e72ac197e50bdd77ecfdc422458715da8e454db1ea7c33e",
+      "seconds": 140,
+      "returned": {
+        "app_key": "google_play:com.pinterest",
+        "app_key2": "",
+        "challenge_id": 6,
+        "filing_result": "CLAIM_VERIFIED",
+        "kind": "POLICY_LABEL",
+        "respond_by": 1790768164,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:28:23.088Z"
+    },
+    {
+      "label": "policy-pinterest-identifiers#1 respond",
+      "role": "dev2",
+      "from": "0x43529Ee4B62B8b527463609FfbE34251085190A0",
+      "method": "respond",
+      "args": [
+        6,
+        "Our store declarations and policy are accurate; we contest this reading.",
+        ""
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0xb2b172b3353f6d2ddd5acce31045e580bf06163ce8b1aac15f15ee338a022860",
+      "seconds": 10,
+      "returned": {
+        "challenge_id": 6,
+        "note": "anyone may now call judge(6)",
+        "respondent_verified": false,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:28:37.951Z"
+    },
+    {
+      "label": "label-whatsapp-location#1 file #1",
+      "role": "advocate1",
+      "from": "0xba28354B5D1C2542bF5C512AF76aa9e5dE96DCD4",
+      "method": "file_challenge",
+      "args": [
+        "https://play.google.com/store/apps/details?id=com.whatsapp",
+        "",
+        "This app does not collect location data"
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0xd5fcb1a77d29b91854e7dce681f99d522300e17cb54cbb31f0df4b43dad5266a",
+      "seconds": 17,
+      "returned": {
+        "app_key": "google_play:com.whatsapp",
+        "app_key2": "",
+        "challenge_id": 7,
+        "filing_result": "CONTRADICTED,INCONCLUSIVE",
+        "kind": "LABEL",
+        "respond_by": 1790768323,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:29:00.046Z"
+    },
+    {
+      "label": "label-whatsapp-location#1 respond",
+      "role": "dev3",
+      "from": "0x21605d6De722C694b9b6024B1198B7cD71Ecc338",
+      "method": "respond",
+      "args": [
+        7,
+        "Our store declarations and policy are accurate; we contest this reading.",
+        ""
+      ],
+      "value": "500000000000000000",
+      "status": "ACCEPTED",
+      "hash": "0xa08faacf274be0147ca5f8a14ff189f1677a3e92415ed55235b795bdbd421c7b",
+      "seconds": 7,
+      "returned": {
+        "challenge_id": 7,
+        "note": "anyone may now call judge(7)",
+        "respondent_verified": false,
+        "stake_wei": "500000000000000000",
+        "status": "OK"
+      },
+      "at": "2026-09-30T11:29:12.087Z"
+    },
+    {
+      "label": "cross-snapchat-identifiers judge #1",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        1
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x12be2de0584a99bfe3b9765f9edd8eff68b59c1ee443f1634767e0a83d8742e2",
+      "seconds": 28,
+      "returned": {
+        "challenge_id": 1,
+        "content_hash": "71957fce99ed2347",
+        "contest_until": 1790768379,
+        "filing_result": "CONTRADICTED",
+        "judged": true,
+        "judgment_result": "CONTRADICTED",
+        "outcome": "CONTRADICTED",
+        "owed_advocate_wei": "900000000000000000",
+        "owed_protocol_wei": "50000000000000000",
+        "owed_respondent_wei": "50000000000000000",
+        "status": "OK",
+        "winner": "ADVOCATE"
+      },
+      "at": "2026-09-30T11:30:06.130Z"
+    },
+    {
+      "label": "cross-capcut-identifiers judge #1",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        2
+      ],
+      "value": "0",
+      "status": "FINALIZED",
+      "hash": "0xdfa2fd931522f905b83710ce132d7112e50b19b1a60bb8771d0b588f3a0efdcd",
+      "seconds": 79,
+      "returned": {
+        "challenge_id": 2,
+        "content_hash": "57dbb0d2432ce546",
+        "contest_until": 1790768434,
+        "filing_result": "CONTRADICTED",
+        "judged": true,
+        "judgment_result": "CONTRADICTED",
+        "outcome": "CONTRADICTED",
+        "owed_advocate_wei": "900000000000000000",
+        "owed_protocol_wei": "50000000000000000",
+        "owed_respondent_wei": "50000000000000000",
+        "status": "OK",
+        "winner": "ADVOCATE"
+      },
+      "at": "2026-09-30T11:31:52.568Z"
+    },
+    {
+      "label": "cross-capcut-identifiers judge #2",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        2
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0xae21e536fde1a6dbeeccd36e2cb8dfaa96fbfc187562a52c00229aec751347d7",
+      "seconds": 26,
+      "returned": {
+        "challenge_id": 2,
+        "content_hash": "57dbb0d2432ce546",
+        "contest_until": 1790768560,
+        "filing_result": "CONTRADICTED",
+        "judged": true,
+        "judgment_result": "CONTRADICTED",
+        "outcome": "CONTRADICTED",
+        "owed_advocate_wei": "900000000000000000",
+        "owed_protocol_wei": "50000000000000000",
+        "owed_respondent_wei": "50000000000000000",
+        "status": "OK",
+        "winner": "ADVOCATE"
+      },
+      "at": "2026-09-30T11:33:06.227Z"
+    },
+    {
+      "label": "cross-whatsapp-location judge #1",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        3
+      ],
+      "value": "0",
+      "status": "FINALIZED",
+      "hash": "0x5ac81d27434edcc41eded9cc451a6409891ab2470817c57ddca4b4d332903d4a",
+      "seconds": 74,
+      "returned": {
+        "challenge_id": 3,
+        "content_hash": "d4b868d2a7035996",
+        "contest_until": 0,
+        "filing_result": "INCONCLUSIVE",
+        "judged": true,
+        "judgment_result": "INCONCLUSIVE",
+        "outcome": "INCONCLUSIVE",
+        "owed_advocate_wei": "500000000000000000",
+        "owed_protocol_wei": "0",
+        "owed_respondent_wei": "500000000000000000",
+        "status": "OK",
+        "winner": "NONE"
+      },
+      "at": "2026-09-30T11:34:47.440Z"
+    },
+    {
+      "label": "cross-whatsapp-location judge #2",
+      "role": "trigger",
+      "from": "0x5869ce30507d5a69d166219e58ff6437885dec51",
+      "method": "judge",
+      "args": [
+        3
+      ],
+      "value": "0",
+      "status": "ACCEPTED",
+      "hash": "0x274b546890967810bd0edc39579b4d6aaea6c88b12e998cd4493e8177a11707f",
+      "seconds": 33,
+      "returned": {
+        "challenge_id": 3,
+        "content_hash": "d4b868d2a7035996",
+        "contest_until": 0,
+        "filing_result": "INCONCLUSIVE",
+        "judged": true,
+        "judgment_result": "INCONCLUSIVE",
+        "outcome": "INCONCLUSIVE",
+        "owed_advocate_wei": "500000000000000000",
+        "owed_protocol_wei": "0",
+        "owed_respondent_wei": "500000000000000000",
+        "status": "OK",
+        "winner": "NONE"
+      },
+      "at": "2026-09-30T11:36:07.040Z"
+    }
+  ],
+  "cases": {
+    "cross-snapchat-identifiers": 1,
+    "cross-capcut-identifiers": 2,
+    "cross-whatsapp-location": 3,
+    "policy-linkedin-identifiers#1": 4,
+    "policy-capcut-personal#1": 5,
+    "policy-pinterest-identifiers#1": 6,
+    "label-whatsapp-location#1": 7
+  },
+  "reads": {}
+}

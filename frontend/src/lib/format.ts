@@ -97,11 +97,26 @@ const KNOWN: Record<string, string> = {
   "app_store:389801252": "Instagram",
   "app_store:310633997": "WhatsApp",
   "app_store:324684580": "Spotify",
+  "google_play:com.facebook.orca": "Messenger",
+  "google_play:com.lemon.lvoverseas": "CapCut",
+  "app_store:1500855883": "CapCut",
+  "app_store:447188370": "Snapchat",
+  "google_play:com.einnovation.temu": "Temu",
+  "app_store:429047995": "Pinterest",
+  "app_store:284882215": "Facebook",
 };
 
 export function appName(key: string, label: string): string {
   if (KNOWN[key]) return KNOWN[key];
-  const base = label.startsWith("id") && /^id\d+$/.test(label) ? label : label.split(".").pop() ?? label;
+  // Package ids end in generic words (com.linkedin.android, com.reddit.frontpage);
+  // the brand is the last segment that is not one of them.
+  const GENERIC = new Set(["android", "app", "apps", "mobile", "frontpage", "client", "main", "prod", "release", "katana", "orca"]);
+  const segs = label.split(".").filter(Boolean);
+  let pick = segs[segs.length - 1] ?? label;
+  for (let i = segs.length - 1; i >= 1; i--) {
+    if (!GENERIC.has(segs[i].toLowerCase())) { pick = segs[i]; break; }
+  }
+  const base = /^id\d+$/.test(label) ? label : pick;
   return base
     .split(/[-_]/)
     .filter(Boolean)

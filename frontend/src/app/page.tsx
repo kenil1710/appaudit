@@ -58,7 +58,7 @@ export default function Landing() {
         <Wordmark />
         <nav style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
           <Link href="/docs" className="btn btn-sm btn-ghost hide-sm"><FileText size={14} /> Docs</Link>
-          <Link href="/challenges" className="btn btn-sm btn-ghost"><ListChecks size={14} /> Results</Link>
+          <Link href="/v2" className="btn btn-sm btn-ghost"><ListChecks size={14} /> Cases</Link>
         </nav>
       </header>
       <PageShell>
@@ -82,9 +82,12 @@ export default function Landing() {
                 Validators read the store listing. The listing doesn&apos;t lie.
               </motion.p>
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <Link href="/challenge" className="btn btn-primary"><ShieldPlus size={16} /> Challenge an app</Link>
-                <Link href="/challenges" className="btn btn-ghost"><ListChecks size={16} /> Browse results</Link>
+                <Link href="/v2/file" className="btn btn-primary"><ShieldPlus size={16} /> File a case</Link>
+                <Link href="/v2" className="btn btn-ghost"><ListChecks size={16} /> Browse v2 cases</Link>
               </motion.div>
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }} className="muted mono" style={{ fontSize: "0.78rem", margin: "18px 0 0", maxWidth: 520 }}>
+                v2: Google Play against the App Store · the linked privacy policy against the label · verified developers · evidence frozen at filing · pull payouts. <Link href="/docs#v2" style={{ color: "var(--cyan)" }}>What&apos;s new</Link> · <Link href="/challenges" style={{ color: "var(--text-2)" }}>v1 results</Link>
+              </motion.p>
             </div>
             <HeroVisual />
           </div>

@@ -3,18 +3,29 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { BookOpen, LayoutGrid, ListChecks, LogOut, Menu, Radio, ShieldPlus, Wallet, X } from "lucide-react";
+import { BadgeCheck, BookOpen, Coins, FilePlus2, History, LayoutGrid, ListChecks, LogOut, Menu, Radio, ShieldPlus, Wallet, X } from "lucide-react";
 import { Wordmark } from "./Logo";
 import { useWallet } from "./WalletProvider";
 import { NETWORK_LABEL } from "@/lib/genlayer";
 import { short } from "@/lib/format";
 
 export const NAV = [
-  { href: "/challenge", label: "Challenge", icon: ShieldPlus },
-  { href: "/challenges", label: "Results", icon: ListChecks },
-  { href: "/apps", label: "Apps", icon: LayoutGrid },
+  { href: "/v2/file", label: "File", icon: FilePlus2 },
+  { href: "/v2", label: "Cases", icon: ListChecks },
+  { href: "/v2/apps", label: "Apps", icon: LayoutGrid },
+  { href: "/v2/timeline", label: "Timeline", icon: History },
+  { href: "/v2/developer", label: "Developer", icon: BadgeCheck },
+  { href: "/v2/balance", label: "Balance", icon: Coins },
   { href: "/docs", label: "Docs", icon: BookOpen },
+  { href: "/challenges", label: "v1", icon: ShieldPlus },
 ];
+
+function isActive(href: string, path: string): boolean {
+  if (href === "/v2") return path === "/v2" || path.startsWith("/v2/case");
+  if (href === "/v2/apps") return path.startsWith("/v2/apps") || path.startsWith("/v2/app");
+  if (href === "/challenges") return ["/challenge", "/challenges", "/apps"].some((p) => path === p || path.startsWith("/challenge/"));
+  return path === href || path.startsWith(href + "/");
+}
 
 export function NetworkBadge() {
   const { account, onRightNetwork, switchNetwork } = useWallet();
@@ -62,16 +73,16 @@ export function AppHeader() {
         <Link href="/" aria-label="AppAudit home">
           <Wordmark />
         </Link>
-        <nav className="hide-sm" style={{ display: "flex", gap: 4, marginLeft: 18 }}>
+        <nav className="hide-md" style={{ display: "flex", gap: 2, marginLeft: 14 }}>
           {NAV.map(({ href, label, icon: Icon }) => {
-            const active = href === "/challenge" ? path === href : path === href || path.startsWith(href + "/") || (href === "/challenges" && path.startsWith("/challenge/"));
+            const active = isActive(href, path);
             return (
               <Link
                 key={href}
                 href={href}
                 className="mono"
                 style={{
-                  display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 12px", borderRadius: 10, fontSize: "0.82rem",
+                  display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 9px", borderRadius: 10, fontSize: "0.78rem",
                   color: active ? "var(--cyan)" : "var(--text-2)", background: active ? "var(--cyan-dim)" : "transparent",
                 }}
               >
@@ -83,13 +94,13 @@ export function AppHeader() {
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 10 }}>
           <span className="hide-sm"><NetworkBadge /></span>
           <WalletButton />
-          <button className="btn btn-sm btn-ghost show-sm" aria-label="Menu" onClick={() => setOpen(!open)}>
+          <button className="btn btn-sm btn-ghost show-md" aria-label="Menu" onClick={() => setOpen(!open)}>
             {open ? <X size={16} /> : <Menu size={16} />}
           </button>
         </div>
       </div>
       {open && (
-        <nav className="show-sm container" style={{ display: "grid", gap: 4, paddingBottom: 14 }}>
+        <nav className="show-md container" style={{ display: "grid", gap: 4, paddingBottom: 14 }}>
           {NAV.map(({ href, label, icon: Icon }) => (
             <Link key={href} href={href} onClick={() => setOpen(false)} className="mono" style={{ display: "flex", gap: 10, alignItems: "center", padding: "10px 8px", color: "var(--text-2)" }}>
               <Icon size={16} /> {label}

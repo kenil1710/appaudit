@@ -1,5 +1,110 @@
 # AppAudit
 
+**An app's privacy declarations, tested against each other — and against the claims made about them.**
+
+| | |
+|---|---|
+| **Network** | GenLayer Studio Dev (chain `61997`), [explorer](https://explorer-studio-dev.genlayer.com/) |
+| **AppAudit v2 — demo** (the app and the seeds; 10-minute windows) | `0xC7502668d39e8BEA9795F1cEBd705cc267420793` |
+| **AppAudit v2 — canonical** (48h / 24h / 48h, 300s cooldown) | `0x088beDF9fB702C94f140A8c6d4e619d8B53da102` |
+| **AppTrustConsumerV2** (custody false, zero payable methods) | `0xc9a0928A910d59F23AD612fAABaEd041FE5c0294` |
+| **AppAudit v1 — demo / canonical** | `0x060cFC326B19F3DD4B839dEa75924Fd2935be61C` / `0xbbdf68A0616e44Fb57d64386b19fa80b055d6257` |
+| **AppTrustConsumer v1** | `0x5b6F3FBCD4f4aFAA763Fa13Bd9eD39AfD2C5773F` |
+| **Live app** | https://appaudit-genlayer.vercel.app |
+| **Offline tests** | v2: `python3 test/test_v2.py` · v1: `python3 test/test_logic.py` (492) — stdlib only |
+| **Audits** | `python3 tools/audit_v2.py` (39) · `python3 tools/audit.py` (33) · `node tools/verify_source.mjs` |
+
+Full addresses, deploy transactions, commit and sha256: [`ADDRESSES.md`](ADDRESSES.md).
+
+## v2
+
+### What's new
+
+1. **Cross-store mismatch.** One data type, both store listings of the same
+   app. Validators render both labels and reduce each to v1's canonical form;
+   **code** compares: one store declares the type collected/shared, the other
+   states in terms that nothing is → CONTRADICTED; one store silent →
+   INCONCLUSIVE (silence is never evidence). Both listings' HTML is read at
+   filing and the case is **refused unless they are the same app** (same first
+   title word, and the same normalised developer name or website domain).
+2. **Policy vs label.** The privacy policy **linked from the listing** — found
+   by validators in its HTML at filing, never supplied — is read by the model
+   into a fixed enum per data type (SHARED / COLLECTED / NOT_MENTIONED) plus one
+   sentence; **code** checks the sentence appears verbatim in the fetched policy
+   (else NOT_MENTIONED) and compares with the label. Only the enum and a hash of
+   the sentence are stored. Oversized or truncated policies are refused at
+   filing and INCONCLUSIVE at judgment, never VERIFIED. The policy is untrusted
+   data: delimited, with marker lines defanged; an obeyed injection can at worst
+   make a reading INCONCLUSIVE.
+3. **Verified developer.** `register_developer(app)`: validators fetch
+   `https://<website from the listing>/.well-known/appaudit.txt`, which must
+   name the caller's wallet. Then only that wallet may respond or contest for
+   that listing; apps without one keep v1 behaviour and every case shows
+   "respondent unverified". Re-verification after a cooldown, history kept,
+   permissionless `recheck_developer` revokes if the website or file changed.
+4. **Evidence frozen at filing + label timeline.** Every filing is a consensus
+   round that stores the evidence's hash and a compact canonical copy.
+   Contradiction at filing and at judgment → CONTRADICTED; at filing, fixed and
+   edited by judgment → **CORRECTED** (the advocate wins; both snapshots and
+   dates are on the record). `snapshot(app)` (fee, no stake, 4 per listing per
+   day) and `timeline(app)` with diffs computed by code.
+5. **Pull payouts.** Every v2 payout, refund and fee is a claimable balance;
+   `withdraw()` zeroes it, then sends. `balance == open stakes + claimable +
+   protocol fees` is published and checked after every offline transaction.
+6. **`AppTrustConsumerV2.app_record(app)`**: final CONTRADICTED / VERIFIED /
+   CORRECTED / INCONCLUSIVE counts, the verified-developer flag, the last
+   snapshot time. Still no value, no payable methods.
+
+v1's claim type is kept inside v2 unchanged (`file_challenge`), now with
+frozen evidence and CORRECTED.
+
+### What the model never decides
+
+Which pages are fetched · whether two listings are the same app · who the
+developer is · whether a label declares, denies or is silent about a type ·
+whether a quote is real · any cross-store or policy verdict · CORRECTED · the
+timeline · any amount, balance or transfer. The model does two things: v1's
+claim reading inside v1's evidence bracket, and filling the policy enum.
+
+### Seeded on chain (real apps only)
+
+<!-- SEEDS -->
+
+Everything above is read back from the chain into [`docs/SEEDS.md`](docs/SEEDS.md)
+(explorer links, model agreement across two runs, snapshots, withdrawals,
+consumer reads). Measurements that shaped v2: [`docs/PROBE_V2.md`](docs/PROBE_V2.md)
+(24 popular apps dry-run on both stores). Threats and their tests:
+[`docs/THREAT_MODEL_V2.md`](docs/THREAT_MODEL_V2.md). Own audit:
+[`docs/AUDIT_V2.md`](docs/AUDIT_V2.md).
+
+### Known limits
+
+- **Self-declared evidence.** v2 compares the developer's declarations with
+  each other; a developer consistent everywhere is not caught.
+- **Tracking stands in for sharing on the App Store**, which publishes no
+  sharing declaration. Both real cross-store contradictions rest on it; each
+  case says so.
+- **The identity success path runs only in tests.** No real app's website
+  publishes `/.well-known/appaudit.txt`; live, only the refusals run (file
+  served but wallet absent: Temu, Pinterest; no file: Snapchat).
+- **CORRECTED is proven offline only.** It needs a real label to change inside
+  a 10-minute window; none did during the seeds.
+- **Model disagreement stalls, it never decides.** Validators must agree on the
+  enum exactly; if they do not, nothing is stored and `settle_stalled` returns
+  both stakes after the window.
+- **The policy quote is shown by locating its hash in the live policy.** For
+  script-rendered policies (CapCut's US section) the site cannot locate it and
+  shows the hash only.
+- **Studio Dev does not execute value transfers** (measured for both stages,
+  PROBE_V2 §5): `withdraw()` books the payment and zeroes the balance;
+  `get_stats.undelivered_wei` reports what the network has not delivered.
+- **Studio Dev can finalize a round with no state applied** when validators
+  time out; scripts and the app read state back rather than trusting receipts.
+
+---
+
+## v1
+
 **Mobile app privacy claims, tested against the app's own store listing.**
 
 Apps claim privacy practices. Their store listings — the data-safety forms the
@@ -229,23 +334,30 @@ record_listing(app_url)  -> records the decision on chain
 ## Repository
 
 ```
-contracts/AppAudit.py          the contract (v0.6 format, pinned runner)
-contracts/AppTrustConsumer.py  the marketplace consumer
-contracts/NOTES.md             design reasoning and hazards
-contracts/_render_probe.py     the measurement contract
-test/test_logic.py             492 offline tests, stdlib only
-test/fixtures/                 real pages rendered by Studio validators
-test/deploy.mjs · seed.mjs · collect.mjs
-tools/audit.py                 the 33-check rejection ledger
-tools/shots.mjs                screenshots + console / 390px overflow audit
-docs/PROBE.md                  what was measured
-docs/EVIDENCE.md               the seeded lifecycle, read back from the chain
-frontend/                      Next.js app
+contracts/AppAuditV2.py          v2: LABEL, CROSS_STORE, POLICY_LABEL, identity, snapshots, pull payouts
+contracts/AppTrustConsumerV2.py  v2 consumer: app_record(app)
+contracts/AppAudit.py            v1 (unchanged, byte-identical to its deployments)
+contracts/AppTrustConsumer.py    v1 consumer
+contracts/NOTES.md               v1 design reasoning
+contracts/_render_probe.py · _probe_v2.py · _probe_pay.py   measurement contracts
+test/test_v2.py                  v2 offline suite (every threat-model item)
+test/test_logic.py               v1 offline suite (492)
+test/fixtures/, test/fixtures/v2 real pages rendered by Studio validators / served by the stores
+test/deploy_v2.mjs · seed_v2.mjs · collect_v2.mjs   deploy from HEAD, seed, read back
+test/deploy.mjs · seed.mjs · collect.mjs            v1
+tools/audit_v2.py · audit.py     rejection ledgers (39 / 33 checks)
+tools/verify_source.mjs          code read back from Studio Dev == HEAD, all six contracts
+tools/shots.mjs                  screenshots + console / 390px overflow audit
+docs/SEEDS.md · PROBE_V2.md · THREAT_MODEL_V2.md · AUDIT_V2.md · TASKS.md   v2
+docs/EVIDENCE.md · PROBE.md      v1
+ADDRESSES.md                     every address, commit and sha256
+frontend/                        Next.js app (v2 under /v2, v1 pages kept)
 ```
 
 ```bash
-python3 test/test_logic.py          # offline suite
-python3 tools/audit.py              # rejection ledger + source == deployed
-cd test && npm ci && node deploy.mjs --both && node seed.mjs && node collect.mjs
+python3 test/test_v2.py && python3 test/test_logic.py       # offline suites
+python3 tools/audit_v2.py && python3 tools/audit.py         # rejection ledgers + source == deployed
+node tools/verify_source.mjs                                # read code back from the chain
+cd test && npm ci && node deploy_v2.mjs --all && caffeinate -dims node seed_v2.mjs && node collect_v2.mjs
 cd frontend && npm ci && cp .env.example .env.local && npm run dev
 ```

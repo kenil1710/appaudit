@@ -2,14 +2,24 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Apple, BookOpen, Calculator, Code2, Cpu, ExternalLink, HelpCircle, Rocket, Scale, Search, ShieldPlus, Smartphone, Store } from "lucide-react";
+import { Apple, BadgeCheck, BookOpen, Calculator, Camera, Code2, Coins, Cpu, ExternalLink, GitCompareArrows, HelpCircle, Lock, Rocket, Scale, ScrollText, Search, ShieldPlus, Smartphone, Sparkles, Store, Wrench } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { useConfig } from "@/lib/hooks";
 import { CANONICAL_ADDRESS, CONSUMER_ADDRESS, CONTRACT_ADDRESS } from "@/lib/genlayer";
 import { duration, gen } from "@/lib/format";
+import { V2_ADDRESS, V2_CANONICAL_ADDRESS, V2_CONSUMER_ADDRESS } from "@/lib/v2";
 
 const TOC = [
-  { id: "start", label: "Getting started", icon: Rocket },
+  { id: "v2", label: "What's new in v2", icon: Sparkles },
+  { id: "cross", label: "Cross-store mismatch", icon: GitCompareArrows },
+  { id: "policy", label: "Policy vs label", icon: ScrollText },
+  { id: "developer", label: "Verified developer", icon: BadgeCheck },
+  { id: "frozen", label: "Frozen evidence · CORRECTED", icon: Wrench },
+  { id: "timeline", label: "Snapshots & timeline", icon: Camera },
+  { id: "payouts", label: "Pull payouts", icon: Coins },
+  { id: "never", label: "What the model never decides", icon: Lock },
+  { id: "v2integrate", label: "app_record for marketplaces", icon: Code2 },
+  { id: "start", label: "v1 · Getting started", icon: Rocket },
   { id: "how", label: "How challenges work", icon: ShieldPlus },
   { id: "check", label: "What validators check", icon: Search },
   { id: "platforms", label: "Google Play vs App Store", icon: Store },
@@ -34,7 +44,7 @@ export default function Docs() {
   const minStake = gen(c?.min_stake_wei ?? "500000000000000000");
   const contestStake = gen(c?.contest_stake_wei ?? "300000000000000000");
   return (
-    <AppShell eyebrow="Documentation" title="How AppAudit works" blurb="Everything the contract decides, and exactly which part of it GenLayer decides.">
+    <AppShell eyebrow="Documentation" title="How AppAudit works" blurb="Everything the contracts decide, and exactly which part of it GenLayer decides. v2 first; the v1 reference follows.">
       <div className="docs-grid">
         <nav className="glass panel docs-nav" style={{ display: "grid", gap: 4 }}>
           <div className="eyebrow" style={{ marginBottom: 6 }}><BookOpen size={12} style={{ verticalAlign: -1 }} /> Contents</div>
@@ -43,7 +53,71 @@ export default function Docs() {
           ))}
         </nav>
         <div style={{ display: "grid", gap: 18, minWidth: 0 }}>
-          <Block id="start" icon={Rocket} title="Getting started">
+          <Block id="v2" icon={Sparkles} title="What's new in v2">
+            <p style={{ margin: 0 }}>v1 tests one English claim against one store listing. <b>v2 keeps that</b> (as the &ldquo;claim vs label&rdquo; kind, same rules) and tests an app&apos;s declarations <b>against each other</b>: the Google Play label against the App Store label, and the privacy policy the listing links to against the label. It adds verified developers, evidence frozen at filing, a label timeline and pull payouts.</p>
+            <div className="hash">v2 demo instance (this app; 10-minute windows) · {V2_ADDRESS}</div>
+            <div className="hash">v2 canonical instance (48h / 24h / 48h, 300s cooldown) · {V2_CANONICAL_ADDRESS}</div>
+            <div className="hash">AppTrustConsumerV2 · {V2_CONSUMER_ADDRESS}</div>
+            <p style={{ margin: 0 }}>Start at <Link href="/v2/file" style={{ color: "var(--cyan)" }}>File a case</Link>. Every case walks FILED → RESPONDED → SETTLED → FINALIZED; every wait has a deadline and a permissionless exit: <span style={code}>default_judgment</span> after the response window, <span style={code}>settle_stalled</span> after the stall window, <span style={code}>finalize</span> after the contest window.</p>
+          </Block>
+
+          <Block id="cross" icon={GitCompareArrows} title="Cross-store mismatch">
+            <p style={{ margin: 0 }}>Name one data type from the frozen list, a collection or sharing axis, and both listings. At filing, every validator renders <b>both labels</b> (canonical, sorted form) and GETs <b>both listings&apos; HTML</b> for their title, developer name and website. The filing is refused unless the two are the <b>same app</b>: the first word of the titles matches, and the developer names match after normalising (&ldquo;Snap Inc&rdquo; = &ldquo;Snap, Inc.&rdquo;) or the website domains match. Instagram&apos;s Play listing with Facebook&apos;s App Store listing is refused; so is Messenger with Facebook.</p>
+            <p style={{ margin: 0 }}><b>Code</b> compares: one store declares the type and the other states, in terms, that nothing is collected / shared → <b style={{ color: "var(--hot)" }}>contradicted</b>. Both say the same explicit thing → <b style={{ color: "var(--green)" }}>consistent</b>. One store silent → <b>inconclusive</b>: silence is never evidence. No model is asked. The App Store publishes no sharing declaration, so its &ldquo;Data Used to Track You&rdquo; list stands in for sharing, and every such case says so.</p>
+          </Block>
+
+          <Block id="policy" icon={ScrollText} title="Policy vs label">
+            <p style={{ margin: 0 }}>The policy is <b>the one the listing links to</b>, found by validators in the listing&apos;s HTML at filing — there is no parameter for it — and frozen onto the case; judgment reads the same URL. A policy over {(120000).toLocaleString()} characters, unreadable, or not linked is refused at filing, so no stake is ever locked on evidence that can only be inconclusive.</p>
+            <p style={{ margin: 0 }}>The model reads the policy as <b>untrusted data</b> between markers (any line that would close the marker is rewritten first) and returns only a fixed enum per data type — <span style={code}>SHARED</span>, <span style={code}>COLLECTED</span> or <span style={code}>NOT_MENTIONED</span> — plus one sentence copied from the policy. <b>Code</b> checks the sentence appears verbatim in the policy it fetched (else that entry becomes NOT_MENTIONED), and every validator checks the leader&apos;s sentence against its own fetch. Policy says SHARED, label says &ldquo;No data shared&rdquo; → contradicted. Only the enum and a hash of the sentence are stored; the page shows the sentence by finding the one with that hash in the live policy.</p>
+          </Block>
+
+          <Block id="developer" icon={BadgeCheck} title="Verified developer">
+            <p style={{ margin: 0 }}><Link href="/v2/developer" style={{ color: "var(--cyan)" }}>register_developer(app)</Link>: validators read the developer website <b>off the listing</b> and fetch <span style={code}>https://&lt;that host&gt;/.well-known/appaudit.txt</span>. It must answer 200 and contain the caller&apos;s full address. From then on only that wallet can respond to or contest cases about that listing; apps without one keep v1 behaviour and every case shows <b>respondent unverified</b>.</p>
+            <p style={{ margin: 0 }}>Re-verification (new file, new wallet, new host) is allowed once per cooldown and every event is kept. <span style={code}>recheck_developer</span> is permissionless: if the listing&apos;s website moved or the file no longer names the wallet, the verification is revoked. Rechecks keep their own clock, so nobody can recheck a developer out of re-verifying.</p>
+          </Block>
+
+          <Block id="frozen" icon={Wrench} title="Evidence frozen at filing · CORRECTED">
+            <p style={{ margin: 0 }}>Every filing is a consensus round that captures the evidence — the canonical labels, the policy enum — and stores its hash and a compact canonical copy. Judgment fetches everything again.</p>
+            <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 4 }}>
+              <li>Contradiction at filing <b>and</b> at judgment → <b style={{ color: "var(--hot)" }}>CONTRADICTED</b>.</li>
+              <li>At filing, gone at judgment, the label <b>edited</b> and still readable → <b style={{ color: "var(--amber)" }}>CORRECTED</b>: the advocate wins, and the record shows both snapshots and dates.</li>
+              <li>Not at filing → the normal rules. An unreadable listing at judgment is not a fix; it is inconclusive.</li>
+            </ul>
+            <p style={{ margin: 0 }}>CORRECTED requires the code&apos;s own measurement that the label changed, so a model reading the same policy differently twice can never manufacture one.</p>
+          </Block>
+
+          <Block id="timeline" icon={Camera} title="Snapshots & timeline">
+            <p style={{ margin: 0 }}><Link href="/v2/timeline" style={{ color: "var(--cyan)" }}>snapshot(app)</Link>: anyone, for a fee and no stake, records a listing&apos;s current canonical label (at most 4 per listing per UTC day). <span style={code}>timeline(app)</span> returns every snapshot — including those taken at filings and judgments — with the diff against the previous one computed by the contract: data types added or removed per declaration.</p>
+          </Block>
+
+          <Block id="payouts" icon={Coins} title="Pull payouts">
+            <p style={{ margin: 0 }}>No v2 path pushes value. Settlement credits <b>claimable balances</b>; <Link href="/v2/balance" style={{ color: "var(--cyan)" }}>withdraw()</Link> zeroes the caller&apos;s balance and then sends it, so a second call finds nothing. Protocol fees go to the fee recipient&apos;s own balance (<span style={code}>withdraw_fees</span>). The books publish <span style={code}>balance == open stakes + claimable + protocol fees</span>, checked offline after every transaction. Studio Dev queues value transfers without executing them (measured for both stages), which the stats report as undelivered.</p>
+          </Block>
+
+          <Block id="never" icon={Lock} title="What the model never decides">
+            <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 4 }}>
+              <li>Which pages are read — URLs are rebuilt from app ids or read off the listing.</li>
+              <li>Whether two listings are the same app, or who the developer is.</li>
+              <li>Whether a label declares, denies or is silent about a data type.</li>
+              <li>Whether a quote is real — code checks it verbatim.</li>
+              <li>Any verdict of the cross-store or policy kinds — code compares the enum with the label.</li>
+              <li>CORRECTED, the timeline diffs, any amount, any balance, any transfer.</li>
+            </ul>
+            <p style={{ margin: 0 }}>The model does two things only: the v1 claim reading (inside v1&apos;s evidence bracket), and classifying a policy into the fixed enum.</p>
+          </Block>
+
+          <Block id="v2integrate" icon={Code2} title="app_record for marketplaces">
+            <pre className="privacy">{`consumerV2.app_record(app_url) -> {
+  contradicted, verified, corrected, inconclusive,   # FINAL verdicts only
+  verified_developer, developer_wallet,
+  last_snapshot_at, snapshots, trust_score
+}
+# score = 70 + 10*verified - 35*contradicted - 10*corrected + 5 if verified developer
+# custody false, zero payable methods, no transfers`}</pre>
+            <div className="hash">AppTrustConsumerV2 · {V2_CONSUMER_ADDRESS}</div>
+          </Block>
+
+          <Block id="start" icon={Rocket} title="v1 · Getting started">
             <p style={{ margin: 0 }}>AppAudit runs on <b>GenLayer Studio Devnet</b> (chain 61997). Studio is faucet-funded: add the network from the wallet button (the app switches you automatically), then fund your address from the <a href="https://studio.genlayer.com" target="_blank" rel="noreferrer" style={{ color: "var(--cyan)" }}>Studio faucet <ExternalLink size={11} /></a>.</p>
             <ol style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 4 }}>
               <li>Install MetaMask (or any EIP-1193 wallet).</li>

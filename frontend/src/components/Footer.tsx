@@ -9,13 +9,14 @@ export function Footer() {
         <div style={{ maxWidth: 360 }}>
           <Wordmark />
           <p className="muted" style={{ fontSize: "0.85rem", margin: "12px 0 0" }}>
-            Privacy claims tested against the app&apos;s own store listing. GenLayer reads the listing; deterministic code moves the money.
+            An app&apos;s privacy declarations, tested against each other: both store listings and its linked policy. Validators fetch the evidence; code decides and moves the money.
           </p>
         </div>
         <div style={{ display: "grid", gap: 8, fontSize: "0.86rem" }} className="mono">
-          <Link href="/challenge" style={{ display: "flex", gap: 8, alignItems: "center" }}><ShieldPlus size={14} /> Challenge an app</Link>
-          <Link href="/challenges" style={{ display: "flex", gap: 8, alignItems: "center" }}><ListChecks size={14} /> Browse results</Link>
-          <Link href="/apps" style={{ display: "flex", gap: 8, alignItems: "center" }}><LayoutGrid size={14} /> Audited apps</Link>
+          <Link href="/v2/file" style={{ display: "flex", gap: 8, alignItems: "center" }}><ShieldPlus size={14} /> File a case</Link>
+          <Link href="/v2" style={{ display: "flex", gap: 8, alignItems: "center" }}><ListChecks size={14} /> v2 cases</Link>
+          <Link href="/v2/apps" style={{ display: "flex", gap: 8, alignItems: "center" }}><LayoutGrid size={14} /> App records</Link>
+          <Link href="/challenges" style={{ display: "flex", gap: 8, alignItems: "center" }}><ListChecks size={14} /> v1 results</Link>
         </div>
         <div style={{ display: "grid", gap: 8, fontSize: "0.86rem" }} className="mono">
           <Link href="/docs" style={{ display: "flex", gap: 8, alignItems: "center" }}><BookOpen size={14} /> Docs</Link>

@@ -332,6 +332,39 @@ a {
   }
 }
 
+/* v2 has eight destinations: the header collapses to the menu below 1100px */
+@media (max-width: 1100px) {
+  .hide-md {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1101px) {
+  .show-md {
+    display: none !important;
+  }
+}
+
+.split > *,
+.grid-cards > * {
+  min-width: 0;
+}
+
+.hash {
+  overflow-wrap: anywhere;
+}
+
+.chip-wrap {
+  white-space: normal !important;
+  height: auto !important;
+  overflow-wrap: anywhere;
+}
+
+.privacy {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .docs-grid {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
