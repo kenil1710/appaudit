@@ -104,6 +104,58 @@
             "commit_note": "deployed from 8f9db85 before the history rewrite; the same tree is commit d52d5e1"
           }
         }
+      },
+      "AppAuditV2": {
+        "address": "0xB5F63383ED934e8eAa11cCc0510266481038092F",
+        "deploy_tx": "0xe3cce2f527a61af2cef3f7864b41b6f888285180dda1c87aa80dd88036a471a8",
+        "commit": "5e7c6b42d0082c8a8484cec8d35544af574ebfd4",
+        "source_path": "contracts/AppAuditV2.py",
+        "source_bytes": 218447,
+        "source_sha256": "774e7b1d96a3e85968174c02d001ea214e4650b92f9ccb3b2e62879f66833862",
+        "owner": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+        "rubric_version": "2.0.0",
+        "min_stake_wei": "500000000000000000",
+        "contest_stake_wei": "300000000000000000",
+        "response_window_s": 172800,
+        "contest_window_s": 86400,
+        "stall_ttl_s": 172800,
+        "file_cooldown_s": 300,
+        "snapshot_fee_wei": "10000000000000000",
+        "reverify_cooldown_s": 86400,
+        "deployed_at": "2026-09-30T15:37:11.249Z"
+      },
+      "AppAuditV2Demo": {
+        "address": "0xb9141A125Ec557e77BDF7F97B409b460Cf44cd53",
+        "deploy_tx": "0x30879c67d962e851f40298ad26cd002af5d07e9a18e7d6b16db212c67f7f7451",
+        "commit": "5e7c6b42d0082c8a8484cec8d35544af574ebfd4",
+        "source_path": "contracts/AppAuditV2.py",
+        "source_bytes": 218447,
+        "source_sha256": "774e7b1d96a3e85968174c02d001ea214e4650b92f9ccb3b2e62879f66833862",
+        "owner": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+        "rubric_version": "2.0.0",
+        "min_stake_wei": "500000000000000000",
+        "contest_stake_wei": "300000000000000000",
+        "response_window_s": 600,
+        "contest_window_s": 600,
+        "stall_ttl_s": 600,
+        "file_cooldown_s": 0,
+        "snapshot_fee_wei": "10000000000000000",
+        "reverify_cooldown_s": 300,
+        "deployed_at": "2026-09-30T15:37:27.790Z"
+      },
+      "AppTrustConsumerV2": {
+        "address": "0x18a81690aF1f3485fF7d14eFfef03AcFE3522719",
+        "deploy_tx": "0x119479b7e9a762e4e727e4186a8acbd6cdee72347b90183a8bdd6d69496386e0",
+        "commit": "5e7c6b42d0082c8a8484cec8d35544af574ebfd4",
+        "source_path": "contracts/AppTrustConsumerV2.py",
+        "source_bytes": 10076,
+        "source_sha256": "d8c3c291477d6b33f41f1e21d2725f4570f21c57f63b275c4cdad9e0b7b8833f",
+        "audit": "0xb9141A125Ec557e77BDF7F97B409b460Cf44cd53",
+        "min_score": 50,
+        "owner": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+        "custody": false,
+        "payable_methods": 0,
+        "deployed_at": "2026-09-30T15:37:37.132Z"
       }
     }
   }
