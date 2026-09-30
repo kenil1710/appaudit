@@ -1,5 +1,5 @@
 #META {"len": 19347, "status": 0, "err": ""}
-#TX 0x157a5eeb889e4df6b7825f272b206313af7ccab71e5139d452eac1d6ebfa4fd2
+#TX 0xa3b91d12f8c4b40f79aee4bcd50149b9635591a758e0e349054a4d2bf61ca2ab
 CapCut US Privacy Policy
 
 Last Updated: April 15, 2026

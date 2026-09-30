@@ -31,6 +31,26 @@ column is the test or check that now guards it.
 | 13 | frontend | Two pages scrolled sideways at 390 px (long unbreakable hashes and badges in grid cells). | Grid children `min-width: 0`, hashes wrap anywhere, long badges wrap. | `tools/shots.mjs`: no overflow and no console errors at 1440 and 390 px on every v2 page |
 | 14 | frontend | Google Play package names produced "Android" as an app's name (`com.linkedin.android`). | The name skips generic trailing segments; known apps are named explicitly. | screenshots |
 
+## Round 2 — independent attack round
+
+An attacker wrote `test/test_attacks_v2.py`: 13 tests, all failing against
+the first v2 deployment. All ten findings were fixed, the 13 tests moved
+into `test/test_v2.py` (section 14, verbatim), and the contracts redeployed.
+
+| # | severity | finding | fix | guarded by |
+|---|---|---|---|---|
+| R1 | high | Binding on the FIRST title word let sibling apps (Facebook Lite / Facebook, Google Drive / Google Photos) bind as one app; the domain fallback (and the policy-link domain) let unrelated developers on shared hosts bind. | Exact equality of the whole normalised title (case, punctuation, ™/® removed) or of the whole name before a store subtitle, AND the same developer: normalised name, or the same own website host (a list of shared hosts never counts; the policy link is never identity). Re-run on the 24 dry-run apps: the seed apps still bind; Telegram ("Telegram" / "Telegram Messenger") is now refused. | `TestAttackBinding.*`, audit 14 |
+| R2 | high | A policy edit (deleting the admission) escaped a filed contradiction as INCONCLUSIVE; after losing, the same edit plus a contest FLIPPED the case and refunded everything. | An agreed SHA-256 of the whole fetched policy at filing and judgment; a read policy whose hash changed counts as changed → CORRECTED, in judge and contest (`_final_code`), never INCONCLUSIVE. | `TestAttackPolicyEdit.*`, audit 40 |
+| R3 | medium | "Changed" was the whole-label hash: any unrelated edit plus model variation became CORRECTED; in the LABEL kind it re-opened the filed text. | Changed = the case's data type status on its axis (LABEL kind: the claim's relevant rows); `_relevant`. | `TestAttackCorrectedScope.*`, audit 41 |
+| R4 | medium | One agreed failed read (a 503) revoked a verified developer and the change cooldown then locked them out while a squatter responded. | Revoke only on positive evidence (listing read and a different host; file 200 without the wallet); re-registration after a revoke is not cooldown-gated. | `TestAttackIdentity.*`, audit 43 |
+| R5 | medium | A global duplicate check let a sock hold a question hostage at zero cost. | Duplicates per advocate. | `TestAttackSquat.*`, audit 44 |
+| R6 | low | Free filing snapshots could flood a listing's timeline past the 60-row window. | Free snapshots only on change; paginated `timeline(app, offset, limit)`. | `TestAttackTimeline.*`, audit 45 |
+| R7 | low | A stale page read once at filing could make an honest developer lose as CORRECTED. | CORRECTED needs a confirmed capture (paid snapshot before filing with the same state, or `confirm_filing`); unconfirmed → INCONCLUSIVE. An edit to the policy itself needs no witness (its capture was verified sentence by sentence). | `TestAttackFilingGlitch.*`, audit 42 |
+| R8 | low | The stored quote could be any verbatim fragment, cutting off a negation. | Code expands the model's words to the shortest run of whole sentences; validators require verbatim AND whole; SHA-256 (pure Python, FIPS 180-4, checked against hashlib). | `TestAttackQuote.*`, `TestQuotes.*`, audit 3, 46 |
+| R9 | low | `/api/quote` fetched any URL from the query string, followed redirects and echoed the status. | Takes a case id, reads the policy URL from the contract, same-host only, no status. | `TestAttackFrontend.*`, audit 48 |
+| R10 | low | Server fetch guard was name-only. | DNS-resolved, private ranges refused, manual redirects re-checked every hop (`lib/safefetch.ts`). The contract can only check names; the fetch itself is the network's web module. | audit 49 |
+| R11 | found while fixing | The new sentence splitter was first named `_sentences`, silently shadowing v1's `_sentences` used by contest novelty — every contest raised. Caught by the suite before any deploy. | Renamed `_policy_sentences`; a static test and audit 47 forbid duplicate top-level definitions. | `TestStatic.test_no_duplicate_top_level_definitions` |
+
 ## What was checked and holds
 
 - **Consensus binds every stored value.** Each op has primitives and derived

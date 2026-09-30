@@ -150,3 +150,24 @@ has not delivered.
   no state was applied. The identical call 30 s later was ACCEPTED and stored.
   Every script therefore reads the chain after each write and never trusts a
   receipt's return value.
+
+## 7. Policy renders are byte-stable across validators (round 2)
+
+Before putting a SHA-256 of the whole fetched policy on the consensus vector
+(round-2 fix R2), the three seed policies were rendered again through
+different validators about two hours after the first captures:
+
+| policy | characters | raw text | whitespace-normalised |
+|---|---|---|---|
+| linkedin.com/legal/privacy-policy | 41,255 | identical | identical |
+| capcut.com/clause/privacy-policy | 19,347 | identical | identical |
+| policy.pinterest.com/privacy-policy | 24,856 | identical | identical |
+
+The hash is taken over the whitespace-normalised text.
+
+## 8. Same-app binding re-run with the exact-title rule (round 2)
+
+The 24 apps of §2, their real Play and App Store HTML, through the round-2
+`_bind`: 21 bind; Telegram ("Telegram" vs "Telegram Messenger"), Zoom and Temu
+are refused. Snapchat, CapCut and WhatsApp — the cross-store seeds — bind.
+Facebook Lite + Facebook and Google Drive + Google Photos are refused.
