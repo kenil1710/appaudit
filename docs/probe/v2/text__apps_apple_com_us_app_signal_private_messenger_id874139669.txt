@@ -1,0 +1,201 @@
+#META {"len": 9973, "status": 0, "err": ""}
+#TX 0x1c801decea15fa6d3fc8742cea7d0fb648e47871006d51ab098a72328e2dbf6e
+Search
+Today
+Games
+Apps
+Arcade
+Categories
+Categories
+Photo & Video
+Health & Fitness
+Productivity
+Entertainment
+Action
+Adventure
+Puzzle
+Indie
+Platform
+iPhone
+iPad
+Mac
+Vision
+Watch
+TV
+Signal - Private Messenger
+
+Say “hello” to privacy.
+
+Free · In‑App Purchases
+
+1.1M RATINGS
+4.7
+AGE RATING
+13+
+Years
+CHART
+#9
+Social Networking
+DEVELOPER
+Signal Messenger, LLC
+LANGUAGE
+EN
++ 43 More
+SIZE
+219.3
+MB
+iPhone, iPad
+
+Signal is a messaging app with privacy at its core. It is free and easy to use, with strong end-to-end encryption that keeps your communication completely private.
+
+• Send texts, voice messages, photos, videos, GIFs, and files for free. Signal uses your phone’s data connection, so you avoid SMS and MMS fees.
+
+• Call your friends with crystal-clear encrypted voice and video calls. Group calls supported for up to 50 people.
+
+• Stay connected with group chats up to 1,000 people. Control who can post and manage group members with admin permission settings.
+
+• Share image, text, and video Stories that disappear after 24 hours. Privacy settings keep you in charge of exactly who can see each Story.
+
+• Signal is built for your privacy. We know nothing about you or who you’re talking to. Our open source Signal Protocol means that we can’t read your messages or listen to your calls. Neither can anyone else. No back doors, no data collection, no compromises.
+
+• Signal is independent and not for profit; a different kind of tech from a different kind of organization. As a 501c3 nonprofit we are supported by your donations, not by advertisers or investors.
+
+• For support, questions, or more information please visit https://support.signal.org/
+
+To check out our source code, visit https://github.com/signalapp
+
+Follow us on Twitter @signalapp and Instagram @signal_app
+more
+
+Ratings & Reviews
+4.7
+out of 5
+1.1M Ratings
+My new default communication app
+08/08/2024
+Iphoneaphobia
+
+The front end of Signal, and its user interface, is absolutely wonderful. It is as smooth and pleasant to use as iMessage for sure. Knowing that my messages and calls are end to end encrypted brings a great peace of mind to one’s day to day conversations. But it’s not just pretty and functional on the front end, the technical details and workings of the back end as revealed in Signal’s documentation really shows, in my humble opinion, that this app does what it’s makers say it does, and that the developers do not make false or exaggerated claims about their work. Most importantly, again in my humble opinion, it shows that the beautiful and functional front end, the technically impressive back end, and the resulting full stack of this app was developed by engineers that really care for, and have passion for, the privacy and security of their end users as well as privacy and security overall. It is a rare thing indeed, in this day and age, for a business to back up and follow through on their promises regarding their product. I will use Signal until the day I die unless things somehow dramatically change for the worse. I’m not normally a review writer, and when I do I could never be described as being verbose in what I have to say about something I’m reviewing but Signal and the developers behind it deserve all the praise we can muster! Thank you for the fruits of your labor enhancing my quality of life and peace of mind :)
+
+more
+Problem Retrieving Data
+03/08/2025
+iReviewAppsOccasionally
+
+*WARNING* Do not download, install, and use this app! The app developers are responsible for not warning users ahead of time that there will be data loss if you run out of storage space. GitHub is rife with stories of the “Problem Retrieving Data” bug, and there still isn’t a fix. Also they have the signing keys to your data, so your data is not really yours. What’s the point of all that security? I’ve been waiting since October for a bug fix, but there isn’t one, and I have a feeling that there isn’t going to be one. I’m using WhatsApp now, and I love it!! I can’t tell you how many times my phone has ran out of storage space and of course I have gotten the “Storage is full” message from WhatsApp, but as soon as I have freed up even just a little bit of space, I’ve been able to get back into WhatsApp every single time, no problem! And I haven’t even been able to make a chat backup in a long time. This is not the case with Signal. It took just one time of running out of storage space for me to get the “Problem Retrieving Data” popup, saying that some of my “message history may be corrupted.” Unbelievable. What a waste of time. Years of memories wasted. If I would’ve known this years in advance, I would’ve NEVER used this app!! Guys, don’t waste your time, save yourself the trouble and the stress of investing your time and energy in using an app that could possibly cost you major data loss!!
+
+more
+Nightmare editing messages on my iPhone XR
+12/08/2020
+Schwadam
+
+I don’t know if this disfunction is related to the particular phone (iPhone XR) that I am using Signal on now or if it is the same on other phones, but the “cursor” control on Signal is a disaster now. It is a nightmare trying to move the cursor to where you want it, or to highlight a specific section of your message. I am completely unable to move the cursor more than a couple lines away from its current location at a time (and the text window doesn’t extend to more than 4 lines tall), so i have to scroll a couple lines away, click somewhere to move the cursor in the direction of where i want it to go, and repeat over and over again until it finally gets there. If i try to move it further than that, the window just jumps back to the area where it is currently located and moves it to some random location nearby. Highlighting a portion of your message is impossible; it jumps from one end of the message to the other and will not allow you to scroll slowly to where you want to stop highlighting. It is so stupid ~ I recommend typing messages in another app and then pasting it into signal when you are done. Also, FYI, if you want to copy text from a signal message, hold your finger on the message and then click on the little icon at the bottom of the screen that looks like two pieces of paper - nothing will ever appear that says “copy”.
+
+more
+Developer Response
+
+This bug is resolved in the most recent version of the application.
+
+more
+Hands down the best.
+08/05/2020
+Private Sector Signal
+
+I’ll try to be short & sweet. I have been in the Private Security industry for 25 years now. As an Executive Protection Close Protection agent working with at risk individuals as well as their families at times. High threat risk talent in every genre from rap to country’s biggest chart toppers across the country along side Law Enforcement agencies finest & I have to say that Signal is our go to for sensitive photos ,documents video footage & phone calls ,whether it be a conversation that demands the upmost of secrecy o live crystal clear real time video calls that make face time seem outdated. Every athletes, singer’s,hip hop artist & actors & actresses the Mikitary grade end to end encryption is seamless in all that’s offered. Disappearing text messages that you set the time for. Every client we have protected and families have to communicate with the team assigned must text call video chat message VIA Signal . If you are serious about your privacy & all that matters this is BULLETPROOF as long as the persons you communicate with have been invited into your own group or just you and individuals whom choose to remain private. And these guys do it for free so go to the website and donate to the program whether it be a couple bucks or dive In. Replace iPhones dialer & iMessage facetyme & sms services that are hacked on a regular basis with in my eyes untouchable pioneers. Thanks guys & I know I said short but I can not say enough about the app & all things offered we are daily users at work at home or abroad Signal has never failed us keep up the amazing work.
+
+more
+What’s New
+
+• In addition to the existing remote backup support, this update introduces a new on-device backup option too. Now you can export an encrypted copy of your Signal messages and save them to the storage location of your choice.
+
+Version 8.30
+6d ago
+App Privacy
+
+The developer, Signal Messenger, LLC, indicated that the app’s privacy practices may include handling of data as described below. For more information, see the developer’s privacy policy .
+
+Data Not Linked to You
+
+The following data may be collected but it is not linked to your identity:
+
+Contact Info
+
+Privacy practices may vary, for example, based on the features you use or your age. Learn More
+
+Accessibility
+
+The developer has not yet indicated which accessibility features this app supports. Learn More
+
+Information
+Seller
+Signal Messenger, LLC
+Size
+219.3 MB
+Category
+Social Networking
+Compatibility
+Requires iOS 15.0 or later.
+Languages
+English and 43 more
+Age Rating
+13+
+In-App Purchases
+Yes
+Copyright
+© Signal Foundation
+Developer Website
+Privacy Policy
+License Agreement
+Supports
+Wallet
+
+The simplest way to get all your passes in one place.
+
+You Might Also Like
+View
+Zangi - Private Messenger
+Secure. No trace. Fast
+View
+Session - Private Messenger
+Privacy you can trust
+View
+Nextplus: Private Phone Number
+Unlimited 2nd Line Talk & Text
+View
+Friendly Social Browser
+for Facebook, Twitter & more
+View
+Kik Messaging & Chat App
+Messaging, Chatting & Live
+View
+SimpleX Chat: secure messenger
+Privacy redefined: no user IDs
+View
+Skout Dating App & Live Chat
+Date Singles, Meet new Friends
+View
+Threema. The Secure Messenger
+Secure. Anonymous. Private.
+View
+Talkatone: WiFi Text & Calls
+Unlimited Voice Calling, Texts
+View
+Zoosk - Social Dating App
+Match, Chat & Meet New People
+United States
+Español (México)
+العربية
+Русский
+简体中文
+Français (France)
+한국어
+Português (Brazil)
+Tiếng Việt
+繁體中文 (台灣)
+
+Copyright © 2026 Apple Inc. All rights reserved.
+
+Internet Service Terms
+App Store & Privacy
+Cookie Warning
+Support

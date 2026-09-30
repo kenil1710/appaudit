@@ -1,0 +1,127 @@
+CapCut US Privacy Policy
+
+Last Updated: April 15, 2026
+Introduction
+Welcome to CapCut. This Privacy Policy explains how we collect, use, share, and otherwise process the personal information of US users and other US individuals in connection with the CapCut mobile software application ("CapCut APP"), CapCut desktop software applications ("CapCut Desktop version"), and the oﬃcial CapCut website ("CapCut Web"), the CapCut Commerce Pro and Pippit web platforms and mobile applications ("Pippit"), and any other website, app, or platform that links to this Privacy Policy (collectively, the “Services”). The Services are operated by TikTok USDS Joint Venture LLC (“we”, “us” or “our”).
+Please refer to the CapCut Consumer Health Data Privacy Policy for information about how we may collect, use, share, and otherwise process consumer health data as defined under Washington’s My Health My Data Act and other similar US state laws.
+If you are a teen, please see the Privacy Policy - Teen Summary for a summary of what information we collect and how we use it.
+
+1. Information We Collect
+
+We may collect your information in three ways: Information You Provide, Automatically Collected Information, and Information From Other Sources. More detail is provided below.
+Information You Provide
+Account Information. Such information may include, for example, your date of birth, login credentials, your phone number, and other information you choose to disclose in your user proﬁle.
+User Content. We may collect the content you create, import, upload, or generate through the Services, including associated metadata (such as when, where, and by whom the content was created). User Content may include the photographs, images, audio recordings, and videos you upload; video templates you generate or view; prompts, files, and other types of information that you submit to our AI-powered interfaces, as well as the final AI-generated responses we make available to you; and other actions you take on the Services, such as your comments and likes. We may collect User Content through pre-uploading at the time of creation, import, or upload, regardless of whether you choose to save or publish that User Content, for example, to recommend audio options, generate captions, and provide other personalized recommendations. Additionally, we access clipboard content, such as text and images, through your device's clipboard when you choose to use certain functions, such as initiating information sharing with third-party services, or copying and pasting clipboard content onto our Services.
+Purchase Information. If you use features that involve payment, including rewards programs, or the CapCut Cloud Space Services as described in our Terms of Service, we or our service providers may collect information such as what you purchased, and your payment details.
+Marketing and Research Information. We collect information you choose to provide, such as your gender, age, and preferences, if you choose to participate in a survey, research, promotion, contest, marketing campaign, or event conducted or sponsored by us.
+Communication Information. When you contact or otherwise communicate with us, we collect the information you send us, such as proof of identity or age, your data subject requests, and feedback or inquiries about your use of the Services.
+Automatically Collected Information
+Technical Information. We automatically collect certain device, browser, and network information when you use the Services. Such information includes your IP address, unique device identiﬁers, network type and connections, device model, application version, app and file names and types, operating system, device resolution, system language and region, and battery information. We also collect service-related, diagnostic, and performance information, including crash reports and performance logs. Where you log in from multiple devices, we will be able to use your account information to identify your activity across devices.
+Location Information. We collect information about your approximate location, including information based on your SIM card region and IP address.
+Usage Information. We collect information about how you interact with the Services, including information about the content you view, the duration and frequency of your use, and your engagement with other users, such as information about your followers. This information may also include viewing history, users you follow, and the stickers and ﬁlters you use.
+Content Characteristics and Features. We may collect information about the videos, images and audio that are a part of your User Content, for example by identifying objects and scenery; the existence and location of a face and other body parts; the nature of the audio; and the text of the words spoken in your User Content (for example, if you use the auto caption function). We may collect this information to enable special image and video effects, to recommend and moderate content, to serve you personalized ads where permitted, and to improve the Services. We do not use any face or body information to identify you in your User Content. Once an effect that uses face or body information has been applied to your User Content, that information is deleted and not retained.
+Cookies. We and our service providers and business partners use cookies and similar tracking technologies to operate and provide the Services, including functions such as: remembering your language preferences; measuring website traﬃc and functionality; for security purposes and marketing purposes.
+Information From Other Sources
+Third-Party Platforms. We receive information from third party platforms to provide you with certain integrations and features. For example, we may receive your username, email address, and profile picture, as well as certain technical information, if you sign up or log in to the Services using a third-party platform.
+Our Corporate Group. We may obtain information about you from affiliates controlled by, or under common control with, us.
+Advertising, Analytics, and Other Partners. Advertisers, analytics, and other partners share information with us about you and the actions you have taken outside of the Services, such as your activities on other websites and apps.
+Payment Service Providers. Depending on the features you use, we may receive information about you from payment service providers, such as payment confirmation and purchase details.
+Others. We may also collect or receive information about you from others, including government authorities and publicly-available sources, as well as other users, such as where you are mentioned in User Content or in a complaint, request, or feedback submitted by a user or third party.
+
+2. How We Use Your Information
+
+We will use your information in order to:
+
+operate, customize, and administer the Services, such as enabling you to create, modify, share, and consume User Content; and to interact with other users, their content, and the Services’ interactive features;
+provide services to you through related products that are connected in functionality and use a unified account system;
+review, support, improve, and develop the Services, and train, test, and improve technology, such as machine learning models and algorithms, including by analyzing how people are using the Services; conducting research; developing new features; monitoring your activity and usage across the devices you use to access the Services; and scanning, analyzing, and reviewing User Content;
+communicate with you about service-related matters and updates, and respond to your requests and feedback;
+verify your age and identity;
+provide you with tailored or personalized information or content that may be of interest to you;
+promote the Services, including through marketing communications, contests, or campaigns and through third-party advertising platforms;
+provide advertising services, including targeted ads, where permitted;
+enforce our Terms of Service, Community Guidelines, and other conditions and policies that apply to you, and to protect the safety of our community and integrity of the Services, including by scanning, analyzing, and reviewing User Content;
+maintain and enhance the safety, security, and stability of the Services by identifying and addressing technical or security issues or problems (such as technical bugs and spam accounts), and detecting abuse, fraud, and illegal activity;
+comply with our legal obligations and defend our legal rights and commercial interests, and those of our affiliates, users, and the public; and
+aggregate or de-identify Information We Collect.
+
+3. How We Share Your Information
+
+This section sets out how we may share Information You Provide, Automatically Collected Information, and Information From Other Sources. Please note that information shared with certain third parties may be processed in accordance with their privacy policies.
+Service Providers and Business Partners
+We share the categories of personal information listed above with our service providers and business partners as necessary to help us perform business operations and for business purposes, including providing, supporting, and developing the Services, cloud hosting, content generation, content delivery, customer and technical support, content moderation, marketing, analytics, and online payment. Examples of such service providers and business partners include:
+
+Third parties whose platforms or services are integrated with the Services, and who help us provide certain features and functionalities. For example, if you choose to log in to the Services using your third-party account credentials, or link your account to a third-party platform, we will share certain information to facilitate this, including Technical Information. And, some features of the Services are developed based on integration with YouTube’s API services (the “YouTube API Services”). If you choose to use the YouTube API Services, you agree to be bound by the YouTube Terms of Service. See Google's security settings page to revoke your authorization for access to your data by the YouTube API Services. For more information with respect to Google’s privacy practices, please visit this link.
+Payment service providers, who may receive Purchase Information and certain Technical Information when you make a payment on the Services.
+Advertising and measurement partners to help us promote the Services through advertising displayed on other platforms (some of which may be based on your activity across other websites, apps, and services). These partners may also help us measure the effectiveness of our advertising campaigns.
+TT Commerce & Global Services LLC and its affiliates (“TT Commerce & Global Services”), to facilitate a global and interoperable experience, and for other permitted business purposes. We only share specific categories of information consistent with applicable law, including Executive Order 14352 and any compliance obligations thereunder.
+
+Our Corporate Group
+We may share Information We Collect with affiliates controlled by, or under common control with, us as necessary for the purposes set forth within this Privacy Policy.
+Legal Obligations and Rights
+We may share the “Information We Collect” with certain competent law enforcement, regulatory or government agencies, courts, or other third parties if we have a good faith belief that it is necessary to:
+
+Comply with a legal obligation;
+Lawfully protect and defend the rights, property, safety, and security of the Services, our users, copyright holders, and others;
+Investigate potential violations of and enforce our Terms of Service, and other policies; or
+Detect, investigate, and prevent against fraud, technical issues, copyright infringement, or other misleading or illegal activities.
+
+In Connection with a Sale, Merger, or Other Business Transfer
+We may also share your information in connection with, or during negotiations of, a corporate transaction, such as a merger, consolidation, sale of assets or shares, reorganization, financing, or acquisition of all or a part of our business, or in the unlikely event of bankruptcy.
+Others
+We may also share certain information with related products and services which share account log-in features and other functionalities.
+With Your Consent
+We may share information with third parties with your consent or at your direction.
+
+4. Your Rights and Choices
+
+You are entitled to certain rights depending on where you live. We will not retaliate against you for exercising your rights, although doing so may impact the Services’ available features and functionalities.
+Your Rights. You may submit a request to know, access, correct or delete the information we have collected from or about you by contacting us using the contact methods below. You may also have the right to appeal any decision we have made about your request through these same methods. California residents may also be entitled to obtain information about personal information that we shared, if any, with other businesses for their own direct marketing uses.
+You may exercise these rights by submitting your request via the following methods:
+
+Online
+privacy@us.pippit.ai (for Pippit)
+Mail: 5800 Bristol Pkwy, Suite 300, Culver City, CA 90230, USA
+
+We will respond to your request consistent with applicable law and subject to proper veriﬁcation. We will verify your request by asking you to send it from the email address associated with your account or to provide information necessary to verify your account.
+Authorized Agents. You may be entitled, in accordance with applicable law, to submit a request through an authorized agent. To designate an authorized agent to exercise choices on your behalf, please provide evidence that you have given such agent power of attorney or that the agent otherwise has valid written authority to submit requests to exercise rights on your behalf.
+Opt-Out of Sale and Sharing. Although we do not sell your personal information for money, we do “share” your information where defined under applicable law to include the processing and disclosing your personal information to third parties for purposes of serving you advertisements based on your activity across other sites and services (“cross-context behavioral advertising” or “targeted advertising”). We do not knowingly sell or share personal information belonging to minors where restricted by applicable laws.
+Depending on the state in which you reside, you may also have the right to opt out of the sale or sharing of your personal information. You may opt out by:
+
+navigating to “Your Privacy Choices” in your mobile app settings and switching off the applicable toggle described therein; or
+enabling the Global Privacy Control (“GPC”), which is a browser-based opt-out preference signal that enables you to communicate your privacy preferences to the websites you visit. Please note that because the GPCl is a browser-based mechanism, our policy is to opt you out of the sale or sharing of your personal information only for the browser on which you have GPC enabled. For more information about the GPC, please visit their website here. Please note that the Services do not currently support “Do Not Track” requests.
+
+Profiling.
+We do not engage in profiling which results in legal or similarly significant effects, as defined under applicable law.
+Sensitive Personal Information.
+Information You Provide may constitute sensitive personal information under applicable state privacy laws, such as information from users under the relevant age threshold, your financial information, and any sensitive information you choose to disclose in survey responses or in your User Content. We process such information in order to provide the Services and within other exemptions under applicable law.
+Your Choices.
+Your in-app settings may enable you to access and modify certain of your account information, as well as manage the third-party services that are linked to your account.
+You can also refuse, disable, or delete cookies and similar tracking technologies that collect your information through your device or browser settings, though by doing so, some of the Services’ features and functionalities may no longer be available to you. Each browser and device is different, so please consult the instructions provided by your browser or device (as applicable) to modify your cookie settings.
+You can opt out of marketing emails by using the “unsubscribe” link or mechanism noted in each marketing email.
+
+5. Data Security
+
+We maintain technical, administrative, and organizational measures designed to protect your information from unauthorized access, theft, disclosure, modiﬁcation, or loss, and to provide a level of security appropriate to the processing risk. The Services may contain links, functionality, and content maintained by third parties we do not control, and any information shared with such third parties will be subject to their privacy and security practices and terms of use. We are not responsible for, and make no representations regarding, such third party practices and policies.
+
+6. Data Retention
+
+We retain information for as long as necessary to provide the Services and for the other purposes set out in this Privacy Policy. We also retain information when necessary to comply with contractual and legal obligations; when we have a legitimate business interest to do so (such as improving and developing the Services, and enhancing their safety, security, and stability); and for the exercise or defense of legal claims.
+The retention periods differ depending on the type of information and the purposes for which we use the information. For example, if you use the Cloud Space Service, we will delete the information you have actively uploaded and stored therein at your request or as otherwise permitted by applicable law.
+
+7. Information Relating to Children
+
+CapCut is not directed at and is not intended for children under the age of 13. If you believe that we have collected personal information from a child under the minimum age, please contact us using the contact information found in the “Contact Us” section below.
+Pippit: Pippit is intended for and should only be used by, adults (persons who meet the legal consent age in each applicable jurisdiction) and not children or minors. We do not seek or knowingly collect any personal data about children under the age of 18. If you learn that anyone younger than legal age of consent has provided us with their personal data in relation to Pippit, please contact us and we will make commercially reasonable efforts to delete such information from our database.
+
+8. Privacy Policy Updates
+
+We may amend or update this Privacy Policy from time to time. We will notify you of any material changes by updating the “Last Updated” date at the top of the new Privacy Policy, or providing other notice as required by applicable law. We recommend that you review this Privacy Policy regularly to stay informed of our privacy practices.
+
+9. Contact Us
+
+Questions, comments and requests regarding this Privacy Policy are welcomed and should be addressed to:
+
+Contact us: Online
+privacy@us.pippit.ai (for Pippit)
+Mailing Address: 5800 Bristol Pkwy, Suite 300, Culver City, CA 90230, USA

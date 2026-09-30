@@ -1,0 +1,105 @@
+#META {"len": 2243, "status": 0, "err": ""}
+#TX 0x4ce719f78172693a1953c7c53bd70de904c94f84828dcd06947b0304f5e3a73d
+google_logo Play
+Games
+Apps
+Movies & TV
+Books
+Kids
+Gift Cards
+search
+help_outline
+Facebook
+Meta Platforms, Inc.
+privacy_tip
+The developer has provided this information about how this app collects, shares, and handles your data
+Data safety
+Here's more information the developer has provided about the kinds of data this app may collect and share, and security practices the app may follow. Data practices may vary based on your app version, use, region, and age. Learn more
+Data shared
+Data that may be shared with other companies or organizations
+Personal info
+Name, Email address, User IDs, and Phone number
+expand_more
+Device or other IDs
+Device or other IDs
+expand_more
+Data collected
+Data this app may collect
+Contacts
+Contacts
+expand_more
+Audio
+Voice or sound recordings, Music files, and Other audio files
+expand_more
+Files and docs
+Files and docs
+expand_more
+Personal info
+Name, Email address, User IDs, Address, Phone number, Political or religious beliefs, Sexual orientation, and Other info
+expand_more
+Photos and videos
+Photos and Videos
+expand_more
+Financial info
+User payment info, Purchase history, Credit score, and Other financial info
+expand_more
+App activity
+App interactions, In-app search history, Installed apps, Other user-generated content, and Other actions
+expand_more
+Health and fitness
+Health info and Fitness info
+expand_more
+Messages
+Emails, SMS or MMS, and Other in-app messages
+expand_more
+Location
+Approximate location and Precise location
+expand_more
+Device or other IDs
+Device or other IDs
+expand_more
+App info and performance
+Crash logs, Diagnostics, and Other app performance data
+expand_more
+Web browsing
+Web browsing history
+expand_more
+Calendar
+Calendar events
+expand_more
+Security practices
+Data is encrypted in transit
+Your data is transferred over a secure connection
+You can request that data be deleted
+The developer provides a way for you to request that your data be deleted
+info
+For more information about collected and shared data, see the developer's privacy policy
+Google Play
+
+Play Pass
+
+Play Points
+
+Gift cards
+
+Redeem
+
+Refund policy
+
+Kids & family
+
+Parent Guide
+
+Family sharing
+
+Terms of Service
+
+Privacy
+
+About Google Play
+
+Developers
+
+Google Store
+
+United States (English (United States))

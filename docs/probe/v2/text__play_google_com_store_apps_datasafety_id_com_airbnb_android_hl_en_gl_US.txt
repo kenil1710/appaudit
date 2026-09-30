@@ -1,0 +1,99 @@
+#META {"len": 1957, "status": 0, "err": ""}
+#TX 0x4dd1bbcc71b6060c3a74b5182e33a4fbb769d147b2b847e99bccca86a9757d20
+google_logo Play
+Games
+Apps
+Movies & TV
+Books
+Kids
+Gift Cards
+search
+help_outline
+Airbnb
+Airbnb
+privacy_tip
+The developer has provided this information about how this app collects, shares, and handles your data
+Data safety
+Here's more information the developer has provided about the kinds of data this app may collect and share, and security practices the app may follow. Data practices may vary based on your app version, use, region, and age. Learn more
+Data shared
+Data that may be shared with other companies or organizations
+App activity
+App interactions
+expand_more
+Location
+Approximate location
+expand_more
+Personal info
+Email address, User IDs, Address, and Phone number
+expand_more
+Device or other IDs
+Device or other IDs
+expand_more
+Financial info
+User payment info
+expand_more
+Data collected
+Data this app may collect
+App activity
+App interactions, In-app search history, and Installed apps
+expand_more
+Location
+Approximate location and Precise location
+expand_more
+Files and docs
+Files and docs
+expand_more
+App info and performance
+Crash logs, Diagnostics, and Other app performance data
+expand_more
+Messages
+Other in-app messages
+expand_more
+Personal info
+Name, Email address, User IDs, Address, Phone number, Sexual orientation, and Other info
+expand_more
+Device or other IDs
+Device or other IDs
+expand_more
+Financial info
+User payment info, Purchase history, and Other financial info
+expand_more
+Contacts
+Contacts
+expand_more
+Security practices
+Data is encrypted in transit
+Your data is transferred over a secure connection
+You can request that data be deleted
+The developer provides a way for you to request that your data be deleted
+info
+For more information about collected and shared data, see the developer's privacy policy
+Google Play
+
+Play Pass
+
+Play Points
+
+Gift cards
+
+Redeem
+
+Refund policy
+
+Kids & family
+
+Parent Guide
+
+Family sharing
+
+Terms of Service
+
+Privacy
+
+About Google Play
+
+Developers
+
+Google Store
+
+United States (English)

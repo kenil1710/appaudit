@@ -1,0 +1,264 @@
+#META {"len": 12936, "status": 0, "err": ""}
+#TX 0xad4ca381b3ea9c8f0865d08614c2fdb1811fa0078d45a8b66895491abcae38e1
+Search
+Today
+Games
+Apps
+Arcade
+Categories
+Categories
+Photo & Video
+Health & Fitness
+Productivity
+Entertainment
+Action
+Adventure
+Puzzle
+Indie
+Platform
+iPhone
+iPad
+Mac
+Vision
+Watch
+TV
+Proton Mail - Encrypted Email
+
+Fast, private, secure inbox
+
+Free · In‑App Purchases
+
+48K RATINGS
+4.8
+AGE RATING
+4+
+Years
+CHART
+#68
+Productivity
+DEVELOPER
+Proton AG
+LANGUAGE
+EN
++ 28 More
+SIZE
+285.5
+MB
+Also Included In
+View
+Proton: Privacy by default
+Productivity
+iPhone, iPad
+
+Keep your conversations private. Proton Mail is encrypted email from Switzerland. Used by millions worldwide, our all-new email app protects your communications and has everything you need to easily manage your inbox.
+
+The Wall Street Journal says:
+“Proton Mail offers encrypted email, which makes it virtually impossible for anyone to read it except the sender and the recipient.”
+
+With the all-new Proton Mail app, you can:
+• Create a @proton.me or @protonmail.com email address
+• Send and receive encrypted emails and attachments with ease
+• Switch between multiple Proton Mail accounts
+• Easily manage your email with conversations
+• Keep your inbox tidy and clean with folders, labels and simple swipe-gestures
+• Receive new email notifications
+• Send Password-protected Emails to anyone
+• Keep important emails in focus with automatic, private categories
+• Enjoy your inbox in dark mode
+
+Why use Proton Mail?
+• Easy to use — Our all-new app has been redesigned to make it easier to read, organize, and write your emails.
+• Your inbox is yours — We don’t spy on your communications to show you targeted ads. Your inbox, your rules.
+• Rigorous encryption — Your entire inbox is secured, on all your devices. No one can read your emails but you. Proton is privacy, guaranteed by end-to-end and zero-access encryption.
+• Unmatched protection — We offer strong phishing, spam, and spying/tracking protection for all your communications.
+
+Industry Leading Security Features
+Messages are stored on Proton Mail servers using end-to-end encryption at all times and are transmitted securely between Proton servers and user devices. This largely eliminates the risk of message interception.
+
+Zero Access to Your Email Content
+Proton Mail's zero access architecture means that your data is encrypted in a way that makes it inaccessible to us. Data is encrypted on the client side using an encryption key that Proton does not have access to. This means we don't have the technical ability to decrypt your messages.
+
+Open-Source Cryptography
+Proton Mail's open-source software has been thoroughly vetted by security experts from around the world to ensure the highest levels of protection. Proton Mail only uses secure implementations of AES, RSA, along with OpenPGP, while all of the cryptographic libraries used are open source. By using open-source libraries, Proton Mail can guarantee that the encryption algorithms used do not have clandestinely built-in back doors.
+
+Proton Mail in the press:
+“Proton Mail is a Gmail-like email system which uses end-to-end encryption, making it impossible for outside parties to monitor.” Forbes
+
+“A new email service being developed by a group who met at MIT and CERN promises to bring secure, encrypted email to the masses and keep sensitive information away from prying eyes.” Huffington Post
+
+Follow Proton on social media for all the latest news and offers:
+Facebook: /proton
+Twitter: @protonprivacy
+Reddit: /protonmail
+Instagram: /protonprivacy
+
+Our open-source code base: https://github.com/ProtonMail
+
+EULA: http://www.apple.com/legal/itunes/appstore/dev/stdeula
+more
+
+Ratings & Reviews
+4.8
+out of 5
+48K Ratings
+Unexpectedly Great!
+12/02/2024
+Lance-Poore
+
+This mail client is awesome, it’s free and it’s really free. The upgrade plan isn’t necessary nor required for full functionality of the app. Most products on the App Store that are free have a hidden catch or cripple the free version unless you pay a subscription. Yes Proton has paid subscription to upgrade the storage options but for most individual users what they give you is plenty and if you need more than they give you then you should maybe think about how you use email as a person because 1gb is plenty for mail, if you need more then you most likely are using your mail client for something other than mail or you are too lazy to keep your mail cleaned out. The proton vpn, which is also free and unlimited usage, however the paid plan for the vpn is needed in order to pick your own exit node country. All in all the suite is great and even on macos or windows you can download the “electron” mail app and use it as an open source client for desktop use. It’s just not the official app, however it is transparent in the coding and is basically the webui with some custom css implemented in order to give you a free ui to proton. The only down side to all of this is you can’t just use proton with your favorite mail app. However I’m personally very content with my setup! Highly recommended and very secure!
+
+more
+Still needs features of other clients
+09/18/2024
+AbcTimMabc
+
+The ProtonMail app works very well for what it does. However, it’s still lacks some fairly basic features that would make its usability even better. The first feature that I would like to see, is that when you read and then delete an email, the app automatically takes you to your next email. Maybe this feature includes a switch inside of the settings, so that you can turn the feature on and off as needed. The current operation is that once you read and delete an email, that takes you back to the email list. This current method of operation really creates a lot of extra clicks. The second feature needed is the ability to filter on an email address. I have multiple protonmail email addresses and they ALL show up under one inbox. The whole idea of having multiple email addresses is to be able to use them for different purposes. If I have one address that collects important emails, it would be nice to be able to filter, or otherwise view, just those important emails and not every email received. I know both of these feature requests have been kicking around the internet for years. But, I’m still hopeful that they might be implemented. I like having a secure, encrypted email system such as protonmail. However, using it could be made easier with some tweaks. Thanks. TUPDATE: The first feature requested above exists on the app. It is a bit buried in the account menus but can be found by navigating to “settings” > “account settings” > “Jump to next email” and toggle that feature on. Thanks. T
+
+more
+Developer Response
+
+Hi! Thank you for the feedback - we've shared it with the team. The first feature you've mentioned is already available. Navigate to "Settings" → "Account settings" → "Jump to next email" and toggle the feature on. We'll share your suggestion internally with the team. In the meantime, you can consider creating folders/labels to better organize your inbox: https://proton.me/support/using-folders-labels. Feel free to contact us at https://proton.me/support/contact if you have any additional suggestions. Edit: You are most welcome! We'll share your feedback with the team for future consideration.
+
+more
+Lags behind rest of ProtonMail suite
+09/01/2020
+( ˘⌣˘)づ)˚з°)
+
+Let me begin by saying that I absolutely love ProtonMail. To the extent that it almost feels sinister in the level of brand loyalty I feel. That said, when taken in against the attention to detail and quality I see and experience throughout my everyday, while using their other components, this feels pretty lacking. It’s useful for push or when the web app is running a bit slow (which is just to be expected of a web app, and which Safari is mainly culpable), but 9/10 times, I’d rather wait and use that, as their normal version looks and feels 10x better in using. Then there’s the beta in all its sleek, dark glory, which is doubly nice (sometimes a little laggy on my phone, however it’s a beta and to be expected. Anyways, I would so love to see this app get a little more lovin’, since it has the potential, based on the foundation of its platform to be the best of its kind. This wouldn’t matter so much, were we given options to use something like Newton, Spark, Canary (what I use for other accounts currently), or whatever your personal client of choice may be. To their mobile app division’s lead dev, I would recommend taking a look at Hey (recently released by BaseCamp) for cues by which to enrich the app, but that’s just my own little suggestion. Otherwise, to the team as a whole: thanks for creating and continuing to create the best email service in existence. You guys have my support, figuratively and by way of my annual membership dues for years to come.
+
+more
+Developer Response
+
+Hello! We are constantly working on improving the mobile apps, and they are currently being redesigned so many of these features will come out in the 4.0 version. Thank you for your patience.
+
+more
+Great mail app for privacy focused individuals
+05/28/2024
+Kaiiserr
+
+This application gets a lot of things right. The service blocking trackers is a wonderful future that is welcomed for someone like me who values their privacy. There are some things that the app is missing that I hope there are added in the future. The ability to choose which maps opens when you click on an address would be great. Also being able to add an email address from a third-party service through the application would be wonderful as well, instead of having to go through the website on a browser to add the email. I do also wish that there were more customization options for the layout of the app. As well as selection of colors. I like that there is a dark mode however, I wish there was an actual dark mode option for OLED screens. these are more of quality of life improvements than things that are needed in the app however, I think that the app itself and the functions and services are provides are more than adequate and definitely worth the price.EDIT: Apparently you can a third party email to this service, but only if you’re paying for a business account… If you’re paying a premium for this service that should come as a given, not something locked behind a larger paywall.
+
+more
+Developer Response
+
+Hi! Thank you for your suggestions! We’ve passed this directly to the team. 🙂 If you have any additional suggestions on what we can do to improve, please feel free to contact us at https://proton.me/support/contact to let us know. We always appreciate our community’s input. Adding a third-party email is only possible through the Proton Bridge app and it's currently available to all paid subscribers: https://proton.me/mail/bridge
+
+more
+What’s New
+
+Scrolling through emails now takes just one finger instead of two.
+Fixed text appearing too small in some emails.
+
+Version 7.11.6
+1d ago
+App Privacy
+
+The developer, Proton AG, indicated that the app’s privacy practices may include handling of data as described below. For more information, see the developer’s privacy policy .
+
+Data Not Linked to You
+
+The following data may be collected but it is not linked to your identity:
+
+Diagnostics
+
+Privacy practices may vary, for example, based on the features you use or your age. Learn More
+
+Accessibility
+
+The developer has not yet indicated which accessibility features this app supports. Learn More
+
+Information
+Seller
+Proton AG
+Size
+285.5 MB
+Category
+Productivity
+Compatibility
+Requires iOS 17.2 or later.
+Languages
+English and 28 more
+Age Rating
+4+
+In-App Purchases
+Yes
+Copyright
+© Proton AG
+Developer Website
+Privacy Policy
+More by Proton AG
+View
+Proton VPN: Fast & Secure
+Safe and unlimited proxy
+View
+Proton Drive: Cloud Storage
+Private files & photos backup
+View
+Proton Pass - Password Manager
+Passkeys, 2FA & secure vault
+View
+Proton Calendar: Secure Events
+Keep your schedule private
+View
+Proton Authenticator
+Secure 2FA Authenticator
+View
+Lumo AI by Proton
+Private Assistant from Europe
+View
+SimpleLogin - Email alias
+Temporary email for privacy
+View
+Proton Wallet: Secure Bitcoin
+A safer way to hold Bitcoin
+View
+Proton Meet: Secure Meetings
+Encrypted video conferencing
+You Might Also Like
+View
+Tuta Mail: Secure Email
+Encrypted Private Inbox
+View
+mail.com - email & cloud
+Mailbox for storage & mail
+View
+Spark Mail: AI Email Assistant
+Streamline your email inbox
+View
+Canary Mail – AI Email
+Read Receipts, Unified Inbox
+View
+myMail box: email client app
+E-mail for Gmail, Hotmail, AOL
+View
+Zoho Mail - Email and Calendar
+More than just an inbox
+View
+Bitwarden Password Manager
+Secure your digital life
+View
+2FA Authenticator (2FAS)
+#1 Rated 2FA Authenticator
+View
+Standard Notes
+End-to-end encrypted notes
+View
+Yubico Authenticator
+2FA with YubiKey
+United States
+Español (México)
+العربية
+Русский
+简体中文
+Français (France)
+한국어
+Português (Brazil)
+Tiếng Việt
+繁體中文 (台灣)
+
+Copyright © 2026 Apple Inc. All rights reserved.
+
+Internet Service Terms
+App Store & Privacy
+Cookie Warning
+Support

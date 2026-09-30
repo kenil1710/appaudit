@@ -1,0 +1,19 @@
+#META {"len": 929297, "status": 200, "err": ""}
+#TX 0x4db82e9c97f4871104987530211b4203a25e78c7cc0319d144ccd30ab81f9253
+META og:title = Instagram App - App Store
+META og:url = https://apps.apple.com/us/app/instagram/id389801252
+A http://instagram.com/legal/privacy/ :: developer’s privacy policy [aria Developer’s Privacy Policy]
+A https://apps.apple.com/us/iphone/story/id1539235847 :: Privacy Definitions and Examples [aria Privacy Definitions and Examples]
+A https://apps.apple.com/us/iphone/story/id1538632801 :: Learn More [aria Learn More]
+A http://instagram.com/legal/privacy/ :: developer’s privacy policy [aria Developer’s Privacy Policy]
+A https://apps.apple.com/us/iphone/story/id1538632801 :: Learn More [aria Learn More]
+A https://apps.apple.com/story/id1814164299 :: Learn More [aria Learn More]
+A https://apps.apple.com/us/iphone/story/id1825160725 :: Learn More [aria Learn More]
+A https://apps.apple.com/us/iphone/story/id1436214772 :: Learn More [aria Learn More]
+A http://instagram.com/ :: Developer Website
+A http://instagram.com/legal/privacy/ :: Privacy Policy
+A https://www.apple.com :: Apple Inc.
+A https://www.apple.com/legal/internet-services/ :: Internet Service Terms
+A https://www.apple.com/legal/privacy/data/en/app-store/ :: App Store &amp; Privacy
+A https://www.apple.com/privacy/use-of-cookies/ :: Cookie Warning
+A https://support.apple.com/billing :: Support

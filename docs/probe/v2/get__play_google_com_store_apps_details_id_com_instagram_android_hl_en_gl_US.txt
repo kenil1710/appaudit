@@ -1,0 +1,21 @@
+#META {"len": 1333574, "status": 200, "err": ""}
+#TX 0x106ad399e64ba023eba05a43eaf1d03e6fa13ae1bf26fd18c79bb26adb2a834f
+META og:url = https://play.google.com/store/apps/details?id=com.instagram.android&amp;hl=en
+META og:title = Instagram - Apps on Google Play
+A https://policies.google.com/privacy :: Privacy Policy
+A https://myaccount.google.com/termsofservice :: Terms of Service
+A https://support.google.com/googleplay?p=appgame_ratings :: Learn more [aria Learn more about content ratings (opens in new window)]
+A https://support.google.com/googleplay/?p=report_content :: flag Flag as inappropriate [aria Flag as inappropriate (opens in new window)]
+A https://support.google.com/googleplay?p=appgame_ratings :: Learn more [aria Learn more about content ratings (opens in new window)]
+A http://help.instagram.com/ :: public Website [aria Website http://help.instagram.com/ will open in a new window or tab.]
+A http://instagram.com/legal/privacy/ :: shield Privacy Policy [aria Privacy Policy http://instagram.com/legal/privacy/ will open in a new window or tab.]
+A https://support.google.com/googleplay/?p=report_content :: flag Flag as inappropriate [aria Flag as inappropriate (opens in new window)]
+A https://play.google.com/about/giftcards :: Gift cards
+A https://support.google.com/googleplay/answer/134336 :: Refund policy
+A https://support.google.com/googleplay?p=pff_parentguide :: Parent Guide
+A https://support.google.com/googleplay/answer/7007852 :: Family sharing
+A https://play.google.com/intl/en_us/about/play-terms.html :: Terms of Service
+A https://policies.google.com/privacy :: Privacy
+A https://support.google.com/googleplay/?p=about_play :: About Google Play
+A http://developer.android.com/index.html :: Developers
+A https://store.google.com/?playredirect=true&amp;utm_source=play&amp;utm_medium=google_oo&amp;utm_campaign=GS106288 :: Google Store

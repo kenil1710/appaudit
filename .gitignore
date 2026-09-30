@@ -21,3 +21,6 @@ docs/seed-console.log
 tools/node_modules/
 test/node_modules/
 frontend/tsconfig.tsbuildinfo
+test/.probe_v2.json
+test/.trial_v2.json
+test/.probe_v2.old.json

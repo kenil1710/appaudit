@@ -15,15 +15,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: python3 test/test_logic.py
+      - run: python3 test/test_v2.py
       - run: python3 tools/audit.py
+      - run: python3 tools/audit_v2.py
       - run: |
           python3 -m pip install --quiet genvm-linter
           genvm-lint lint contracts/AppAudit.py
           genvm-lint lint contracts/AppTrustConsumer.py
+          genvm-lint lint contracts/AppAuditV2.py
+          genvm-lint lint contracts/AppTrustConsumerV2.py
   frontend:
     runs-on: ubuntu-latest
     steps:
