@@ -22,6 +22,7 @@ const PAGES = [
   ["v2-file", "/v2/file"],
   ["v2-case-1", "/v2/case/1"],
   ["v2-case-4", "/v2/case/4"],
+  ["v2-case-12", "/v2/case/12"],
   ["v2-developer", "/v2/developer?app=https://play.google.com/store/apps/details?id=com.snapchat.android"],
   ["v2-timeline", "/v2/timeline?app=https://play.google.com/store/apps/details?id=com.snapchat.android"],
   ["v2-balance", "/v2/balance"],
