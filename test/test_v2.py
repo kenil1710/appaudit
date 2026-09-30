@@ -1930,6 +1930,72 @@ class TestConsumerV2(unittest.TestCase):
         self.assertEqual(r["trust_score"], 70 - 10 + 5)
         self.assertTrue(ok(self.k.record_listing(play_url("snapchat"))))
 
+    def _refile_and_settle(self, times, who=ADV, name="snapchat"):
+        for _ in range(times):
+            self.assertTrue(ok(cross(self.c, name, who=who)))
+            cid = len(self.c.cases)
+            respond(self.c, cid)
+            judge(self.c, cid)
+            settle(self.c, cid)
+            T.set_now(T.NOW + 10 * cid + 700)
+
+    def test_refiling_the_same_true_claim_three_times_counts_once(self):
+        self._refile_and_settle(3)
+        self.assertEqual([case(self.c, i).outcome for i in (1, 2, 3)], ["CONTRADICTED"] * 3)
+        main = self.c.app_record(play_url("snapchat"))
+        self.assertEqual(main["contradicted"], 3)                 # the contract: per case
+        r = self.k.app_record(play_url("snapchat"))
+        self.assertEqual(r["contradicted"], 1)                    # the consumer: per question
+        self.assertEqual((r["cases"], r["distinct_questions"]), (3, 1))
+        self.assertEqual(r["per_case_counts"]["contradicted"], 3)
+        self.assertEqual(r["trust_score"], 70 - 35)               # not clamped to 0 by repeats
+        self.assertEqual(self.k.check_listing(play_url("snapchat"))["trust_score"], 35)
+
+    def test_other_advocates_refiling_also_counts_once(self):
+        for who in (ADV, ADV2, NOBODY):
+            self._refile_and_settle(1, who=who)
+        self.assertEqual(self.k.app_record(apple_url("snapchat"))["contradicted"], 1)
+
+    def test_latest_final_verdict_wins(self):
+        self._refile_and_settle(1)                                # CONTRADICTED
+        T.WEB.serve(ds("com.snapchat.android"), edited_play_label(fx("play_snapchat.txt")))
+        self._refile_and_settle(1)                                # now CLAIM_VERIFIED
+        self.assertEqual(case(self.c, 2).outcome, "CLAIM_VERIFIED")
+        r = self.k.app_record(play_url("snapchat"))
+        self.assertEqual((r["contradicted"], r["verified"]), (0, 1))
+        self.assertEqual(r["distinct_questions"], 1)
+
+    def test_different_questions_count_separately(self):
+        self._refile_and_settle(1)                                          # identifiers / share
+        self.assertTrue(ok(cross(self.c, "snapchat", "personal", "share")))  # personal / share
+        respond(self.c, 2)
+        judge(self.c, 2)
+        settle(self.c, 2)
+        r = self.k.app_record(play_url("snapchat"))
+        self.assertEqual((r["contradicted"], r["distinct_questions"]), (2, 2))
+
+    def test_open_and_defaulted_cases_are_cases_not_verdicts(self):
+        cross(self.c)                                              # open
+        cross(self.c, "snapchat", "personal", "share", who=ADV2)
+        T.set_now(T.NOW + 700)
+        send(self.c, STRANGER, 0, "default_judgment", 2)           # defaulted
+        r = self.k.app_record(play_url("snapchat"))
+        self.assertEqual((r["cases"], r["distinct_questions"], r["decided_questions"]), (2, 2, 0))
+        self.assertEqual(r["contradicted"] + r["verified"] + r["corrected"] + r["inconclusive"], 0)
+
+    def test_claim_kind_question_is_its_reading_not_its_wording(self):
+        cards = [{"challenge_id": 1, "kind": "LABEL", "app_key": "k", "axis": "collect",
+                  "status": "FINALIZED", "outcome": "CONTRADICTED", "judged_at": 5},
+                 {"challenge_id": 2, "kind": "LABEL", "app_key": "k", "axis": "collect",
+                  "status": "FINALIZED", "outcome": "CONTRADICTED", "judged_at": 9}]
+        same = {"1": {"negative": True, "topics": ["location"]},
+                "2": {"negative": True, "topics": ["location"]}}
+        self.assertEqual(CMOD._distinct(cards, same)["contradicted"], 1)
+        other = {"1": {"negative": True, "topics": ["location"]},
+                 "2": {"negative": True, "topics": ["contacts"]}}
+        self.assertEqual(CMOD._distinct(cards, other)["contradicted"], 2)
+        self.assertEqual(CMOD._distinct("junk", None)["distinct_questions"], 0)
+
     def test_unreachable_is_not_clean(self):
         T.CONTRACTS.clear()
         r = self.k.app_record(play_url("snapchat"))

@@ -103,6 +103,21 @@
             "deployed_at": "2026-09-30T11:12:17.721Z",
             "commit_note": "deployed from 8f9db85 before the history rewrite; the same tree is commit d52d5e1"
           }
+        },
+        "consumer_v2_r2": {
+          "address": "0x18a81690aF1f3485fF7d14eFfef03AcFE3522719",
+          "deploy_tx": "0x119479b7e9a762e4e727e4186a8acbd6cdee72347b90183a8bdd6d69496386e0",
+          "commit": "5e7c6b42d0082c8a8484cec8d35544af574ebfd4",
+          "source_path": "contracts/AppTrustConsumerV2.py",
+          "source_bytes": 10076,
+          "source_sha256": "d8c3c291477d6b33f41f1e21d2725f4570f21c57f63b275c4cdad9e0b7b8833f",
+          "audit": "0xb9141A125Ec557e77BDF7F97B409b460Cf44cd53",
+          "min_score": 50,
+          "owner": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
+          "custody": false,
+          "payable_methods": 0,
+          "deployed_at": "2026-09-30T15:37:37.132Z",
+          "superseded_because": "counted every case; replaced by a consumer that counts each distinct question once"
         }
       },
       "AppAuditV2": {
@@ -142,20 +157,6 @@
         "snapshot_fee_wei": "10000000000000000",
         "reverify_cooldown_s": 300,
         "deployed_at": "2026-09-30T15:37:27.790Z"
-      },
-      "AppTrustConsumerV2": {
-        "address": "0x18a81690aF1f3485fF7d14eFfef03AcFE3522719",
-        "deploy_tx": "0x119479b7e9a762e4e727e4186a8acbd6cdee72347b90183a8bdd6d69496386e0",
-        "commit": "5e7c6b42d0082c8a8484cec8d35544af574ebfd4",
-        "source_path": "contracts/AppTrustConsumerV2.py",
-        "source_bytes": 10076,
-        "source_sha256": "d8c3c291477d6b33f41f1e21d2725f4570f21c57f63b275c4cdad9e0b7b8833f",
-        "audit": "0xb9141A125Ec557e77BDF7F97B409b460Cf44cd53",
-        "min_score": 50,
-        "owner": "0x4D628402a7358e646674075d479f5Dd36f92b2B3",
-        "custody": false,
-        "payable_methods": 0,
-        "deployed_at": "2026-09-30T15:37:37.132Z"
       }
     }
   }

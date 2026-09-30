@@ -210,6 +210,10 @@ check(49, "server fetches resolve DNS, block private addresses, follow redirects
       'redirect: "manual"' in sf and "lookup(" in sf and "isPrivateAddress" in sf
       and "!== host" in sf and 'redirect: "follow"' not in sf)
 
+check(50, "consumer counts each distinct question once, by its latest final verdict (from the main contract's views)",
+      "def _distinct(" in CSRC and "get_cases_by_app(" in CSRC and "latest" in CSRC
+      and "def _question(" in CSRC and "per_case" in CSRC)
+
 # --- source == deployed == HEAD
 def git(*a):
     return subprocess.run(["git", "-C", str(ROOT)] + list(a), capture_output=True, text=True).stdout.strip()
