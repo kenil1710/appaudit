@@ -55,9 +55,27 @@ const APPS = {
 async function step(label, role, method, args, value = 0n, heavy = true) {
   const opts = heavy ? { fees: await estimateFees(C[role].wallet, method) } : {};
   const out = await C[role].send(method, args, value, opts);
+  if (out.status === "UNSETTLED" && out.hash) {
+    // Measured: a transaction Studio leaves PENDING jams every later write to
+    // this contract. Cancel it (the sender signs) before anything is re-sent.
+    try {
+      const r = await C[role].wallet.cancelTransaction({ hash: out.hash });
+      log(`   → cancelled the stuck transaction (${r?.status ?? "?"}) so the contract's queue moves`);
+    } catch (e) {
+      log(`   → cancel failed: ${String(e?.message ?? e).slice(0, 120)}`);
+    }
+  }
   const ret = returnedJson(out);
+  // The ledger identity, read back from the chain after EVERY transaction.
+  let ledger = null;
+  try {
+    const st = await view("get_stats");
+    ledger = { ok: Boolean(st.ledger_balanced), balance: st.balance_wei, locked: st.locked_wei,
+      claimable: st.claimable_wei, protocol: st.protocol_wei };
+    if (!ledger.ok) log(`   !!! LEDGER IDENTITY BROKEN after ${method}`);
+  } catch { /* an unreadable stats view is recorded as null, never as balanced */ }
   const row = { label, role, from: C[role].account.address, method, args: plain(args), value: value.toString(),
-    status: out.status, hash: out.hash, seconds: Math.round(out.seconds), returned: ret, at: new Date().toISOString() };
+    status: out.status, hash: out.hash, seconds: Math.round(out.seconds), returned: ret, ledger, at: new Date().toISOString() };
   S.txs.push(row);
   save();
   log(`${label.padEnd(34)} ${method.padEnd(19)} ${String(out.status).padEnd(10)} ${String(Math.round(out.seconds)).padStart(4)}s ${out.hash ?? ""}`);
@@ -66,6 +84,25 @@ async function step(label, role, method, args, value = 0n, heavy = true) {
 }
 
 const caseOf = async (id) => view("get_case", [id]);
+
+/** An intended refusal, re-sent until the chain's own refusal counter moves:
+ *  a round whose validators timed out can come back with a leader-only
+ *  REJECTED and no state applied, which is not an agreed refusal. */
+async function refusal(label, role, method, args, value = 0n) {
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    const before = (await view("get_stats")).refusals;
+    const { ret } = await step(`${label}${attempt > 1 ? " #" + attempt : ""}`, role, method, args, value);
+    await sleep(3000);
+    const after = (await view("get_stats")).refusals;
+    if (after > before) return ret;
+    const last = S.txs[S.txs.length - 1];
+    last.label += " — not agreed (validators timed out; leader-only), re-sent";
+    last.returned = null;
+    save();
+    await sleep(30_000);
+  }
+  return null;
+}
 
 /** File a case once. The case id is read OFF THE CHAIN (newest case by this
  *  advocate with this kind/app/topic that is not yet in state). */
@@ -83,6 +120,14 @@ async function fileOnce(key, role, method, args) {
       log(`   → case #${id} filing_result ${items[items.length - 1].filing_result}`);
       return id;
     }
+    if (ret?.status === "REJECTED" && /already have this/.test(ret.reason) && ret.challenge_id
+        && !Object.values(S.cases).includes(Number(ret.challenge_id))) {
+      // A view that lagged behind a filing that DID land: adopt that case.
+      S.cases[key] = Number(ret.challenge_id);
+      save();
+      log(`   → the earlier attempt landed as case #${ret.challenge_id}; adopted`);
+      return S.cases[key];
+    }
     if (ret?.status === "REJECTED" && !/could not agree/.test(ret.reason)) return null;
     log("   → not stored (no agreed round); retrying in 45s");
     await sleep(45_000);
@@ -94,9 +139,11 @@ async function respondOnce(key, role) {
   const id = S.cases[key];
   if (!id) return;
   for (let attempt = 1; attempt <= 3; attempt++) {
-    if ((await caseOf(id)).status !== "FILED") return;
-    await step(`${key} respond`, role, "respond",
+    const c = await caseOf(id);
+    if (c.status !== "FILED" || c.phase === "DEFAULT_AVAILABLE") return;
+    const { ret } = await step(`${key} respond`, role, "respond",
       [id, "Our store declarations and policy are accurate; we contest this reading.", ""], HALF, false);
+    if (ret?.status === "REJECTED" && /window/.test(String(ret.reason))) return;
     await sleep(3000);
   }
 }
@@ -138,17 +185,20 @@ log(`AppAudit v2 seed → ${address}`);
 
 // --- A. identity refusals (real listings, no stake) -----------------------
 if (!S.idDone) {
-  await step("identity: Temu (file served, wallet absent)", "dev1", "register_developer", [APPS.temu[0]]);
-  await step("identity: Snapchat (no file)", "dev2", "register_developer", [APPS.snapchat[0]]);
-  await step("identity: Pinterest App Store (file served, wallet absent)", "dev3", "register_developer", [APPS.pinterest[1]]);
+  await refusal("identity: Temu (file served, wallet absent)", "dev1", "register_developer", [APPS.temu[0]]);
+  await refusal("identity: Snapchat (no file)", "dev2", "register_developer", [APPS.snapchat[0]]);
+  await refusal("identity: Pinterest App Store (file served, wallet absent)", "dev3", "register_developer", [APPS.pinterest[1]]);
   S.idDone = true;
   save();
 }
 
 // --- B. refusal: two different apps -----------------------------------------
 if (!S.pairDone) {
-  await step("cross: Instagram (Play) + Facebook (App Store)", "outsider", "file_cross_store",
+  await refusal("cross: Instagram (Play) + Facebook (App Store)", "outsider", "file_cross_store",
     [APPS.instagram[0], APPS.facebook[1], "identifiers", "share"], HALF);
+  // Round 2: a sibling app of the same developer is not the same app.
+  await refusal("cross: Facebook Lite (Play) + Facebook (App Store)", "outsider", "file_cross_store",
+    [PLAY("com.facebook.lite"), APPS.facebook[1], "identifiers", "share"], HALF);
   S.pairDone = true;
   save();
 }
@@ -163,6 +213,11 @@ const RUN1 = [
   ["policy-pinterest-identifiers#1", "advocate6", "dev2", "file_policy", [APPS.pinterest[0], "", "identifiers", "share"]],
   ["label-whatsapp-location#1", "advocate1", "dev3", "file_challenge", [APPS.whatsapp[0], "", "This app does not collect location data"]],
 ];
+const RUN2B = [
+  // Case #10 (Pinterest run 2) defaulted: its response window closed while two
+  // stuck confirm re-sends sat in Studio's queue. This is its judged re-run.
+  ["policy-pinterest-identifiers#3", "advocate6", "dev2", "file_policy", [APPS.pinterest[0], "", "identifiers", "share"]],
+];
 const RUN2 = [
   ["policy-linkedin-identifiers#2", "advocate4", "dev4", "file_policy", [APPS.linkedin[0], "", "identifiers", "share"]],
   ["policy-capcut-personal#2", "advocate5", "dev1", "file_policy", [APPS.capcut[0], "", "personal", "share"]],
@@ -175,9 +230,10 @@ const RUN2 = [
 async function confirmOnce(key) {
   const id = S.cases[key];
   if (!id) return;
-  for (let attempt = 1; attempt <= 3; attempt++) {
+  for (let attempt = 1; attempt <= 2; attempt++) {
     const c = await caseOf(id);
     if (c.filing.confirmed || !["FILED", "RESPONDED"].includes(c.status)) return;
+    if (c.status === "FILED") return;      // unanswered: it can only default
     await step(`${key} confirm #${attempt}`, "trigger", "confirm_filing", [id]);
     await sleep(3000);
   }
@@ -186,8 +242,11 @@ async function confirmOnce(key) {
 async function run(list) {
   for (const [key, adv, dev, method, args] of list) {
     await fileOnce(key, adv, method, args);
-    await confirmOnce(key);
+    // Respond FIRST: the response window is 10 minutes on the demo and a
+    // Studio jam once made two confirm re-sends outlast it (case #10).
+    // confirm_filing is allowed until judgment, so it can safely come after.
     await respondOnce(key, dev);
+    await confirmOnce(key);
   }
   for (const [key] of list) {
     await sleep(20_000);
@@ -211,16 +270,26 @@ for (const [key] of RUN1) await finalizeWhenDue(key);
 
 // --- E. run 2 of every model-decided seed -----------------------------------
 await run(RUN2);
-for (const [key] of RUN2) await finalizeWhenDue(key);
+await run(RUN2B);
+// Any case nobody answered in time is closed the permissionless way.
+for (const key of Object.keys(S.cases)) {
+  const c = await caseOf(S.cases[key]);
+  if (c.status === "FILED") {
+    const due = c.respond_by + 15 - Math.floor(Date.now() / 1000);
+    if (due > 0) await sleep(due * 1000);
+    await step(`${key} default_judgment`, "trigger", "default_judgment", [S.cases[key]]);
+  }
+}
+for (const [key] of [...RUN2, ...RUN2B]) await finalizeWhenDue(key);
 
 // --- F. withdraw flows ---------------------------------------------------------
 if (!S.withdrawDone) {
   for (const r of ["advocate1", "advocate2", "advocate3", "advocate4", "advocate5", "advocate6",
-    "dev1", "dev2", "dev3", "dev4", "outsider"]) {
+    "dev1", "dev2", "dev3", "dev4", "outsider", "trigger"]) {
     const bal = await view("get_balance", [C[r].account.address]);
     if (BigInt(bal.claimable_wei) > 0n) await step(`withdraw ${r}`, r, "withdraw", [], 0n, false);
   }
-  await step("withdraw advocate1 again (must refuse)", "advocate1", "withdraw", [], 0n, false);
+  await refusal("withdraw advocate1 again (must refuse)", "advocate1", "withdraw", []);
   const fees = await view("get_balance", [C.client.account.address]);
   if (BigInt(fees.fees_wei) > 0n) await step("withdraw_fees (fee recipient)", "client", "withdraw_fees", [], 0n, false);
   S.withdrawDone = true;

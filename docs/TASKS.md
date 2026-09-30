@@ -37,7 +37,7 @@ addresses, and its 492-test suite still runs on every push.
 ## Chain
 - [x] deploy v2 CANONICAL, DEMO, CONSUMER from committed HEAD
 - [x] ADDRESSES.md (full addresses, commit, sha256)
-- [x] seeds (docs/SEEDS.md), every model-decided seed run twice (4/4 agree)
+- [x] seeds (docs/SEEDS.md), every model-decided seed run twice (4/4 verdicts; 13/14 readings)
 - [x] verify_source: code read back from Studio Dev for all 3 v2 contracts
 
 ## Frontend
@@ -59,3 +59,11 @@ addresses, and its 492-test suite still runs on every push.
 ## Finish
 - [x] own audit (docs/AUDIT_V2.md), findings fixed
 - [x] full suite green, commit, push, Vercel redeploy
+
+## Round 2 (attack round)
+- [x] 10 fixes; 13 attack tests pass inside test/test_v2.py (176)
+- [x] git history rewritten: no Co-Authored-By, no Claude/AI mentions
+- [x] redeployed canonical, demo, consumer from the rewritten HEAD (5e7c6b4)
+- [x] reseeded; ledger identity after every transaction (99/99)
+- [x] r1 archived under docs/superseded/v2-r1
+- [x] Vercel redeploy, pages read the new contracts

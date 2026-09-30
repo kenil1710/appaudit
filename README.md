@@ -5,14 +5,15 @@
 | | |
 |---|---|
 | **Network** | GenLayer Studio Dev (chain `61997`), [explorer](https://explorer-studio-dev.genlayer.com/) |
-| **AppAudit v2 — demo** (the app and the seeds; 10-minute windows) | `0xC7502668d39e8BEA9795F1cEBd705cc267420793` |
-| **AppAudit v2 — canonical** (48h / 24h / 48h, 300s cooldown) | `0x088beDF9fB702C94f140A8c6d4e619d8B53da102` |
-| **AppTrustConsumerV2** (custody false, zero payable methods) | `0xc9a0928A910d59F23AD612fAABaEd041FE5c0294` |
+| **AppAudit v2 — demo** (the app and the seeds; 10-minute windows) | `0xb9141A125Ec557e77BDF7F97B409b460Cf44cd53` |
+| **AppAudit v2 — canonical** (48h / 24h / 48h, 300s cooldown) | `0xB5F63383ED934e8eAa11cCc0510266481038092F` |
+| **AppTrustConsumerV2** (custody false, zero payable methods) | `0x18a81690aF1f3485fF7d14eFfef03AcFE3522719` |
+| **v2 round 1** (superseded after the attack round) | [`docs/superseded/v2-r1/`](docs/superseded/v2-r1/README.md) |
 | **AppAudit v1 — demo / canonical** | `0x060cFC326B19F3DD4B839dEa75924Fd2935be61C` / `0xbbdf68A0616e44Fb57d64386b19fa80b055d6257` |
 | **AppTrustConsumer v1** | `0x5b6F3FBCD4f4aFAA763Fa13Bd9eD39AfD2C5773F` |
 | **Live app** | https://appaudit-genlayer.vercel.app |
 | **Offline tests** | v2: `python3 test/test_v2.py` · v1: `python3 test/test_logic.py` (492) — stdlib only |
-| **Audits** | `python3 tools/audit_v2.py` (39) · `python3 tools/audit.py` (33) · `node tools/verify_source.mjs` |
+| **Audits** | `python3 tools/audit_v2.py` (49) · `python3 tools/audit.py` (33) · `node tools/verify_source.mjs` |
 
 Full addresses, deploy transactions, commit and sha256: [`ADDRESSES.md`](ADDRESSES.md).
 
@@ -25,14 +26,17 @@ Full addresses, deploy transactions, commit and sha256: [`ADDRESSES.md`](ADDRESS
    **code** compares: one store declares the type collected/shared, the other
    states in terms that nothing is → CONTRADICTED; one store silent →
    INCONCLUSIVE (silence is never evidence). Both listings' HTML is read at
-   filing and the case is **refused unless they are the same app** (same first
-   title word, and the same normalised developer name or website domain).
+   filing and the case is **refused unless they are the same app**: the same
+   title exactly (case, punctuation and ™/® dropped; a store subtitle after
+   ":" or " - " may differ) AND the same developer (normalised name, or the
+   developer's own website host — shared hosts never count).
 2. **Policy vs label.** The privacy policy **linked from the listing** — found
    by validators in its HTML at filing, never supplied — is read by the model
-   into a fixed enum per data type (SHARED / COLLECTED / NOT_MENTIONED) plus one
-   sentence; **code** checks the sentence appears verbatim in the fetched policy
-   (else NOT_MENTIONED) and compares with the label. Only the enum and a hash of
-   the sentence are stored. Oversized or truncated policies are refused at
+   into a fixed enum per data type (SHARED / COLLECTED / NOT_MENTIONED) plus the
+   words it relied on; **code** checks them verbatim in the fetched policy (else
+   NOT_MENTIONED), expands them to the whole sentence(s) around them, and
+   compares with the label. Stored: the enum, a SHA-256 of the whole-sentence
+   quote, and a SHA-256 of the whole fetched policy text. Oversized or truncated policies are refused at
    filing and INCONCLUSIVE at judgment, never VERIFIED. The policy is untrusted
    data: delimited, with marker lines defanged; an obeyed injection can at worst
    make a reading INCONCLUSIVE.
@@ -44,10 +48,16 @@ Full addresses, deploy transactions, commit and sha256: [`ADDRESSES.md`](ADDRESS
    permissionless `recheck_developer` revokes if the website or file changed.
 4. **Evidence frozen at filing + label timeline.** Every filing is a consensus
    round that stores the evidence's hash and a compact canonical copy.
-   Contradiction at filing and at judgment → CONTRADICTED; at filing, fixed and
-   edited by judgment → **CORRECTED** (the advocate wins; both snapshots and
-   dates are on the record). `snapshot(app)` (fee, no stake, 4 per listing per
-   day) and `timeline(app)` with diffs computed by code.
+   Contradiction at filing and at judgment → CONTRADICTED; at filing, gone by
+   judgment, the evidence **for that data type** changed (its status, or the
+   policy text) and the filing capture **confirmed** → **CORRECTED** (the
+   advocate wins). Confirmation is a second witness: a paid snapshot before
+   filing with the same state, or `confirm_filing(id)` by anyone before
+   judgment; unconfirmed, a fixed contradiction is INCONCLUSIVE. Editing the
+   linked policy needs no witness: it is CORRECTED, in judge and in a contest,
+   never a refund. `snapshot(app)` (fee, no stake, 4 per listing per day);
+   free filing/judgment snapshots only when the label changed;
+   `timeline(app, offset, limit)` paginated, diffs computed by code.
 5. **Pull payouts.** Every v2 payout, refund and fee is a claimable balance;
    `withdraw()` zeroes it, then sends. `balance == open stakes + claimable +
    protocol fees` is published and checked after every offline transaction.
@@ -57,6 +67,19 @@ Full addresses, deploy transactions, commit and sha256: [`ADDRESSES.md`](ADDRESS
 
 v1's claim type is kept inside v2 unchanged (`file_challenge`), now with
 frozen evidence and CORRECTED.
+
+### Round 2 — the independent attack round
+
+An attacker wrote 13 tests against the first v2 deployment, all failing. All
+ten findings are fixed (details: [`docs/AUDIT_V2.md`](docs/AUDIT_V2.md),
+"Round 2"; threats 34–40 in [`docs/THREAT_MODEL_V2.md`](docs/THREAT_MODEL_V2.md)),
+the 13 tests are part of `test/test_v2.py` (176 tests), and v2 was redeployed:
+exact-title binding, policy-edit CORRECTED, data-type-scoped CORRECTED with a
+confirmed capture, identity revoked only on positive evidence, duplicates per
+advocate, flood-proof paginated timeline, whole-sentence SHA-256 quotes, and a
+`/api/quote` that fetches only a case's own policy URL behind a DNS-resolving
+private-address guard. The first deployment is kept on chain and documented
+under [`docs/superseded/v2-r1/`](docs/superseded/v2-r1/README.md).
 
 ### What the model never decides
 
@@ -68,33 +91,43 @@ claim reading inside v1's evidence bracket, and filling the policy enum.
 
 ### Seeded on chain (real apps only)
 
-Demo instance, 10-minute windows, driven by `test/seed_v2.mjs`, read back by `test/collect_v2.mjs`:
+Round-2 demo instance `0xb9141A125Ec557e77BDF7F97B409b460Cf44cd53`, 10-minute windows, driven by `test/seed_v2.mjs`, read back by `test/collect_v2.mjs`:
 
 | # | kind | app | question | filing → judgment | verdict | settlement adv / dev / fee |
 |---|---|---|---|---|---|---|
-| 1 | cross-store | Snapchat | Identifiers, shared | Play "No data shared" vs App Store tracks Identifiers | **CONTRADICTED** | 0.9 / 0.05 / 0.05 |
-| 2 | cross-store | CapCut | Identifiers, shared | Play "No data shared" vs App Store tracks Identifiers | **CONTRADICTED** | 0.9 / 0.05 / 0.05 |
+| 1 | cross-store | Snapchat | Identifiers, shared | Play "No data shared" vs App Store tracks Identifiers, both reads | **CONTRADICTED** | 0.9 / 0.05 / 0.05 |
+| 2 | cross-store | CapCut | Identifiers, shared | same pattern | **CONTRADICTED** | 0.9 / 0.05 / 0.05 |
 | 3 | cross-store | WhatsApp | Location, shared | Play "No data shared" vs App Store silent | **INCONCLUSIVE** | 0.5 / 0.5 / 0 |
-| 4, 8 | policy vs label | LinkedIn | Identifiers, shared | policy SHARED ("hashed IDs or device identifiers" to advertisers) vs Play "No data shared" | **CONTRADICTED** ×2 | 0.9 / 0.05 / 0.05 |
-| 5, 9 | policy vs label | CapCut | Personal info, shared | policy SHARED (targeted advertising) vs Play "No data shared" | **CONTRADICTED** ×2 | 0.9 / 0.05 / 0.05 |
-| 6, 10 | policy vs label | Pinterest | Identifiers, shared | policy SHARED vs Play declares Device IDs shared | **CLAIM_VERIFIED** ×2 | 0.05 / 0.9 / 0.05 |
+| 4, 8 | policy vs label | LinkedIn | Identifiers, shared | SHARED (whole-sentence quote: "…except for: (i) hashed IDs or device identifiers…") vs Play "No data shared" | **CONTRADICTED** ×2 | 0.9 / 0.05 / 0.05 |
+| 5, 9 | policy vs label | CapCut | Personal info, shared | run 1: filing read COLLECTED, judgment SHARED; run 2: SHARED both | **CONTRADICTED** ×2 | 0.9 / 0.05 / 0.05 |
+| 6, 12 | policy vs label | Pinterest | Identifiers, shared | SHARED vs Play declares Device IDs shared | **CLAIM_VERIFIED** ×2 | 0.05 / 0.9 / 0.05 |
 | 7, 11 | claim vs label (v1 kind) | WhatsApp | "does not collect location data" | Play declares Approximate location | **CONTRADICTED** ×2 | 0.9 / 0.05 / 0.05 |
+| 10 | policy vs label | Pinterest | (run 2, first attempt) | — | **DEFAULTED** | 0.5 / — / 0 |
 
-- **Model agreement:** every model-decided question was filed and judged twice;
-  **4 of 4** reached the same verdict on both runs, with the same enum at
-  filing and at judgment each time.
-- **Refused live:** Instagram (Play) + Facebook (App Store) — "not the same app";
+- **Model agreement:** 4 of 4 model-decided questions reached the same verdict
+  on both runs; **13 of 14** individual readings agree with their question's
+  majority (the split: CapCut run 1's filing read COLLECTED, the other three
+  CapCut readings SHARED — so case #5 filed INCONCLUSIVE and judged
+  CONTRADICTED).
+- **Case #10 defaulted, not a reading:** Studio held two `confirm_filing`
+  re-sends PENDING for 15 minutes each, outlasting the 10-minute response
+  window; `respond` was correctly refused. The seed now responds before
+  confirming; #12 is the re-filed second run.
+- **Filing captures confirmed live:** by `confirm_filing` (#1–#7, #9, #12) and
+  by a paid snapshot taken before filing (#8, #11).
+- **Refused live, each an agreed refusal (counter moved):** Instagram +
+  Facebook and **Facebook Lite + Facebook** ("not the same app");
   `register_developer` on Temu and Pinterest (file served, wallet absent) and
   Snapchat (no file); a second `withdraw`.
+- **Ledger identity** read back after every one of 99 seed transactions: held
+  99/99; the books end at **balance 0 = open 0 + claimable 0 + protocol 0**.
 - **Snapshots + timelines** for WhatsApp (both stores), Snapchat and LinkedIn;
-  32 snapshots in all, diffs computed by the contract (labels did not change
-  during the run, and the timeline says so).
-- **Withdrawals:** every party withdrew; the fee recipient withdrew 0.54 GEN;
-  the books end at **balance 0 = open 0 + claimable 0 + protocol 0**.
-- **Consumer:** `app_record` reads for six listings (e.g. Snapchat 1
-  contradicted, score 35; Pinterest 2 verified, score 90).
-- **CORRECTED:** not reproducible honestly on chain (no real label changed in
-  the window); shown in tests.
+  no label changed during the run, and the timelines say so.
+- **Consumer:** `app_record` for six listings (Snapchat 1 contradicted, score
+  35; Pinterest 2 verified, score 90).
+- **CORRECTED:** not reproducible honestly on chain; shown in tests.
+- **Studio queue jams:** 5 writes sat PENDING 15+ minutes and blocked the
+  contract's queue; each was cancelled by its sender. Listed in SEEDS.md.
 
 Everything above is read back from the chain into [`docs/SEEDS.md`](docs/SEEDS.md)
 (explorer links, model agreement across two runs, snapshots, withdrawals,
@@ -113,8 +146,15 @@ consumer reads). Measurements that shaped v2: [`docs/PROBE_V2.md`](docs/PROBE_V2
 - **The identity success path runs only in tests.** No real app's website
   publishes `/.well-known/appaudit.txt`; live, only the refusals run (file
   served but wallet absent: Temu, Pinterest; no file: Snapchat).
-- **CORRECTED is proven offline only.** It needs a real label to change inside
-  a 10-minute window; none did during the seeds.
+- **CORRECTED is proven offline only.** It needs a real label or policy to
+  change inside a 10-minute window; none did during the seeds. It also needs a
+  confirmed filing capture when the label changed: advocates should snapshot
+  before filing or call `confirm_filing` right after.
+- **Exact titles are conservative.** Of 24 popular apps, 21 bind; Telegram
+  ("Telegram" vs "Telegram Messenger"), Zoom and Temu are refused.
+- **The contract can only check host NAMES** for developer-controlled links;
+  the fetch itself is done by the network's web module. Our own servers
+  resolve DNS and refuse private addresses on every hop.
 - **Model disagreement stalls, it never decides.** Validators must agree on the
   enum exactly; if they do not, nothing is stored and `settle_stalled` returns
   both stakes after the window.

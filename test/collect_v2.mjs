@@ -29,7 +29,8 @@ const EXPECT = {
   "policy-capcut-personal#1": ["CapCut", "Personal info · shared", "CONTRADICTED", "policy: “we do ‘share’ your information … for … advertisements”; Play: “No data shared”"],
   "policy-capcut-personal#2": ["CapCut", "Personal info · shared", "CONTRADICTED", "run 2"],
   "policy-pinterest-identifiers#1": ["Pinterest", "Identifiers · shared", "CLAIM_VERIFIED", "policy discloses cookie IDs / hashed email to ad platforms; Play declares Device IDs shared"],
-  "policy-pinterest-identifiers#2": ["Pinterest", "Identifiers · shared", "CLAIM_VERIFIED", "run 2"],
+  "policy-pinterest-identifiers#2": ["Pinterest", "Identifiers · shared", "CLAIM_VERIFIED", "run 2 (defaulted, see below)"],
+  "policy-pinterest-identifiers#3": ["Pinterest", "Identifiers · shared", "CLAIM_VERIFIED", "run 2, re-filed after #2 defaulted"],
   "label-whatsapp-location#1": ["WhatsApp", "“does not collect location data”", "CONTRADICTED", "v1 claim kind; Play declares Approximate location"],
   "label-whatsapp-location#2": ["WhatsApp", "“does not collect location data”", "CONTRADICTED", "run 2"],
 };
@@ -60,6 +61,9 @@ for (const [key, id] of Object.entries(seed.cases)) {
   const [app, q, want, why] = EXPECT[key] ?? [c.app_label, c.topic, "", ""];
   const actual = c.outcome || `(${c.status})`;
   if (want && actual !== want) mismatches.push([key, want, actual, why, c]);
+  if (want && actual === want && c.kind === "POLICY_LABEL" && c.filing_result !== c.judgment_result) {
+    mismatches.push([key, want, actual + " (filing read " + c.filing_result + ")", why, c]);
+  }
   const filing = c.kind === "LABEL" ? `case ${c.filing.status}` : `${c.filing.status}${c.kind === "CROSS_STORE" ? " / " + c.filing.status2 : ""} → ${c.filing_result}`;
   const judgment = c.judged_at ? (c.kind === "LABEL" ? `${c.judgment.case} → ${c.judgment_result}` : `${c.judgment.status}${c.kind === "CROSS_STORE" ? " / " + c.judgment.status2 : ""} → ${c.judgment_result}`) : "—";
   const s = c.settlement;
@@ -70,6 +74,10 @@ if (mismatches.length) {
   out("### Where actual ≠ expected");
   out();
   for (const [key, want, actual, , c] of mismatches) {
+    if (c.status === "DEFAULTED") {
+      out(`- **${key}** (case #${c.challenge_id}): expected ${want}, got DEFAULTED — not a reading. Studio left two of the seed's \`confirm_filing\` re-sends PENDING for 15 minutes each (both cancelled by their sender), which outlasted the demo's 10-minute response window; \`respond\` was then correctly refused and the case defaulted (advocate's stake claimable in full). The seed now responds before confirming. The second judged Pinterest run is the re-filed \`policy-pinterest-identifiers#3\`.`);
+      continue;
+    }
     out(`- **${key}**: expected ${want}, got ${actual}. Filing: ${c.filing_result || c.filing.status}; judgment: ${c.judgment_result || "—"}${c.kind === "POLICY_LABEL" ? `; policy enum at filing ${c.filing.policy_enum}, at judgment ${c.judgment.policy_enum || c.judgment.policy_state || "—"}` : ""}. Reason on chain: ${c.reason}`);
   }
   out();
@@ -88,7 +96,9 @@ let agreeN = 0;
 let totalN = 0;
 for (const base of ["policy-linkedin-identifiers", "policy-capcut-personal", "policy-pinterest-identifiers", "label-whatsapp-location"]) {
   const a = cases[base + "#1"];
-  const b = cases[base + "#2"];
+  // Run 2 is the second JUDGED run: a run-2 case that defaulted (Studio jam
+  // outlasted its response window) is replaced by its re-filed #3.
+  const b = cases[base + "#3"]?.judged_at ? cases[base + "#3"] : cases[base + "#2"];
   if (!a || !b) { out(`| ${base} | ${a ? "run" : "missing"} | | ${b ? "run" : "missing"} | | — |`); continue; }
   const f = (c, when) => c.kind === "POLICY_LABEL"
     ? `${c[when].policy_enum || c[when].policy_state || "—"} → ${when === "filing" ? c.filing_result : c.judgment_result || "—"}`
@@ -101,14 +111,53 @@ for (const base of ["policy-linkedin-identifiers", "policy-capcut-personal", "po
 out();
 out(`**${agreeN} of ${totalN}** model-decided questions reached the same verdict on both runs.`);
 out();
+// Stricter: every individual model READING (the policy enum at filing and at
+// judgment, both runs; the claim verdict at judgment, both runs).
+let readings = 0;
+let sameAsMajority = 0;
+const splits = [];
+for (const base of ["policy-linkedin-identifiers", "policy-capcut-personal", "policy-pinterest-identifiers", "label-whatsapp-location"]) {
+  const runs = [cases[base + "#1"], cases[base + "#3"]?.judged_at ? cases[base + "#3"] : cases[base + "#2"]].filter(Boolean);
+  const vals = [];
+  for (const c of runs) {
+    if (c.kind === "POLICY_LABEL") {
+      if (c.filing.policy_enum) vals.push(c.filing.policy_enum);
+      if (c.judgment.policy_enum) vals.push(c.judgment.policy_enum);
+    } else if (c.judgment_result) {
+      vals.push(c.judgment_result);
+    }
+  }
+  const counts = {};
+  for (const v of vals) counts[v] = (counts[v] ?? 0) + 1;
+  const top = Math.max(0, ...Object.values(counts));
+  readings += vals.length;
+  sameAsMajority += top;
+  if (top < vals.length) splits.push(`${base}: ${vals.join(" / ")}`);
+}
+out(`Individual readings: **${sameAsMajority} of ${readings}** agree with their question's majority reading.${splits.length ? " Split: " + splits.join("; ") + "." : ""}`);
+out();
 
+const rejectedRows = seed.txs.filter((t) => t.returned?.status === "REJECTED");
+const deliberate = rejectedRows.filter((t) => /^(identity:|cross:|withdraw .* again)/.test(t.label));
+const incidental = rejectedRows.filter((t) => !deliberate.includes(t));
 out("## Refusals, live");
+out();
+out("Deliberate: each was re-sent until the chain's own refusal counter moved, so every row is an AGREED refusal.");
 out();
 out("| what | call | result on chain | tx |");
 out("|---|---|---|---|");
-for (const t of seed.txs.filter((t) => t.returned?.status === "REJECTED")) {
-  out(`| ${t.label} | \`${t.method}\` | ${String(t.returned.reason).replace(/\|/g, "/")} | ${tx(t.hash)} |`);
-}
+for (const t of deliberate) out(`| ${t.label} | \`${t.method}\` | ${String(t.returned.reason).replace(/\|/g, "/")} | ${tx(t.hash)} |`);
+out();
+out("Incidental refusals during the run (the contract refusing a re-send correctly):");
+out();
+out("| what | call | result on chain | tx |");
+out("|---|---|---|---|");
+for (const t of incidental) out(`| ${t.label} | \`${t.method}\` | ${String(t.returned.reason).replace(/\|/g, "/")} | ${tx(t.hash)} |`);
+out();
+const cancelled = seed.txs.filter((t) => t.status === "CANCELED" || /cancelled/.test(t.label));
+const stuck = seed.txs.filter((t) => t.status === "UNSETTLED");
+const jammed = [...new Map([...stuck, ...cancelled].map((t) => [t.hash, t])).values()];
+out(`**Studio queue jams.** ${jammed.length} writes sat PENDING for 15+ minutes and blocked every later write to the contract; each was cancelled by its own sender (\`sim_cancelTransaction\`) so the queue moved: ${jammed.map((t) => tx(t.hash)).join(" · ")}.`);
 out();
 
 const unapplied = seed.txs.filter((t) => ["FINALIZED", "CANCELED", "UNDETERMINED"].includes(t.status) && /(file|judge) #\d/.test(t.label));
@@ -161,6 +210,13 @@ for (const [name, url] of [["Snapchat · Play", "https://play.google.com/store/a
   const r = plain(await K.view("app_record", [url]));
   out(`| ${name} | ${r.contradicted} | ${r.verified} | ${r.corrected} | ${r.inconclusive} | ${r.verified_developer} | ${r.last_snapshot_at ? new Date(r.last_snapshot_at * 1000).toISOString().slice(0, 19) : "—"} | ${r.trust_score} |`);
 }
+out();
+
+const checked = seed.txs.filter((t) => t.ledger);
+const broken = checked.filter((t) => !t.ledger.ok);
+out("## Ledger identity after every transaction");
+out();
+out(`After each of the **${checked.length}** seed transactions the script read \`get_stats\` back from the chain: \`balance == locked + claimable + protocol\` held **${checked.length - broken.length} / ${checked.length}** times${broken.length ? " — BROKEN after: " + broken.map((t) => t.label).join(", ") : ""}.`);
 out();
 
 const s = await view("get_stats");

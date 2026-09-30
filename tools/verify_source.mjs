@@ -44,6 +44,19 @@ for (const [name, file] of Object.entries(FILES)) {
   if (!same || !recorded) bad++;
   rows.push([name, rec.address, file, sha(onChain), same ? "identical" : "DIFFERS", recorded ? "match" : "MISMATCH"]);
 }
+// The superseded r1 contracts, against the tree they were deployed from.
+for (const [name, file] of [["AppAuditV2", "contracts/AppAuditV2.py"], ["AppAuditV2Demo", "contracts/AppAuditV2.py"], ["AppTrustConsumerV2", "contracts/AppTrustConsumerV2.py"]]) {
+  const rec = dep.superseded?.v2_r1?.[name];
+  if (!rec) continue;
+  let chain = "";
+  for (let i = 0; i < 5 && !chain; i++) {
+    try { chain = await client.getContractCode(rec.address); } catch (e) { await new Promise((r) => setTimeout(r, 3000)); }
+  }
+  const at = execFileSync("git", ["-C", root, "show", `d52d5e1:${file}`]);
+  const same = Buffer.from(String(chain), "utf8").equals(at);
+  if (!same || rec.source_sha256 !== sha(at)) bad++;
+  rows.push([name + " (r1)", rec.address, file + " @ d52d5e1", sha(Buffer.from(String(chain), "utf8")), same ? "identical" : "DIFFERS", rec.source_sha256 === sha(at) ? "match" : "MISMATCH"]);
+}
 if (process.argv.includes("--md")) {
   console.log(`Read back from Studio Dev (\`gen_getContractCode\`) against HEAD \`${head}\`:\n`);
   console.log("| contract | address | file | sha256 of code on chain | chain vs HEAD | recorded sha256 |");

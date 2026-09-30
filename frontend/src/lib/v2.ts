@@ -13,16 +13,16 @@ import { ContractReadError, plain, type TransactionHash } from "./contract";
 
 const isAddr = (v: string | undefined): v is string => Boolean(v && /^0x[0-9a-fA-F]{40}$/.test(v));
 
-/** Deployed from commit 8f9db85 (ADDRESSES.md). Overridable per environment. */
+/** Deployed from commit 5e7c6b4 (ADDRESSES.md). Overridable per environment. */
 export const V2_ADDRESS = (isAddr(process.env.NEXT_PUBLIC_V2_ADDRESS)
   ? process.env.NEXT_PUBLIC_V2_ADDRESS
-  : "0xC7502668d39e8BEA9795F1cEBd705cc267420793") as `0x${string}`;
+  : "0xb9141A125Ec557e77BDF7F97B409b460Cf44cd53") as `0x${string}`;
 export const V2_CANONICAL_ADDRESS = isAddr(process.env.NEXT_PUBLIC_V2_CANONICAL_ADDRESS)
   ? process.env.NEXT_PUBLIC_V2_CANONICAL_ADDRESS
-  : "0x088beDF9fB702C94f140A8c6d4e619d8B53da102";
+  : "0xB5F63383ED934e8eAa11cCc0510266481038092F";
 export const V2_CONSUMER_ADDRESS = isAddr(process.env.NEXT_PUBLIC_V2_CONSUMER_ADDRESS)
   ? process.env.NEXT_PUBLIC_V2_CONSUMER_ADDRESS
-  : "0xc9a0928A910d59F23AD612fAABaEd041FE5c0294";
+  : "0x18a81690aF1f3485fF7d14eFfef03AcFE3522719";
 
 export type Kind = "LABEL" | "CROSS_STORE" | "POLICY_LABEL";
 export type Outcome = "CONTRADICTED" | "CLAIM_VERIFIED" | "INCONCLUSIVE" | "CORRECTED" | "";
