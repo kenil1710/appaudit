@@ -69,8 +69,9 @@ check(1, "validators compare every primitive and derived field EXACTLY",
 coh = text(fn("_coherent_v2"))
 check(2, "leader cannot forge: derived fields re-derived from the leader's primitives",
       "_derive_v2(task, payload)" in coh and "DERIVED[op]" in coh)
-check(3, "the one non-compared leader string (a policy quote) is CHECKED verbatim by each validator",
-      "_quote_ok(lead.get('quote', ''), private)" in agr)
+check(3, "the one non-compared leader string (a policy quote) is CHECKED by each validator: verbatim AND whole sentences",
+      "_quote_whole(lead.get('quote', ''), private)" in agr
+      and "_whole_sentences(q, policy_text) == q" in text(fn("_quote_whole")))
 check(4, "the quote is stored only as hash + length, never as text",
       "f_quote_hash" in SRC and "f_quote:" not in SRC and "j_quote:" not in SRC
       and "ch.f_quote_hash = str(out['quote_hash'])" in text(W["file_policy"]))
@@ -95,8 +96,10 @@ check(12, "silence is never evidence: only an explicit statement is DECLARED_NON
       "if none and len(rows) == 0:" in text(fn("_label_status")))
 check(13, "oversized / truncated / unreadable policy is INCONCLUSIVE, never VERIFIED",
       "if policy_state != PS_OK:\n        return V_INCONCLUSIVE" in text(fn("_policy_result")))
-check(14, "same-app binding at filing: title word AND (developer name OR website domain)",
-      "if t1 != t2:" in text(fn("_bind")) and "n1 == n2" in text(fn("_bind")) and "d1 == d2" in text(fn("_bind"))
+check(14, "same-app binding at filing: EXACT normalised title AND same developer (name, or own non-shared website host); no first-word, no policy domain",
+      "_titles_match(" in text(fn("_bind")) and "n1 == n2" in text(fn("_bind")) and "h1 == h2" in text(fn("_bind"))
+      and "_first_word" not in SRC and "policy" not in text(fn("_bind")).split('"""')[-1]
+      and "a == b" in text(fn("_titles_match"))
       and "if not bool(out['bound']):" in text(W["file_cross_store"]))
 check(15, "CORRECTED needs the label edited and still readable (model variation alone cannot)",
       "filed == V_CONTRADICTED and now_readable and changed" in text(fn("_fixed")))
@@ -174,6 +177,38 @@ check(35, "consumer: custody false, zero payable, no transfer",
       not [f for f in writes(CTREE, "AppTrustConsumerV2").values()
            if any(d.endswith("payable") for d in decos(f))]
       and "emit_transfer" not in CSRC and "app_record" in CSRC)
+
+# --- round 2 (attack round) fixes
+fc = text(fn("_final_code"))
+check(40, "a policy edit after filing is CORRECTED (judge and contest share _final_code), never INCONCLUSIVE",
+      "policy_changed" in fc and "PS_TOO_LARGE" in fc and "_final_code(" in text(M["_run_judgment"])
+      and "self._run_judgment(" in text(W["contest"]) and "_final_code(" in text(M["verify_case"]))
+check(41, "CORRECTED keyed on the case's data type (status / claim rows), never the whole-label hash",
+      "p_status" in fc and "_relevant(" in text(fn("_label_corrects"))
+      and "section_hash" not in text(fn("_label_corrects")))
+check(42, "CORRECTED needs a confirmed filing capture (pre-filing paid snapshot or confirm_filing)",
+      "V_CORRECTED if confirmed else V_INCONCLUSIVE" in text(fn("_fixed"))
+      and "confirm_filing" in W and "self._pre_confirm(ch)" in text(W["file_policy"]))
+rc = text(W["recheck_developer"])
+check(43, "identity revoked only on positive evidence; a failed read changes nothing",
+      "page_ok" in rc and "not evidence" in rc and "if self._dev(key) is not None:" in text(W["register_developer"]))
+check(44, "duplicates refused per advocate",
+      all("sender.as_hex" in text(W[k]).split("live_key")[1][:400] for k in FILINGS))
+check(45, "free snapshots only on change; timeline paginated",
+      "if source != SRC_MANUAL:" in text(M["_add_snapshot"])
+      and [a.arg for a in M["timeline"].args.args] == ["self", "app_url", "offset", "limit"])
+check(46, "quote and policy hashes are SHA-256",
+      "_sha256(" in text(fn("_quote_hash")) and "_sha256(" in text(fn("_policy_hash")))
+check(47, "no duplicate top-level definitions (a later def silently shadows an earlier one)",
+      len([n.name for n in TREE.body if isinstance(n, ast.FunctionDef)])
+      == len({n.name for n in TREE.body if isinstance(n, ast.FunctionDef)}))
+qr = (ROOT / "frontend/src/app/api/quote/route.ts").read_text()
+sf = (ROOT / "frontend/src/lib/safefetch.ts").read_text()
+check(48, "/api/quote takes a case id, reads the policy URL from the contract, no open relay",
+      'get("url")' not in qr and 'get("id")' in qr and '"get_case"' in qr and "guardedText(" in qr)
+check(49, "server fetches resolve DNS, block private addresses, follow redirects by hand on the same host",
+      'redirect: "manual"' in sf and "lookup(" in sf and "isPrivateAddress" in sf
+      and "!== host" in sf and 'redirect: "follow"' not in sf)
 
 # --- source == deployed == HEAD
 def git(*a):

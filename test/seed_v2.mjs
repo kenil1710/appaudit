@@ -170,9 +170,23 @@ const RUN2 = [
   ["label-whatsapp-location#2", "advocate1", "dev3", "file_challenge", [APPS.whatsapp[0], "", "This app does not collect location data"]],
 ];
 
+/** A second witness of the filing capture (fix 7): only a confirmed capture
+ *  can ever become CORRECTED. Anyone may call it; the seed does, once. */
+async function confirmOnce(key) {
+  const id = S.cases[key];
+  if (!id) return;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const c = await caseOf(id);
+    if (c.filing.confirmed || !["FILED", "RESPONDED"].includes(c.status)) return;
+    await step(`${key} confirm #${attempt}`, "trigger", "confirm_filing", [id]);
+    await sleep(3000);
+  }
+}
+
 async function run(list) {
   for (const [key, adv, dev, method, args] of list) {
     await fileOnce(key, adv, method, args);
+    await confirmOnce(key);
     await respondOnce(key, dev);
   }
   for (const [key] of list) {

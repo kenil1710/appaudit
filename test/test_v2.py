@@ -196,15 +196,26 @@ POLICIES = {
     "http://www.snapchat.com/privacy": "policy_snapchat.txt",
 }
 
+# Whole sentences of the real policies (fix: quotes are whole sentences).
 LI_QUOTE = ("We do not share your personal data with any non-Affiliated "
             "third-party advertisers or ad networks except for: (i) hashed IDs "
-            "or device identifiers")
+            "or device identifiers (to the extent they are personal data in some "
+            "countries); (ii) with your separate permission (e.g., in a lead "
+            "generation form) or (iii) data already visible to any users of the "
+            "Services (e.g., profile).")
 PIN_QUOTE = ("To do this, we disclose information such as cookie IDs, your IP "
              "address, or a hashed version of your email address to third "
              "parties, such as Facebook Ads, Google Marketing Platform, and "
              "others who may combine that information with other information "
-             "they already have about you")
-CAP_QUOTE = "we do “share” your information where defined under applicable law"
+             "they already have about you and deliver ads about Pinterest to you.")
+CAP_QUOTE = ("Although we do not sell your personal information for money, we do "
+             "“share” your information where defined under applicable law to "
+             "include the processing and disclosing your personal information to "
+             "third parties for purposes of serving you advertisements based on "
+             "your activity across other sites and services (“cross-context "
+             "behavioral advertising” or “targeted advertising”).")
+# What a model often returns: a verbatim FRAGMENT of that sentence.
+LI_FRAGMENT = "hashed IDs or device identifiers"
 
 
 def serve_world():
@@ -565,13 +576,25 @@ class TestComparisons(unittest.TestCase):
 
     def test_fixed_rule(self):
         C, V, I, K = "CONTRADICTED", "CLAIM_VERIFIED", "INCONCLUSIVE", "CORRECTED"
-        self.assertEqual(P._fixed(C, C, True, True), C)
-        self.assertEqual(P._fixed(C, V, True, True), K)
-        self.assertEqual(P._fixed(C, I, True, True), K)
-        self.assertEqual(P._fixed(C, I, False, True), I)      # unreadable is not a fix
-        self.assertEqual(P._fixed(C, V, True, False), V)      # nothing edited
-        self.assertEqual(P._fixed(V, C, True, True), C)       # not at filing: normal
-        self.assertEqual(P._fixed(I, V, True, True), V)
+        self.assertEqual(P._fixed(C, C, True, True, True), C)
+        self.assertEqual(P._fixed(C, V, True, True, True), K)
+        self.assertEqual(P._fixed(C, I, True, True, True), K)
+        self.assertEqual(P._fixed(C, V, True, True, False), I)   # unconfirmed capture
+        self.assertEqual(P._fixed(C, I, False, True, True), I)   # unreadable is not a fix
+        self.assertEqual(P._fixed(C, V, True, False, True), V)   # nothing edited
+        self.assertEqual(P._fixed(V, C, True, True, True), C)    # not at filing: normal
+        self.assertEqual(P._fixed(I, V, True, True, True), V)
+
+    def test_final_code_policy_edit_needs_no_witness(self):
+        f = {"result": "CONTRADICTED", "status": "DECLARED_NONE", "policy_hash": "a" * 64}
+        j = {"state": "OK", "status": "DECLARED_NONE", "result": "INCONCLUSIVE",
+             "policy_state": "OK", "policy_hash": "b" * 64}
+        self.assertEqual(P._final_code("POLICY_LABEL", f, j, False)[0], "CORRECTED")
+        j["policy_state"] = "TOO_LARGE"
+        self.assertEqual(P._final_code("POLICY_LABEL", f, j, False)[0], "CORRECTED")
+        j["policy_state"] = "UNREADABLE"       # a failed read is not an edit
+        j["policy_hash"] = ""
+        self.assertEqual(P._final_code("POLICY_LABEL", f, j, True)[0], "INCONCLUSIVE")
 
 
 # ---------------------------------------------------------------------------
@@ -588,6 +611,29 @@ class TestQuotes(unittest.TestCase):
         self.assertTrue(P._quote_ok(PIN_QUOTE, fx("policy_pinterest.txt")))
         self.assertTrue(P._quote_ok(CAP_QUOTE, fx("policy_capcut.txt")))
 
+    def test_fragment_is_not_a_quote(self):
+        # verbatim, but not a whole sentence: the negation would be cut off
+        frag = "share your personal data with any non-Affiliated third-party advertisers"
+        self.assertTrue(P._quote_ok(frag, self.text))               # verbatim...
+        self.assertFalse(P._quote_whole(frag, self.text))           # ...not whole
+        self.assertFalse(P._quote_whole(LI_QUOTE[:-1], self.text))  # no final "."
+        self.assertTrue(P._quote_whole(LI_QUOTE, self.text))
+
+    def test_fragment_expands_to_its_whole_sentence(self):
+        raw = {"entries": {"identifiers": {"use": "SHARED", "quote": LI_FRAGMENT}}}
+        self.assertEqual(P._policy_entry(raw, "identifiers", self.text), ("SHARED", P._qnorm(LI_QUOTE)))
+
+    def test_sentences_do_not_split_on_abbreviations(self):
+        sents = P._policy_sentences(self.text)
+        self.assertIn(P._qnorm(LI_QUOTE), sents)          # "(e.g., profile)." kept whole
+
+    def test_quote_hash_is_sha256(self):
+        import hashlib
+        self.assertEqual(P._quote_hash(LI_QUOTE),
+                         hashlib.sha256(("quote|" + P._qnorm(LI_QUOTE)).encode()).hexdigest())
+        for t in ("", "abc", "x" * 55, "x" * 56, "x" * 64, "é“”" * 99):
+            self.assertEqual(P._sha256(t), hashlib.sha256(t.encode()).hexdigest())
+
     def test_threat_fake_quote_from_model(self):
         self.assertFalse(P._quote_ok("We sell device identifiers to data brokers every day.", self.text))
 
@@ -600,7 +646,7 @@ class TestQuotes(unittest.TestCase):
         self.assertFalse(P._quote_ok(self.text[:2000], self.text))        # > 400
 
     def test_typography_normalised(self):
-        straight = "we do \"share\" your information where defined under applicable law"
+        straight = CAP_QUOTE.replace("“", '"').replace("”", '"')
         self.assertTrue(P._quote_ok(straight, fx("policy_capcut.txt")))
 
     def test_entry_demotes_fake_quote(self):
@@ -728,7 +774,8 @@ class TestConsensusV2(unittest.TestCase):
         self.assertTrue(P._agrees_v2(t, lead, mine, priv))
         # a different verbatim quote from the same policy still agrees
         other = dict(lead)
-        other["quote"] = "We use data about you (such as your profile, profiles you have viewed"
+        other["quote"] = [x for x in P._policy_sentences(fx("policy_linkedin.txt"))
+                          if x.startswith("We use data about you")][0]
         other.update(P._derive_v2(t, other))
         self.assertTrue(P._coherent_v2(t, other))
         self.assertTrue(P._agrees_v2(t, other, mine, priv))
@@ -840,9 +887,10 @@ class TestFileCross(unittest.TestCase):
             out = cross(self.c, topic=topic, axis=axis)
             self.assertTrue(rejected(out), (topic, axis))
 
-    def test_duplicate_refused(self):
+    def test_duplicate_refused_per_advocate(self):
         self.assertTrue(ok(cross(self.c)))
-        self.assertTrue(rejected(cross(self.c, who=ADV2)))
+        self.assertTrue(rejected(cross(self.c, who=ADV)))    # the same advocate
+        self.assertTrue(ok(cross(self.c, who=ADV2)))          # another advocate may
 
     def test_no_consensus_refuses_and_stores_nothing(self):
         before = storage_image(self.c)
@@ -887,6 +935,7 @@ class TestFilePolicy(unittest.TestCase):
         self.assertEqual(ch.f_result, "CONTRADICTED")
         self.assertEqual(ch.f_quote_hash, P._quote_hash(LI_QUOTE))
         self.assertEqual(int(ch.f_quote_len), len(P._qnorm(LI_QUOTE)))
+        self.assertEqual(ch.f_policy_hash, P._policy_hash(fx("policy_linkedin.txt")))
 
     def test_model_output_stored_only_as_enum_and_quote_hash(self):
         policy(self.c, answer=LI_SHARED)
@@ -1027,6 +1076,7 @@ class TestJudgeCross(unittest.TestCase):
 
     def test_threat_label_fixed_between_filing_and_judgment(self):
         self.assertTrue(ok(cross(self.c)))
+        self.assertTrue(send(self.c, STRANGER, 0, "confirm_filing", 1)["confirmed"])
         respond(self.c, 1)
         T.WEB.serve(ds(self.pkg), edited_play_label(fx("play_snapchat.txt")))
         out = judge(self.c, 1)
@@ -1056,9 +1106,9 @@ class TestJudgeCross(unittest.TestCase):
         self.assertEqual(out["outcome"], "CONTRADICTED")
         tl = self.c.timeline(play_url("snapchat"))
         sources = [r["source"] for r in tl["items"]]
-        self.assertEqual(sources, ["filing", "snapshot", "judgment"])
+        self.assertEqual(sources, ["judgment", "snapshot", "filing"])   # newest first
         fixed = tl["items"][1]["diff"]
-        reverted = tl["items"][2]["diff"]
+        reverted = tl["items"][0]["diff"]
         self.assertEqual(fixed["shared"]["added"], ["identifiers"])
         self.assertEqual(fixed["none"]["removed"], ["shared"])
         self.assertEqual(reverted["shared"]["removed"], ["identifiers"])
@@ -1118,6 +1168,7 @@ class TestJudgePolicy(unittest.TestCase):
 
     def test_corrected_by_label_edit(self):
         policy(self.c, answer=LI_SHARED)
+        send(self.c, STRANGER, 0, "confirm_filing", 1)
         respond(self.c, 1)
         T.WEB.serve(ds(self.pkg), edited_play_label(fx("play_linkedin.txt")))
         self.assertEqual(judge(self.c, 1)["outcome"], "CORRECTED")
@@ -1130,11 +1181,46 @@ class TestJudgePolicy(unittest.TestCase):
         PMODEL.answer = {"identifiers": ("NOT_MENTIONED", "")}
         self.assertEqual(judge(self.c, 1)["outcome"], "INCONCLUSIVE")
 
-    def test_threat_policy_grows_huge_before_judgment(self):
+    def test_threat_policy_padded_huge_before_judgment_is_corrected(self):
+        # Padding the policy past the limit is an edit, not an escape.
         policy(self.c, answer=LI_SHARED)
         respond(self.c, 1)
         T.WEB.serve("https://www.linkedin.com/legal/privacy-policy", "We share. " * 20000)
+        self.assertEqual(judge(self.c, 1)["outcome"], "CORRECTED")
+
+    def test_policy_unreadable_at_judgment_is_not_an_edit(self):
+        policy(self.c, answer=LI_SHARED)
+        respond(self.c, 1)
+        T.WEB.down.add("https://www.linkedin.com/legal/privacy-policy")
         self.assertEqual(judge(self.c, 1)["outcome"], "INCONCLUSIVE")
+
+    def test_unconfirmed_label_fix_is_inconclusive(self):
+        policy(self.c, answer=LI_SHARED)
+        respond(self.c, 1)
+        T.WEB.serve(ds(self.pkg), edited_play_label(fx("play_linkedin.txt")))
+        self.assertEqual(judge(self.c, 1)["outcome"], "INCONCLUSIVE")
+        self.assertTrue(self.c.verify_case(1)["verified"])
+
+    def test_pre_filing_snapshot_confirms(self):
+        self.assertTrue(ok(send(self.c, STRANGER, SNAP_FEE, "snapshot", play_url("linkedin"))))
+        policy(self.c, answer=LI_SHARED)
+        self.assertTrue(self.c.get_case(1)["filing"]["confirmed"])
+        respond(self.c, 1)
+        T.WEB.serve(ds(self.pkg), edited_play_label(fx("play_linkedin.txt")))
+        self.assertEqual(judge(self.c, 1)["outcome"], "CORRECTED")
+
+    def test_confirm_read_that_differs_does_not_confirm(self):
+        policy(self.c, answer=LI_SHARED)
+        T.WEB.serve(ds(self.pkg), edited_play_label(fx("play_linkedin.txt")))
+        out = send(self.c, STRANGER, 0, "confirm_filing", 1)
+        self.assertFalse(out["confirmed"])
+        self.assertIn("DIFFERS", out["reads"][0])
+
+    def test_confirm_only_before_judgment(self):
+        policy(self.c, answer=LI_SHARED)
+        respond(self.c, 1)
+        judge(self.c, 1)
+        self.assertTrue(rejected(send(self.c, STRANGER, 0, "confirm_filing", 1)))
 
     def test_model_down_at_judgment_stores_nothing(self):
         policy(self.c, answer=LI_SHARED)
@@ -1173,6 +1259,7 @@ class TestJudgeLabelKind(unittest.TestCase):
         text = fx("play_snapchat.txt")
         at = text.find("Location\n")
         end = text.find("expand_more", at) + len("expand_more\n")
+        send(self.c, STRANGER, 0, "confirm_filing", 1)
         T.WEB.serve(ds(self.pkg), text[:at] + text[end:])
         T.MODEL.serve("CONTRADICTED", 7)   # asked only about the FILED text
         out = judge(self.c, 1)
@@ -1331,13 +1418,25 @@ class TestDeveloper(unittest.TestCase):
         out = send(self.c, STRANGER, 0, "recheck_developer", self.url)
         self.assertTrue(out["still_verified"])
 
-    def test_file_removed_revokes(self):
+    def test_missing_file_is_not_evidence(self):
         GET.serve(SNAP_FILE, id_file(DEV))
         self.register()
-        del GET.pages[SNAP_FILE]
+        del GET.pages[SNAP_FILE]                              # 404: a failed read
+        T.set_now(T.NOW + 61)
+        out = send(self.c, STRANGER, 0, "recheck_developer", self.url)
+        self.assertTrue(out["still_verified"])
+        self.assertIn("not evidence", out["note"])
+
+    def test_file_that_loads_without_the_wallet_revokes(self):
+        GET.serve(SNAP_FILE, id_file(DEV))
+        self.register()
+        GET.serve(SNAP_FILE, "appaudit-verify google_play:com.snapchat.android\n")   # 200, no wallet
         T.set_now(T.NOW + 61)
         out = send(self.c, STRANGER, 0, "recheck_developer", self.url)
         self.assertFalse(out["still_verified"])
+        # after a revoke the developer may register again at once (no cooldown)
+        GET.serve(SNAP_FILE, id_file(DEV))
+        self.assertTrue(ok(self.register()))
 
     def test_reverification_cooldown_and_history(self):
         GET.serve(SNAP_FILE, id_file(DEV))
@@ -1458,7 +1557,7 @@ class TestSnapshots(unittest.TestCase):
         pkg = APPS["snapchat"][0]
         T.WEB.serve(ds("com.whatsapp"), fx("play_snapchat.txt"))
         self.snap()
-        d = self.c.timeline(self.url)["items"][1]["diff"]
+        d = self.c.timeline(self.url)["items"][0]["diff"]      # newest first
         self.assertEqual(sorted(d["collected"]["added"]), sorted(
             ["audio", "messages", "media", "browsing"]))
         self.assertEqual(d["collected"]["removed"], [])
@@ -1466,13 +1565,31 @@ class TestSnapshots(unittest.TestCase):
     def test_unchanged_snapshot_shows_no_change(self):
         self.snap()
         self.snap()
-        row = self.c.timeline(self.url)["items"][1]
+        row = self.c.timeline(self.url)["items"][0]
         self.assertFalse(row["changed"])
         self.assertEqual(row["diff"]["collected"], {"added": [], "removed": []})
 
     def test_paused(self):
         send(self.c, OWNER, 0, "set_paused", True)
         self.assertTrue(rejected(self.snap()))
+
+    def test_timeline_is_paginated(self):
+        for i in range(4):
+            T.set_now(T.NOW + i)
+            self.snap()
+        a = self.c.timeline(self.url, 0, 3)
+        b = self.c.timeline(self.url, 3, 3)
+        self.assertEqual(a["total"], 4)
+        self.assertEqual(len(a["items"]), 3)
+        self.assertEqual(len(b["items"]), 1)
+        ids = [r["snapshot_id"] for r in a["items"] + b["items"]]
+        self.assertEqual(ids, sorted(ids, reverse=True))
+
+    def test_free_snapshots_only_on_change(self):
+        cross(self.c, "whatsapp", "location", "share")
+        n = len(self.c.snapshots)
+        cross(self.c, "whatsapp", "location", "share", who=ADV2)   # same labels
+        self.assertEqual(len(self.c.snapshots), n)
 
 
 # ---------------------------------------------------------------------------
@@ -1709,6 +1826,13 @@ class TestStatic(unittest.TestCase):
             self.assertTrue(lines[1].startswith('# { "Depends": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng"'))
             self.assertEqual(lines[2], "import genlayer as gl")
 
+    def test_no_duplicate_top_level_definitions(self):
+        # a later def silently replaces an earlier one (it once broke contest
+        # novelty by shadowing v1's _sentences)
+        for tree in (TREE, CTREE):
+            names = [n.name for n in tree.body if isinstance(n, (ast.FunctionDef, ast.ClassDef))]
+            self.assertEqual(sorted(set(n for n in names if names.count(n) > 1)), [])
+
     def test_no_undefined_names(self):
         self.assertEqual(T.undefined_names(SOURCE), [])
         self.assertEqual(T.undefined_names(CONSUMER), [])
@@ -1792,6 +1916,7 @@ class TestConsumerV2(unittest.TestCase):
         GET.serve(SNAP_FILE, id_file(DEV))
         send(self.c, DEV, 0, "register_developer", play_url("snapchat"))
         cross(self.c)
+        send(self.c, STRANGER, 0, "confirm_filing", 1)
         respond(self.c, 1)
         T.WEB.serve(ds("com.snapchat.android"), edited_play_label(fx("play_snapchat.txt")))
         judge(self.c, 1)
@@ -1810,6 +1935,361 @@ class TestConsumerV2(unittest.TestCase):
         r = self.k.app_record(play_url("snapchat"))
         self.assertFalse(r["reachable"])
         self.assertFalse(self.k.check_listing(play_url("snapchat"))["ok"])
+
+
+# ---------------------------------------------------------------------------
+# 14. the independent attack round (formerly test/test_attacks_v2.py)
+#
+# Written by an attacker against the first v2 deployment; every test here
+# failed there, for the reason in its docstring, and passes now. Kept
+# verbatim: `V` is this module, the names below are the ones the attack file
+# imported from it.
+# ---------------------------------------------------------------------------
+
+import re  # noqa: E402
+
+V = sys.modules[__name__]
+ADV, DEV, DEV2, STRANGER = V.ADV, V.DEV, V.DEV2, V.STRANGER
+
+LI_POLICY_URL = "https://www.linkedin.com/legal/privacy-policy"
+
+
+def wallet(i):
+    return T._Addr("0x" + format(0xF00000 + i, "040x"))
+
+
+def without_play_entry(text, category):
+    """A Play render with one collected entry removed: an edit to the label
+    that has nothing to do with the data type a case is about."""
+    at = text.find(category + "\n")
+    assert at >= 0, category
+    end = text.find("expand_more", at) + len("expand_more\n")
+    return text[:at] + text[end:]
+
+
+# ---------------------------------------------------------------------------
+# 1. same-app binding
+# ---------------------------------------------------------------------------
+
+
+class TestAttackBinding(unittest.TestCase):
+    def test_brand_prefixed_sibling_apps_bind_as_one_app(self):
+        """HIGH. Rule 15 binds on the FIRST title word + developer. A
+        developer's sibling apps share both ("Facebook Lite" / "Facebook",
+        "Google Drive" / "Google Photos"), so a cross-store case compares two
+        different apps' labels and books CONTRADICTED on both records."""
+        c = V.fresh()
+        lite = "com.facebook.lite"
+        html = fx("play_facebook.html")
+        html = 'itemprop="name">Facebook Lite<'.join(html.split('itemprop="name">Facebook<', 1))
+        V.GET.serve(details(lite), html)
+        # Facebook Lite's Play label: "No data shared with third parties"
+        T.WEB.serve(ds(lite), fx("play_whatsapp.txt"))
+        out = send(c, ADV, HALF, "file_cross_store",
+                   "https://play.google.com/store/apps/details?id=" + lite,
+                   V.apple_url("facebook"), "identifiers", "share")
+        self.assertTrue(rejected(out),
+                        "Facebook Lite (Play) + Facebook (App Store) accepted as one app: "
+                        + str(out.get("filing_result")) + " / "
+                        + str(case(c, 1).bind_why if len(c.cases) else ""))
+
+    def test_google_drive_and_google_photos_bind(self):
+        """HIGH (same root cause, pure function)."""
+        drive = {"title": "Google Drive", "developer": "Google LLC",
+                 "website": "https://www.google.com/drive/", "policy": ""}
+        photos = {"title": "Google Photos", "developer": "Google LLC",
+                  "website": "https://www.google.com/photos/", "policy": ""}
+        bound, why = P._bind(drive, photos)
+        self.assertFalse(bound, why)
+
+    def test_shared_hosting_domain_binds_unrelated_developers(self):
+        """MEDIUM. The domain fallback uses the registrable domain, and the
+        policy URL when there is no website. Unrelated developers on shared
+        hosts (sites.google.com, *.flycricket.io, *.github.io) with same-first-
+        word titles bind as one app."""
+        cases = [
+            ({"title": "Flashlight", "developer": "Bright Apps", "website": "",
+              "policy": "https://brightapps.flycricket.io/privacy.html"},
+             {"title": "Flashlight LED Torch", "developer": "Torch Studio LLC", "website": "",
+              "policy": "https://torchstudio.flycricket.io/privacy.html"}),
+            ({"title": "Calculator", "developer": "Alice Dev",
+              "website": "https://sites.google.com/view/alicecalc", "policy": ""},
+             {"title": "Calculator Plus", "developer": "Bob Tools",
+              "website": "https://sites.google.com/view/bobtools", "policy": ""}),
+            ({"title": "Notes", "developer": "Alice Dev",
+              "website": "https://alice.github.io", "policy": ""},
+             {"title": "Notes Pro", "developer": "Bob Tools",
+              "website": "https://bob.github.io", "policy": ""}),
+        ]
+        bound_pairs = []
+        for play, apple in cases:
+            b, why = P._bind(play, apple)
+            if b:
+                bound_pairs.append(why)
+        self.assertEqual(bound_pairs, [], "unrelated developers bound")
+
+
+# ---------------------------------------------------------------------------
+# 2. POLICY_LABEL: the developer edits the policy, not the label
+# ---------------------------------------------------------------------------
+
+
+def li_policy_without_quote():
+    text = fx("policy_linkedin.txt")
+    at = text.find(V.LI_QUOTE)
+    assert at >= 0
+    end = text.find(".", at + len(V.LI_QUOTE)) + 1
+    return text[:at] + text[end:]
+
+
+class TestAttackPolicyEdit(unittest.TestCase):
+    def setUp(self):
+        self.c = V.fresh()
+        self.assertTrue(ok(V.policy(self.c, answer=V.LI_SHARED)))
+        self.assertEqual(case(self.c, 1).f_result, "CONTRADICTED")
+        self.assertTrue(ok(V.respond(self.c, 1)))
+
+    def test_policy_edit_before_judgment_escapes_corrected(self):
+        """HIGH. The contradiction frozen at filing is fixed by deleting the
+        admission from the developer-hosted policy. `_fixed` counts only a
+        LABEL hash change, so this is INCONCLUSIVE (both stakes back), not
+        CORRECTED."""
+        T.WEB.serve(LI_POLICY_URL, li_policy_without_quote())
+        V.PMODEL.answer = {"identifiers": ("NOT_MENTIONED", "")}
+        out = V.judge(self.c, 1)
+        self.assertEqual(out.get("outcome"), "CORRECTED",
+                         "policy edited mid-case -> " + str(out.get("outcome"))
+                         + "; developer refunded " + str(claim_of(self.c, DEV)))
+
+    def test_policy_edit_then_contest_flips_a_lost_case(self):
+        """HIGH. After LOSING (CONTRADICTED, settled), the developer deletes
+        the sentence and contests: the re-read is readable, 'unchanged' by the
+        label hash, INCONCLUSIVE -> FLIPPED. Every wei goes back, the contest
+        stake included, and the record shows no contradiction."""
+        self.assertEqual(V.judge(self.c, 1)["outcome"], "CONTRADICTED")
+        T.WEB.serve(LI_POLICY_URL, li_policy_without_quote())
+        V.PMODEL.answer = {"identifiers": ("NOT_MENTIONED", "")}
+        out = send(self.c, DEV, CONTEST, "contest", 1,
+                   "Our privacy policy has been clarified and no longer describes this.")
+        ch = case(self.c, 1)
+        self.assertEqual(ch.outcome, "CONTRADICTED",
+                         "contest result " + str(out.get("result")) + ", outcome "
+                         + str(ch.outcome) + ", developer claimable "
+                         + str(claim_of(self.c, DEV)) + " of " + str(HALF + CONTEST))
+
+
+# ---------------------------------------------------------------------------
+# 3. CORRECTED keyed on the whole label, not the case's data type
+# ---------------------------------------------------------------------------
+
+
+class TestAttackCorrectedScope(unittest.TestCase):
+    def test_unrelated_label_edit_plus_model_variation_is_corrected(self):
+        """MEDIUM. Threat #17 says model variation alone never corrects. But
+        ANY edit to the label (here: dropping Calendar) sets `changed`, so the
+        same unchanged policy read COLLECTED at judgment becomes CORRECTED -
+        although the Identifiers/sharing declaration never changed. The honest
+        developer pays 90% of the stake."""
+        c = V.fresh()
+        pkg = V.APPS["linkedin"][0]
+        V.policy(c, answer=V.LI_SHARED)
+        V.respond(c, 1)
+        T.WEB.serve(ds(pkg), without_play_entry(fx("play_linkedin.txt"), "Calendar"))
+        V.PMODEL.answer = {"identifiers": ("COLLECTED", V.LI_QUOTE)}
+        out = V.judge(c, 1)
+        ch = case(c, 1)
+        self.assertEqual(ch.f_status, ch.j_status)      # DECLARED_NONE both times
+        self.assertNotEqual(out.get("outcome"), "CORRECTED",
+                            "identifiers status unchanged (" + ch.j_status + ") yet CORRECTED")
+
+    def test_label_kind_unrelated_edit_triggers_filing_reread(self):
+        """MEDIUM, LABEL kind. Location is declared at filing AND at judgment;
+        dropping an unrelated entry (Audio) makes the round re-ask the model
+        about the frozen text, and a CONTRADICTED there beats today's
+        INCONCLUSIVE on the identical location rows."""
+        c = V.fresh()
+        pkg = V.APPS["snapchat"][0]
+        claim = "This app does not collect location data at all"
+        self.assertTrue(ok(V.label(c, claim=claim)))
+        V.respond(c, 1)
+        T.WEB.serve(ds(pkg), without_play_entry(fx("play_snapchat.txt"), "Audio"))
+        T.MODEL.script(("INCONCLUSIVE", 3), ("CONTRADICTED", 7),
+                       ("INCONCLUSIVE", 3), ("CONTRADICTED", 7))
+        out = V.judge(c, 1)
+        self.assertNotEqual(out.get("outcome"), "CORRECTED",
+                            "location declared at filing and judgment, yet CORRECTED")
+
+
+# ---------------------------------------------------------------------------
+# 4. verified developer: one failed read revokes, and locks the developer out
+# ---------------------------------------------------------------------------
+
+
+class TestAttackIdentity(unittest.TestCase):
+    def test_one_failed_read_revokes_and_lets_a_squatter_respond(self):
+        """MEDIUM. `recheck_developer` revokes on a single agreed failed read:
+        the Play details page answering 503 (rate limit, outage) reads as "no
+        website" -> host changed. Anyone can call it at that moment. The
+        developer then cannot re-verify for the change cooldown (24h
+        canonical), and any wallet may take the respondent slot."""
+        c = V.fresh(reverify_cooldown_s=86400)
+        url = V.play_url("snapchat")
+        pkg = V.APPS["snapchat"][0]
+        V.GET.serve(V.SNAP_FILE, V.id_file(DEV))
+        self.assertTrue(ok(send(c, DEV, 0, "register_developer", url)))
+        self.assertTrue(ok(V.cross(c)))
+        T.set_now(T.NOW + 10)
+        real = V.GET.pages[details(pkg)]
+        V.GET.serve(details(pkg), "Service Unavailable", status=503)
+        out = send(c, STRANGER, 0, "recheck_developer", url)
+        V.GET.pages[details(pkg)] = real                 # the glitch is over
+        again = send(c, DEV, 0, "register_developer", url)
+        squat = V.respond(c, 1, who=DEV2)
+        self.assertTrue(out.get("still_verified", True),
+                        "revoked by a 503: " + str(out.get("revoked"))
+                        + " | developer re-register: " + str(again.get("reason", again.get("status")))
+                        + " | squatter respond: " + str(squat.get("status")))
+
+
+# ---------------------------------------------------------------------------
+# 5. holding a question hostage at zero cost
+# ---------------------------------------------------------------------------
+
+
+class TestAttackSquat(unittest.TestCase):
+    def test_duplicate_question_can_be_held_at_zero_cost(self):
+        """MEDIUM. `live_claims` refuses a second advocate on the same
+        question. A developer's sock files it, never responds, and after the
+        window `default_judgment` refunds 100%; the sock re-files. With a
+        verified developer the real advocate cannot even respond to it."""
+        c = V.fresh()
+        socks = [wallet(1), wallet(2)]
+        advocate_tries = []
+        for sock in socks:
+            self.assertTrue(ok(V.cross(c, who=sock)))
+            cid = len(c.cases)
+            advocate_tries.append(V.cross(c, who=ADV))
+            T.set_now(int(case(c, cid).filed_at) + 601)
+            self.assertTrue(ok(send(c, sock, 0, "default_judgment", cid)))
+        cost = sum(HALF - claim_of(c, s) for s in socks)
+        self.assertTrue(any(ok(o) for o in advocate_tries),
+                        "real advocate refused every time ("
+                        + advocate_tries[0].get("reason", "") + "); squatter net cost "
+                        + str(cost) + " wei")
+
+
+# ---------------------------------------------------------------------------
+# 6. snapshots: the fee, the daily cap and the timeline window
+# ---------------------------------------------------------------------------
+
+
+class TestAttackTimeline(unittest.TestCase):
+    def test_free_filing_snapshots_flush_the_timeline(self):
+        """LOW. Every filing appends a snapshot with no fee and no cap, and
+        withdraw_challenge refunds the stake in full. 60 file+withdraw rounds
+        in one day (rotating wallets past the per-wallet cooldown) put 61+
+        snapshots on one listing, pay 0 net, and push the paid snapshot that
+        recorded a label edit out of timeline()'s 60-row window."""
+        c = V.fresh()
+        pkg = V.APPS["snapchat"][0]
+        url = V.play_url("snapchat")
+        self.assertTrue(ok(send(c, STRANGER, SNAP_FEE, "snapshot", url)))
+        T.WEB.serve(ds(pkg), V.edited_play_label(fx("play_snapchat.txt")))
+        T.set_now(T.NOW + 5)
+        self.assertTrue(ok(send(c, STRANGER, SNAP_FEE, "snapshot", url)))
+        self.assertTrue(any(r["changed"] for r in c.timeline(url)["items"]))
+        spam = [wallet(100 + i) for i in range(60)]
+        for i, w in enumerate(spam):
+            T.set_now(T.NOW + 10 + i)
+            self.assertTrue(ok(V.label(c, who=w)))
+            self.assertTrue(ok(send(c, w, 0, "withdraw_challenge", len(c.cases))))
+        net = sum(HALF - claim_of(c, w) for w in spam)
+        tl = c.timeline(url)
+        self.assertTrue(any(r["changed"] for r in tl["items"]),
+                        "the recorded edit is gone from timeline(); " + str(tl["count"])
+                        + " snapshots today (cap " + str(P.SNAPSHOT_CAP_PER_DAY)
+                        + "), spammers' net cost " + str(net) + " wei")
+
+
+# ---------------------------------------------------------------------------
+# 7. a glitched filing capture has no recovery path
+# ---------------------------------------------------------------------------
+
+
+class TestAttackFilingGlitch(unittest.TestCase):
+    def test_stale_filing_capture_makes_honest_developer_lose(self):
+        """LOW. The label declares Identifiers shared before, and after,
+        filing (a paid snapshot proves it). The filing round alone reads a
+        stale "No data shared" page. Judgment: CORRECTED, although nothing
+        was edited; the contest re-derives CORRECTED and HOLDS."""
+        c = V.fresh()
+        pkg = V.APPS["snapchat"][0]
+        url = V.play_url("snapchat")
+        real = V.edited_play_label(fx("play_snapchat.txt"))
+        T.WEB.serve(ds(pkg), real)
+        self.assertTrue(ok(send(c, STRANGER, SNAP_FEE, "snapshot", url)))
+        pre_hash = c.snapshots[0].hash
+        T.set_now(T.NOW + 60)
+        T.WEB.serve(ds(pkg), fx("play_snapchat.txt"))          # stale page, filing only
+        self.assertTrue(ok(V.cross(c)))
+        T.WEB.serve(ds(pkg), real)
+        V.respond(c, 1)
+        out = V.judge(c, 1)
+        ch = case(c, 1)
+        self.assertEqual(ch.section_hash, pre_hash)            # judgment == pre-filing label
+        self.assertNotEqual(out.get("outcome"), "CORRECTED",
+                            "label never edited (pre-filing snapshot == judgment) yet CORRECTED")
+
+
+# ---------------------------------------------------------------------------
+# 8. the stored policy quote is any leader-chosen substring
+# ---------------------------------------------------------------------------
+
+
+class TestAttackQuote(unittest.TestCase):
+    def test_leader_quote_can_be_a_fragment_that_drops_the_negation(self):
+        """LOW. Validators only check the leader's quote is a substring of
+        their fetch. A fragment that cuts "We do not" and the "except" clause
+        is accepted and its hash stored; the site then shows it as the
+        sentence every validator verified."""
+        c = V.fresh()
+        V.PMODEL.answer = V.LI_SHARED
+        task = {"op": "policy", "phase": "file", "topic": "identifiers", "axis": "share",
+                "platform": "google_play", "app_id": V.APPS["linkedin"][0],
+                "fetch_url": ds(V.APPS["linkedin"][0]), "policy_url": ""}
+        lead, _ = P._collect_v2(task)
+        fragment = "share your personal data with any non-Affiliated third-party advertisers"
+        self.assertTrue(P._quote_ok(fragment, fx("policy_linkedin.txt")))
+        forged = dict(lead)
+        forged["quote"] = fragment
+        forged.update(P._derive_v2(task, forged))
+        T.FORGE["payload"] = forged
+        out = V.policy(c)
+        T.FORGE["payload"] = None
+        stored = case(c, 1).f_quote_hash if ok(out) else ""
+        self.assertNotEqual(stored, P._quote_hash(fragment),
+                            "mid-sentence fragment accepted and stored as the quote")
+
+
+# ---------------------------------------------------------------------------
+# 9. frontend
+# ---------------------------------------------------------------------------
+
+
+class TestAttackFrontend(unittest.TestCase):
+    def test_quote_route_fetches_any_url_from_the_query(self):
+        """LOW. /api/quote fetches whatever `url` the query string names
+        (not the case's policy URL from the chain), follows redirects to any
+        host, and echoes the HTTP status: an open fetch relay / blind SSRF
+        with a status oracle. The name-only host check is bypassed by a
+        redirect or a DNS name that resolves to a private address."""
+        src = (HERE.parent / "frontend/src/app/api/quote/route.ts").read_text(encoding="utf8")
+        takes_url = re.search(r'\.get\(\s*"url"\s*\)', src) is not None
+        follows = re.search(r'redirect:\s*"follow"', src) is not None
+        self.assertFalse(takes_url and follows,
+                         "route fetches a caller-supplied URL with redirect: follow")
+
+
 
 
 if __name__ == "__main__":

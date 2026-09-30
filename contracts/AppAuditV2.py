@@ -1279,7 +1279,8 @@ def _from_json(raw: typing.Any, read: dict) -> tuple:
 def _render(url: str) -> tuple:
     """(rendered, text). render() has no status code: it returns the body on
     success and raises on every failure, so a raise is UNREADABLE and nothing
-    else."""
+    else. The cap (MAX_PAGE) is above MAX_POLICY, so an oversized policy is
+    still recognised as oversized."""
     try:
         txt = gl.nondet.web.render(url, mode="text", wait_after_loaded="3s")
     except Exception:
@@ -1634,7 +1635,7 @@ MAX_POLICY = 120000
 MAX_HTML = 3000000
 MAX_ID_FILE = 4096
 MIN_QUOTE = 20
-MAX_QUOTE = 400
+MAX_QUOTE = 800
 SNAPSHOT_CAP_PER_DAY = 4
 DEFAULT_SNAPSHOT_FEE_WEI = 10 ** 16           # 0.01 GEN
 DEFAULT_REVERIFY_COOLDOWN_S = 24 * 3600
@@ -1834,35 +1835,93 @@ def _norm_name(name: typing.Any) -> str:
     return " ".join(out)
 
 
-def _first_word(title: typing.Any) -> str:
-    w = _words(title)
-    return w[0] if w else ""
+# Hosts many unrelated developers publish on. Equal hosts here say nothing
+# about who the developer is.
+SHARED_HOSTS = ("github.io", "gitlab.io", "sites.google.com", "google.com",
+                "flycricket.io", "wixsite.com", "wix.com", "blogspot.com",
+                "wordpress.com", "weebly.com", "squarespace.com", "notion.site",
+                "notion.so", "carrd.co", "web.app", "firebaseapp.com",
+                "vercel.app", "netlify.app", "herokuapp.com", "pages.dev",
+                "linktr.ee", "facebook.com", "instagram.com", "twitter.com",
+                "x.com", "medium.com", "tumblr.com", "termly.io", "iubenda.com",
+                "privacypolicies.com", "freeprivacypolicy.com",
+                "app-privacy-policy.com", "play.google.com", "apps.apple.com",
+                "apple.com", "itch.io", "gumroad.com", "substack.com")
+TITLE_SEPARATORS = (" - ", " – ", " — ", ": ", " | ", " · ")
+
+
+def _title_norm(title: typing.Any) -> str:
+    """The WHOLE title, case folded, ™ / ® / © / ℠ and punctuation removed."""
+    out = []
+    for ch in str(title):
+        if ch in "™®©℠":
+            continue
+        out.append(ch.lower() if ch.isalnum() else " ")
+    return " ".join("".join(out).split())
+
+
+def _title_name(title: typing.Any) -> str:
+    """The app's name: the title before its first store-style subtitle
+    separator ("CapCut: Photo & Video Editor" -> "capcut"), normalised."""
+    t = str(title)
+    cut = len(t)
+    for sep in TITLE_SEPARATORS:
+        at = t.find(sep)
+        if at > 0 and at < cut:
+            cut = at
+    return _title_norm(t[:cut])
+
+
+def _titles_match(t1: typing.Any, t2: typing.Any) -> bool:
+    """EXACT equality of the whole normalised title, or of the whole
+    normalised name before the subtitle. Never a prefix: "Facebook Lite" is
+    not "Facebook", "Google Drive" is not "Google Photos"."""
+    a = _title_norm(t1)
+    b = _title_norm(t2)
+    if a == "" or b == "":
+        return False
+    if a == b:
+        return True
+    n1 = _title_name(t1)
+    n2 = _title_name(t2)
+    return n1 != "" and n1 == n2
+
+
+def _own_host(url: typing.Any) -> str:
+    """A website host that can identify ONE developer: not a shared host."""
+    h = _host(url)
+    if h == "" or "." not in h:
+        return ""
+    for d in SHARED_HOSTS:
+        if h == d or h.endswith("." + d):
+            return ""
+    return h
 
 
 def _bind(play: dict, apple: dict) -> tuple:
     """(bound, why). RULE 15: the two listings are the same app when their
-    titles start with the same word AND the developers match - by normalised
-    name, or by website domain (a listing that publishes no website is
-    represented by its privacy-policy domain)."""
-    t1 = _first_word(play.get("title", ""))
-    t2 = _first_word(apple.get("title", ""))
-    if t1 == "" or t2 == "":
+    titles match EXACTLY after normalising (the whole title, or the whole name
+    before the subtitle) AND the developer is the same - the same normalised
+    developer name, or the same website host that is not a shared host. The
+    privacy-policy link is never used as identity."""
+    if _title_norm(play.get("title", "")) == "" or \
+            _title_norm(apple.get("title", "")) == "":
         return (False, "a listing's title could not be read")
-    if t1 != t2:
+    if not _titles_match(play.get("title", ""), apple.get("title", "")):
         return (False, "the titles differ ('" + _short(play.get("title"), 60)
                 + "' vs '" + _short(apple.get("title"), 60) + "')")
     n1 = _norm_name(play.get("developer", ""))
     n2 = _norm_name(apple.get("developer", ""))
     if n1 != "" and n1 == n2:
-        return (True, "same developer name: " + n1)
-    d1 = _domain(play.get("website", "") or play.get("policy", ""))
-    d2 = _domain(apple.get("website", "") or apple.get("policy", ""))
-    if d1 != "" and d1 == d2:
-        return (True, "same developer website domain: " + d1)
+        return (True, "same title and developer: " + n1)
+    h1 = _own_host(play.get("website", ""))
+    h2 = _own_host(apple.get("website", ""))
+    if h1 != "" and h1 == h2:
+        return (True, "same title and developer website: " + h1)
     return (False, "the developers differ ('" + _short(play.get("developer"), 60)
-            + "' / " + (d1 or "no website") + " vs '"
+            + "' / " + (h1 or "no own website") + " vs '"
             + _short(apple.get("developer"), 60) + "' / "
-            + (d2 or "no website") + ")")
+            + (h2 or "no own website") + ")")
 
 
 # --- one listing, one data type, one axis ------------------------------------
@@ -1931,21 +1990,82 @@ def _policy_result(policy_state: str, enum: str, label: str, axis: str) -> str:
     return V_INCONCLUSIVE
 
 
-def _fixed(filed: str, now: str, now_readable: bool, changed: bool) -> str:
+def _fixed(filed: str, now: str, now_readable: bool, changed: bool,
+           confirmed: bool) -> str:
     """RULE: evidence frozen at filing.
-      contradiction at filing AND at judgment               -> CONTRADICTED
-      at filing, gone by judgment, the declaration EDITED
-      and still readable                                     -> CORRECTED
-      not at filing                                          -> the judgment's
-    `changed` is the code's own measurement that the label the case is about
-    is no longer the one captured at filing, so a model reading the same
-    policy differently twice can never manufacture a CORRECTED. An unreadable
-    listing at judgment is not a fix; it is INCONCLUSIVE."""
+      contradiction at filing AND at judgment                 -> CONTRADICTED
+      at filing (CONFIRMED), gone by judgment, the evidence
+      the case is about CHANGED, and still readable           -> CORRECTED
+      at filing but UNCONFIRMED, gone by judgment             -> INCONCLUSIVE
+      not at filing                                           -> the judgment's
+    `changed` is the code's own measurement that the evidence for THIS data
+    type is no longer what was captured at filing: the type's status on the
+    case's axis, or (policy kind) the policy text itself. An edit elsewhere on
+    the label, or a model reading an unchanged policy differently, is never a
+    change. `confirmed` is a second witness of the filing capture."""
     if now == V_CONTRADICTED:
         return V_CONTRADICTED
     if filed == V_CONTRADICTED and now_readable and changed:
-        return V_CORRECTED
+        return V_CORRECTED if confirmed else V_INCONCLUSIVE
     return now
+
+
+def _relevant(platform: str, page_state: str, privacy_text: str,
+              topics_csv: str, axis: str) -> str:
+    """The part of a label a LABEL-kind claim is about, canonical: the page
+    state, the axis's explicit "none", and the rows on the claim's axis that
+    name one of its data types. Nothing else on the label can change it."""
+    if page_state != PAGE_OK:
+        return str(page_state)
+    d = _declared(platform, privacy_text)
+    if axis == AX_TRACK:
+        rows = d["tracking"] if d["tracking_declared"] else d["shared"]
+        none = d["shared_none"]
+    elif axis == AX_SHARE:
+        rows = d["shared"]
+        none = d["shared_none"]
+    else:
+        rows = d["collected"]
+        none = d["collected_none"]
+    keep = []
+    for t in _split_csv(topics_csv, ","):
+        for r in rows:
+            if _hits([r], t) and r not in keep:
+                keep.append(r)
+    return str(page_state) + "|" + ("none" if none else "") + "|" + \
+        "||".join(sorted(keep))
+
+
+def _final_code(kind: str, f: dict, j: dict, confirmed: bool) -> tuple:
+    """(final, readable, changed) for the code-decided kinds, from the stored
+    filing capture `f` and the agreed judgment read `j`. One function for
+    judge(), contest() and verify_case().
+
+    CROSS_STORE: changed = the data type's status moved on either listing.
+    POLICY_LABEL: changed = the data type's status moved on the label (needs
+      a confirmed filing capture, like CROSS_STORE), OR the policy text itself
+      changed (read, and its hash differs from filing). The policy capture was
+      verified sentence-for-sentence by every validator at filing, so an edit
+      to it is CORRECTED without a further witness - and never INCONCLUSIVE:
+      deleting or padding the admission cannot buy a refund, in judge() or in
+      a contest."""
+    if kind == K_CROSS:
+        readable = str(j.get("p_state")) == PAGE_OK and \
+            str(j.get("a_state")) == PAGE_OK
+        changed = str(j.get("p_status")) != str(f.get("status")) or \
+            str(j.get("a_status")) != str(f.get("status2"))
+        return (_fixed(str(f.get("result")), str(j.get("result")), readable,
+                       changed, confirmed), readable, changed)
+    policy_changed = str(j.get("policy_state")) in (PS_OK, PS_TOO_LARGE) and \
+        str(j.get("policy_hash", "")) != str(f.get("policy_hash", ""))
+    if policy_changed:
+        return (_fixed(str(f.get("result")), str(j.get("result")), True, True,
+                       True), True, True)
+    readable = str(j.get("state")) == PAGE_OK and \
+        str(j.get("policy_state")) == PS_OK
+    changed = str(j.get("status")) != str(f.get("status"))
+    return (_fixed(str(f.get("result")), str(j.get("result")), readable,
+                   changed, confirmed), readable, changed)
 
 
 # --- quotes -------------------------------------------------------------------
@@ -1971,15 +2091,150 @@ def _qnorm(s: typing.Any) -> str:
     return _flat("".join(out))
 
 
+_K256 = (
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1,
+    0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
+    0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786,
+    0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147,
+    0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
+    0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
+    0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a,
+    0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+    0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2)
+
+
+def _sha256(text: typing.Any) -> str:
+    """SHA-256 of the UTF-8 bytes, hex. Written out (FIPS 180-4) so every
+    validator and every later `verify_case` computes it the same way."""
+    data = bytearray(str(text).encode("utf-8"))
+    bits = len(data) * 8
+    data.append(0x80)
+    while len(data) % 64 != 56:
+        data.append(0)
+    data += bits.to_bytes(8, "big")
+    h = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f,
+         0x9b05688c, 0x1f83d9ab, 0x5be0cd19]
+    m = 0xFFFFFFFF
+    for off in range(0, len(data), 64):
+        w = []
+        for i in range(16):
+            w.append(int.from_bytes(data[off + 4 * i:off + 4 * i + 4], "big"))
+        for i in range(16, 64):
+            x = w[i - 15]
+            y = w[i - 2]
+            s0 = ((x >> 7) | (x << 25)) ^ ((x >> 18) | (x << 14)) ^ (x >> 3)
+            s1 = ((y >> 17) | (y << 15)) ^ ((y >> 19) | (y << 13)) ^ (y >> 10)
+            w.append((w[i - 16] + s0 + w[i - 7] + s1) & m)
+        a, b, c, d, e, f, g, hh = h
+        for i in range(64):
+            S1 = ((e >> 6) | (e << 26)) ^ ((e >> 11) | (e << 21)) ^ \
+                ((e >> 25) | (e << 7))
+            ch = (e & f) ^ ((~e) & g)
+            t1 = (hh + (S1 & m) + ch + _K256[i] + w[i]) & m
+            S0 = ((a >> 2) | (a << 30)) ^ ((a >> 13) | (a << 19)) ^ \
+                ((a >> 22) | (a << 10))
+            maj = (a & b) ^ (a & c) ^ (b & c)
+            t2 = ((S0 & m) + maj) & m
+            hh = g
+            g = f
+            f = e
+            e = (d + t1) & m
+            d = c
+            c = b
+            b = a
+            a = (t1 + t2) & m
+        h = [(h[0] + a) & m, (h[1] + b) & m, (h[2] + c) & m, (h[3] + d) & m,
+             (h[4] + e) & m, (h[5] + f) & m, (h[6] + g) & m, (h[7] + hh) & m]
+    return "".join([format(x, "08x") for x in h])
+
+
+SENTENCE_OPENERS = "\"'([“‘•-*"
+
+
+def _policy_sentences(policy_text: typing.Any) -> list:
+    """The policy's sentences, each normalised like a quote. A sentence ends at
+    . ! or ? (and any closing quote or bracket right after it) when the next
+    word starts with a capital, a digit or an opening mark - or at a line
+    break. "e.g., in" and "i.e. the" do not end a sentence."""
+    out = []
+    for raw in str(policy_text).split("\n"):
+        line = _qnorm(raw)
+        if line == "":
+            continue
+        start = 0
+        n = len(line)
+        i = 0
+        while i < n:
+            ch = line[i]
+            if ch in ".!?":
+                j = i + 1
+                while j < n and line[j] in "\"')]”’":
+                    j += 1
+                if j >= n:
+                    break
+                if line[j] == " " and j + 1 < n and (
+                        line[j + 1].isupper() or line[j + 1].isdigit()
+                        or line[j + 1] in SENTENCE_OPENERS):
+                    piece = line[start:j].strip()
+                    if piece != "":
+                        out.append(piece)
+                    start = j + 1
+                    i = j + 1
+                    continue
+            i += 1
+        piece = line[start:].strip()
+        if piece != "":
+            out.append(piece)
+    return out
+
+
+def _whole_sentences(fragment: typing.Any, policy_text: typing.Any) -> str:
+    """The run of WHOLE sentences (at most three, on one line) that contains a
+    verbatim fragment, or "" if there is none. The code - not the model -
+    decides where the quote starts and ends, so a negation or an "except"
+    clause can never be cut off."""
+    q = _qnorm(fragment)
+    if len(q) < MIN_QUOTE:
+        return ""
+    sents = _policy_sentences(policy_text)
+    # The SHORTEST run of whole sentences that contains the fragment, and the
+    # earliest such run: one sentence if one sentence holds it.
+    for length in (1, 2, 3):
+        for i in range(len(sents) - length + 1):
+            run = " ".join(sents[i:i + length])
+            if q in run:
+                return run if len(run) <= MAX_QUOTE else ""
+    return ""
+
+
 def _quote_ok(quote: typing.Any, policy_text: typing.Any) -> bool:
+    """VERBATIM: the quote appears in the policy (typography normalised)."""
     q = _qnorm(quote)
     if len(q) < MIN_QUOTE or len(q) > MAX_QUOTE:
         return False
     return q in _qnorm(policy_text)
 
 
+def _quote_whole(quote: typing.Any, policy_text: typing.Any) -> bool:
+    """WHOLE: the quote IS the shortest run of whole sentences around itself -
+    not a substring of one - so no negation or "except" can be cut off. A
+    stored quote must be both verbatim and whole."""
+    q = _qnorm(quote)
+    if not _quote_ok(q, policy_text):
+        return False
+    return _whole_sentences(q, policy_text) == q
+
+
 def _quote_hash(quote: typing.Any) -> str:
-    return _fnv("quote|" + _qnorm(quote))
+    return _sha256("quote|" + _qnorm(quote))
+
+
+def _policy_hash(text: typing.Any) -> str:
+    """The fetched policy text, whitespace-normalised, hashed. Validators'
+    renders of the same policy were measured byte-identical (PROBE_V2 §7)."""
+    return _sha256("policy|" + _flat(text))
 
 
 def _policy_state(rendered: bool, text: str) -> str:
@@ -2031,10 +2286,11 @@ def _policy_prompt(policy_url: str, policy_text: str) -> str:
         "  COLLECTED     the policy says this type of data is collected, but "
         "not that it is shared as above\n"
         "  NOT_MENTIONED the policy does not clearly say either\n\n"
-        "For SHARED or COLLECTED you MUST copy one sentence (20 to 300 "
-        "characters) EXACTLY as it appears in the policy text that says so. "
-        "A quote that does not appear verbatim makes that answer "
-        "NOT_MENTIONED.\n\n"
+        "For SHARED or COLLECTED you MUST copy ONE COMPLETE sentence, from "
+        "its first word to its final punctuation, EXACTLY as it appears in "
+        "the policy text that says so. A quote that does not appear verbatim "
+        "makes that answer NOT_MENTIONED; the stored quote is always the "
+        "whole sentence around your words.\n\n"
         "Data types:\n" + "\n".join(rows) + "\n\n"
         "Answer with ONLY this JSON object, one entry per data type key:\n"
         '{"entries": {"<key>": {"use": "SHARED|COLLECTED|NOT_MENTIONED", '
@@ -2067,9 +2323,12 @@ def _policy_entry(raw: typing.Any, topic: str, policy_text: str) -> tuple:
     if use not in ENUM or use == E_NOT_MENTIONED:
         return (E_NOT_MENTIONED, "")
     quote = e.get("quote")
-    if not isinstance(quote, str) or not _quote_ok(quote, policy_text):
+    if not isinstance(quote, str) or _qnorm(quote) not in _qnorm(policy_text):
         return (E_NOT_MENTIONED, "")
-    return (use, _qnorm(quote))
+    whole = _whole_sentences(quote, policy_text)
+    if whole == "":
+        return (E_NOT_MENTIONED, "")
+    return (use, whole)
 
 
 # --- the timeline -------------------------------------------------------------
@@ -2163,20 +2422,28 @@ def _get_text(url: str, cap: int) -> tuple:
 
 
 def _fetch_meta(app: dict) -> dict:
+    """The listing's identity fields, plus `page_ok`: whether the listing page
+    itself was read (HTTP 200 and a title found). A failed read is never
+    evidence of anything (fix: identity revocation)."""
     status, html = _get_text(_meta_url(app), MAX_HTML)
     if status != 200:
-        return {"title": "", "developer": "", "website": "", "policy": ""}
-    return _listing_meta(str(app.get("platform", "")), html)
+        return {"title": "", "developer": "", "website": "", "policy": "",
+                "page_ok": False}
+    m = _listing_meta(str(app.get("platform", "")), html)
+    m["page_ok"] = m["title"] != ""
+    return m
 
 
 def _fetch_policy(url: str) -> tuple:
-    """(policy_state, text). Rendered, not fetched raw: most policies are
-    built by script."""
+    """(policy_state, text, policy_hash). Rendered, not fetched raw: most
+    policies are built by script. The hash is taken whenever the policy was
+    READ (OK or oversized), so an edit - or a padding to escape - is seen."""
     if url == "" or _full_host(url) == "":
-        return (PS_NO_LINK, "")
+        return (PS_NO_LINK, "", "")
     rendered, text = _render(url)
     state = _policy_state(rendered, text)
-    return (state, text if state == PS_OK else "")
+    h = _policy_hash(text) if state in (PS_OK, PS_TOO_LARGE) else ""
+    return (state, text if state == PS_OK else "", h)
 
 
 def _ask_policy(policy_url: str, text: str, topic: str) -> tuple:
@@ -2261,8 +2528,9 @@ PRIMS = {
     "cross": ("p_state", "p_text", "a_state", "a_text", "p_title",
               "p_developer", "p_website", "p_policy", "a_title",
               "a_developer", "a_website", "a_policy"),
-    "policy": ("state", "text", "policy_url", "policy_state", "enum"),
-    "register": ("website", "found", "names", "body_hash"),
+    "policy": ("state", "text", "policy_url", "policy_state", "policy_hash",
+               "enum"),
+    "register": ("website", "page_ok", "found", "names", "body_hash"),
 }
 DERIVED = {
     "snap": ("hash",),
@@ -2307,7 +2575,8 @@ def _collect_v2(task: dict) -> tuple:
                                "app_id": str(task.get("app_id", "")),
                                "fetch_url": str(task.get("fetch_url", ""))})["policy"]
         p["policy_url"] = url
-        state, text = _fetch_policy(url)
+        state, text, phash = _fetch_policy(url)
+        p["policy_hash"] = phash
         p["enum"] = ""
         p["quote"] = ""
         if state == PS_OK:
@@ -2322,6 +2591,7 @@ def _collect_v2(task: dict) -> tuple:
                          "app_id": str(task.get("app_id", "")),
                          "fetch_url": str(task.get("fetch_url", ""))})
         p["website"] = m["website"]
+        p["page_ok"] = bool(m["page_ok"])
         p["found"] = False
         p["names"] = False
         p["body_hash"] = ""
@@ -2354,6 +2624,10 @@ def _coherent_v2(task: dict, payload: typing.Any) -> bool:
     if op == "policy":
         if str(payload.get("policy_state", "")) not in POLICY_STATES:
             return False
+        read = str(payload.get("policy_state")) in (PS_OK, PS_TOO_LARGE,
+                                                    PS_NO_ANSWER)
+        if read != (len(str(payload.get("policy_hash", ""))) == 64):
+            return False
         enum = str(payload.get("enum", ""))
         if str(payload.get("policy_state")) == PS_OK:
             if enum not in ENUM:
@@ -2371,7 +2645,11 @@ def _coherent_v2(task: dict, payload: typing.Any) -> bool:
     if op == "register":
         found = payload.get("found")
         names = payload.get("names")
-        if not isinstance(found, bool) or not isinstance(names, bool):
+        page_ok = payload.get("page_ok")
+        if not isinstance(found, bool) or not isinstance(names, bool) or \
+                not isinstance(page_ok, bool):
+            return False
+        if not page_ok and str(payload.get("website", "")) != "":
             return False
         if names and not found:
             return False
@@ -2401,7 +2679,9 @@ def _agrees_v2(task: dict, lead: typing.Any, mine: dict, private: str) -> bool:
         if str(lead.get(k, "")) != str(mine.get(k, "")):
             return False
     if op == "policy" and str(lead.get("quote", "")) != "":
-        return _quote_ok(lead.get("quote", ""), private)
+        # Checked against THIS validator's own fetch: verbatim AND a whole
+        # sentence run (the leader cannot store a fragment).
+        return _quote_whole(lead.get("quote", ""), private)
     return True
 
 
@@ -2424,10 +2704,27 @@ def _label_corrects(task: dict, d: dict) -> bool:
         return False
     if str(d.get("page_state")) != PAGE_OK:
         return False
-    if str(d.get("section_hash", "")) == str(task.get("f_hash", "")):
+    # Only a change to the rows the CLAIM is about re-opens the filed text;
+    # an edit anywhere else on the label changes nothing (fix: CORRECTED scope).
+    platform = str(task.get("platform", ""))
+    before = _relevant(platform, str(task.get("f_state", "")),
+                       str(task.get("f_text", "")), str(task.get("topics_csv", "")),
+                       str(task.get("axis", "")))
+    after = _relevant(platform, str(d.get("page_state", "")),
+                      str(d.get("privacy_text", "")),
+                      str(task.get("topics_csv", "")), str(task.get("axis", "")))
+    if before == after:
         return False
     fr = _reading(task, str(task.get("f_state", "")), str(task.get("f_text", "")))
     return V_CONTRADICTED in fr["allowed"]
+
+
+def _label_final(task: dict, filing_outcome: str, outcome: str) -> str:
+    """CORRECTED needs a confirmed filing capture; unconfirmed, a filed
+    contradiction that is gone today is INCONCLUSIVE."""
+    if filing_outcome != V_CONTRADICTED:
+        return str(outcome)
+    return V_CORRECTED if bool(task.get("f_confirmed")) else V_INCONCLUSIVE
 
 
 def _collect_label(task: dict) -> dict:
@@ -2455,8 +2752,7 @@ def _collect_label(task: dict) -> dict:
                     "facts_hash": _facts_hash(task),
                     "section_hash": d.get("section_hash", "")}
         d["filing_outcome"] = outcome
-    d["final"] = V_CORRECTED if d["filing_outcome"] == V_CONTRADICTED \
-        else str(d["outcome"])
+    d["final"] = _label_final(task, d["filing_outcome"], str(d["outcome"]))
     return d
 
 
@@ -2471,8 +2767,8 @@ def _coherent_label(payload: typing.Any, task: dict) -> bool:
             return False
     elif fo != "":
         return False
-    want = V_CORRECTED if fo == V_CONTRADICTED else str(payload.get("outcome"))
-    return str(payload.get("final", "")) == want
+    return str(payload.get("final", "")) == \
+        _label_final(task, fo, str(payload.get("outcome")))
 
 
 def _agrees_label(lead: typing.Any, mine: typing.Any) -> bool:
@@ -2581,6 +2877,13 @@ class Case:
     f_enum: str
     f_quote_hash: str
     f_quote_len: u32
+    f_policy_hash: str
+    # A second witness of the filing capture, per listing (fix: stale filing
+    # capture). Set at filing by the latest paid snapshot taken BEFORE filing
+    # when it shows the same state, or later by confirm_filing().
+    f_conf1: bool
+    f_conf2: bool
+    confirmed_at: u64
     bind_why: str
     title1: str
     developer1: str
@@ -2625,6 +2928,7 @@ class Case:
     j_enum: str
     j_quote_hash: str
     j_quote_len: u32
+    j_policy_hash: str
 
     # --- contest
     original_outcome: str
@@ -3001,6 +3305,16 @@ class AppAuditV2(gl.contract.Contract):
 
     def _add_snapshot(self, key: str, source: str, case_id: int, by: Address,
                       state: str, text: str, now: int) -> int:
+        """Append a snapshot. A FREE one (taken by a filing or a judgment) is
+        recorded only when the label differs from the listing's last snapshot,
+        so filings cannot flood a timeline; a paid one is always recorded.
+        Returns the snapshot id, or 0 when nothing was recorded."""
+        h = _fnv(str(state) + "|" + str(text))
+        if source != SRC_MANUAL:
+            ids = self.snaps_by_app.get(key)
+            if ids is not None and len(ids) > 0:
+                if str(self.snapshots[int(ids[len(ids) - 1]) - 1].hash) == h:
+                    return 0
         sid = len(self.snapshots) + 1
         s = self.snapshots.append_new_get()
         s.app_key = key
@@ -3010,10 +3324,55 @@ class AppAuditV2(gl.contract.Contract):
         s.by = by
         s.page_state = str(state)
         s.text = _short(str(text), MAX_SECTION)
-        s.hash = _fnv(str(state) + "|" + str(text))
+        s.hash = h
         self.snaps_by_app.get_or_insert_default(key).append(u32(sid))
         self.total_snapshots = u256(int(self.total_snapshots) + 1)
         return sid
+
+    def _last_paid(self, key: str) -> typing.Any:
+        """The latest PAID snapshot of a listing, or None."""
+        ids = self.snaps_by_app.get(key)
+        if ids is None:
+            return None
+        i = len(ids) - 1
+        while i >= 0:
+            snap = self.snapshots[int(ids[i]) - 1]
+            if str(snap.source) == SRC_MANUAL:
+                return snap
+            i -= 1
+        return None
+
+    def _witness(self, ch: Case, side: int, state: str, text: str) -> str:
+        """What a second read must show to confirm the filing capture: the
+        status of the case's data type on its axis (CROSS / POLICY), or the
+        claim's relevant rows (LABEL)."""
+        if str(ch.kind) == K_LABEL:
+            return _relevant(str(ch.platform), state, text, str(ch.topics_csv),
+                             str(ch.axis))
+        platform = P_APPSTORE if (str(ch.kind) == K_CROSS and side == 2) \
+            else str(ch.platform)
+        return _label_status(platform, state, text, str(ch.topic), str(ch.axis))
+
+    def _pre_confirm(self, ch: Case) -> None:
+        """Called at filing, BEFORE the filing's own snapshots are appended:
+        a paid snapshot taken before filing that shows the same state is a
+        second witness of the capture."""
+        snap = self._last_paid(str(ch.app_key))
+        if snap is not None and self._witness(
+                ch, 1, str(snap.page_state), str(snap.text)) == \
+                self._witness(ch, 1, str(ch.f_state), str(ch.f_text)):
+            ch.f_conf1 = True
+        if str(ch.kind) == K_CROSS:
+            snap = self._last_paid(str(ch.app_key2))
+            if snap is not None and self._witness(
+                    ch, 2, str(snap.page_state), str(snap.text)) == \
+                    self._witness(ch, 2, str(ch.f_state2), str(ch.f_text2)):
+                ch.f_conf2 = True
+        else:
+            ch.f_conf2 = True
+
+    def _confirmed(self, ch: Case) -> bool:
+        return bool(ch.f_conf1) and bool(ch.f_conf2)
 
     # --- filing -----------------------------------------------------------------
 
@@ -3116,10 +3475,13 @@ class AppAuditV2(gl.contract.Contract):
         if len(cr["topics"]) == 0:
             return self._refuse("the claim names no data type a store "
                                 "listing declares")
-        live_key = K_LABEL + "|" + str(app["app_key"]) + "|" + str(cr["signature"])
+        # Duplicates are refused PER ADVOCATE: nobody can hold a question
+        # hostage from another advocate by filing it first.
+        live_key = (K_LABEL + "|" + str(app["app_key"]) + "|"
+                    + str(cr["signature"]) + "|" + sender.as_hex)
         dup = int(self.live_claims.get(live_key) or 0)
         if dup > 0:
-            return self._refuse("the same claim about this app is already "
+            return self._refuse("you already have this claim about this app "
                                 "live in case #" + str(dup),
                                 {"challenge_id": dup})
 
@@ -3145,6 +3507,7 @@ class AppAuditV2(gl.contract.Contract):
         fr = _reading(facts, str(ch.f_state), str(ch.f_text))
         ch.f_status = str(fr["case"])
         ch.f_result = str(fr["allowed_csv"])
+        self._pre_confirm(ch)
         self._add_snapshot(str(ch.app_key), SRC_FILING, int(ch.challenge_id),
                            sender, str(ch.f_state), str(ch.f_text), now)
         return self._filed(ch, now)
@@ -3175,11 +3538,11 @@ class AppAuditV2(gl.contract.Contract):
         if ax == "":
             return self._refuse("the axis must be 'collect' or 'share'")
         live_key = (K_CROSS + "|" + str(p["app_key"]) + "|" + str(a["app_key"])
-                    + "|" + topic + "|" + ax)
+                    + "|" + topic + "|" + ax + "|" + sender.as_hex)
         dup = int(self.live_claims.get(live_key) or 0)
         if dup > 0:
-            return self._refuse("this cross-store question is already live in "
-                                "case #" + str(dup), {"challenge_id": dup})
+            return self._refuse("you already have this cross-store question "
+                                "live in case #" + str(dup), {"challenge_id": dup})
 
         task = {"op": "cross", "phase": "file", "topic": topic, "axis": ax,
                 "p_fetch": str(p["fetch_url"]), "p_id": str(p["app_id"]),
@@ -3223,6 +3586,7 @@ class AppAuditV2(gl.contract.Contract):
         ch.developer2 = str(out["a_developer"])
         ch.website2 = str(out["a_website"])
         self._index(str(a["app_key"]), str(a["label"]), int(ch.challenge_id))
+        self._pre_confirm(ch)
         self._add_snapshot(str(ch.app_key), SRC_FILING, int(ch.challenge_id),
                            sender, str(ch.f_state), str(ch.f_text), now)
         self._add_snapshot(str(ch.app_key2), SRC_FILING, int(ch.challenge_id),
@@ -3251,10 +3615,11 @@ class AppAuditV2(gl.contract.Contract):
         ax = _read_axis(axis)
         if ax == "":
             return self._refuse("the axis must be 'collect' or 'share'")
-        live_key = (K_POLICY + "|" + str(app["app_key"]) + "|" + topic + "|" + ax)
+        live_key = (K_POLICY + "|" + str(app["app_key"]) + "|" + topic + "|" + ax
+                    + "|" + sender.as_hex)
         dup = int(self.live_claims.get(live_key) or 0)
         if dup > 0:
-            return self._refuse("this policy question is already live in case #"
+            return self._refuse("you already have this policy question live in case #"
                                 + str(dup), {"challenge_id": dup})
 
         task = {"op": "policy", "phase": "file", "topic": topic, "axis": ax,
@@ -3298,6 +3663,8 @@ class AppAuditV2(gl.contract.Contract):
         ch.f_enum = str(out["enum"])
         ch.f_quote_hash = str(out["quote_hash"])
         ch.f_quote_len = u32(_as_int(out["quote_len"], 0))
+        ch.f_policy_hash = str(out["policy_hash"])
+        self._pre_confirm(ch)
         self._add_snapshot(str(ch.app_key), SRC_FILING, int(ch.challenge_id),
                            sender, str(ch.f_state), str(ch.f_text), now)
         return self._filed(ch, now)
@@ -3390,6 +3757,7 @@ class AppAuditV2(gl.contract.Contract):
             "f_state": str(ch.f_state),
             "f_text": str(ch.f_text),
             "f_hash": _fnv(str(ch.f_state) + "|" + str(ch.f_text)),
+            "f_confirmed": self._confirmed(ch),
         }
 
     def _task(self, ch: Case) -> dict:
@@ -3408,6 +3776,12 @@ class AppAuditV2(gl.contract.Contract):
                 "fetch_url": str(ch.fetch_url),
                 "policy_url": str(ch.f_policy_url)}
 
+    def _filing(self, ch: Case) -> dict:
+        """The stored filing capture, in the shape `_final_code` reads."""
+        return {"result": str(ch.f_result), "status": str(ch.f_status),
+                "status2": str(ch.f_status2),
+                "policy_hash": str(ch.f_policy_hash)}
+
     def _run_judgment(self, ch: Case, evidence: str) -> dict:
         """One judgment of any kind. {"ok": False, "why"} when nothing agreed;
         otherwise the agreed, RE-DERIVED record, with `final` - the verdict
@@ -3423,8 +3797,7 @@ class AppAuditV2(gl.contract.Contract):
             d = _derive(task, out.get("page_state"), out.get("privacy_text"),
                         out.get("outcome"), out.get("evidence_strength"))
             d["filing_outcome"] = str(out.get("filing_outcome", ""))
-            d["final"] = V_CORRECTED if d["filing_outcome"] == V_CONTRADICTED \
-                else str(d["outcome"])
+            d["final"] = _label_final(task, d["filing_outcome"], str(d["outcome"]))
             d["readable"] = str(d["page_state"]) == PAGE_OK
             d["ok"] = True
             return d
@@ -3432,21 +3805,13 @@ class AppAuditV2(gl.contract.Contract):
         out = self._consensus_v2(task)
         if not self._agreed(task, out):
             return {"ok": False, "why": "no agreed reading"}
-        if kind == K_CROSS:
-            readable = str(out["p_state"]) == PAGE_OK and \
-                str(out["a_state"]) == PAGE_OK
-            changed = str(out["p_hash"]) != str(ch.f_hash) or \
-                str(out["a_hash"]) != str(ch.f_hash2)
-        else:
-            if str(out["policy_state"]) == PS_NO_ANSWER:
-                return {"ok": False, "why": "the model gave no usable reading "
-                        "of the policy"}
-            readable = str(out["state"]) == PAGE_OK and \
-                str(out["policy_state"]) == PS_OK
-            changed = str(out["hash"]) != str(ch.f_hash)
+        if kind == K_POLICY and str(out["policy_state"]) == PS_NO_ANSWER:
+            return {"ok": False, "why": "the model gave no usable reading of "
+                    "the policy"}
+        final, readable, _changed = _final_code(kind, self._filing(ch), out,
+                                                self._confirmed(ch))
         d = dict(out)
-        d["final"] = _fixed(str(ch.f_result), str(out["result"]), readable,
-                            changed)
+        d["final"] = final
         d["readable"] = readable
         d["ok"] = True
         return d
@@ -3481,6 +3846,13 @@ class AppAuditV2(gl.contract.Contract):
             ch.filing_outcome = str(d["filing_outcome"])
             ch.j_result = str(d["outcome"])
             ch.reason = str(d["reason"])
+            if str(d["filing_outcome"]) == V_CONTRADICTED and \
+                    ch.outcome == V_INCONCLUSIVE:
+                ch.reason = _clean(
+                    "The listing as captured at filing contradicted the claim "
+                    "and no longer does, but the filing capture was never "
+                    "confirmed by a second read: INCONCLUSIVE, stakes back.",
+                    MAX_REASON)
             if ch.outcome == V_CORRECTED:
                 ch.reason = _clean(
                     "The listing as captured at filing contradicted the claim; "
@@ -3506,6 +3878,7 @@ class AppAuditV2(gl.contract.Contract):
             ch.j_enum = str(d["enum"])
             ch.j_quote_hash = str(d["quote_hash"])
             ch.j_quote_len = u32(_as_int(d["quote_len"], 0))
+            ch.j_policy_hash = str(d["policy_hash"])
         ch.j_result = str(d["result"])
         ch.content_hash = _fnv("|".join([
             kind, str(ch.app_key), str(ch.app_key2), str(ch.topic),
@@ -3528,15 +3901,17 @@ class AppAuditV2(gl.contract.Contract):
                     + "; label: " + str(ch.j_status) + " (" + verb + ").")
         tail = {V_CONTRADICTED: " Contradiction at filing and at judgment: "
                                 "CONTRADICTED.",
-                V_CORRECTED: " The contradiction captured at filing is gone "
-                             "and the label was edited: CORRECTED.",
+                V_CORRECTED: " The contradiction captured (and confirmed) at "
+                             "filing is gone and its evidence changed: "
+                             "CORRECTED.",
                 V_VERIFIED: " The declarations agree: CLAIM_VERIFIED.",
                 V_INCONCLUSIVE: " Silent, unreadable or not contradicting: "
                                 "INCONCLUSIVE."}.get(str(ch.outcome), "")
         if str(ch.f_result) == V_CONTRADICTED and str(ch.outcome) == \
                 V_INCONCLUSIVE:
-            tail += " (A contradiction was captured at filing, but the " \
-                    "evidence was unreadable or unchanged at judgment.)"
+            tail += " (A contradiction was captured at filing, but at " \
+                    "judgment the evidence was unreadable or unchanged, or " \
+                    "the filing capture was never confirmed by a second read.)"
         return head + tail
 
     def _judgment_snapshots(self, ch: Case, now: int) -> None:
@@ -3943,9 +4318,12 @@ class AppAuditV2(gl.contract.Contract):
         if not app.get("ok"):
             return self._refuse(str(app.get("why", "unusable app URL")))
         key = str(app["app_key"])
-        wait = self._cooldown(self.dev_last_at, "change", key, now)
-        if wait:
-            return self._refuse(wait)
+        # The cooldown protects a CURRENT verification from churn. With none
+        # (never verified, or revoked) the developer may register at once.
+        if self._dev(key) is not None:
+            wait = self._cooldown(self.dev_last_at, "change", key, now)
+            if wait:
+                return self._refuse(wait)
         task = {"op": "register", "platform": str(app["platform"]),
                 "app_id": str(app["app_id"]),
                 "fetch_url": str(app["fetch_url"]), "wallet": sender.as_hex}
@@ -3982,9 +4360,13 @@ class AppAuditV2(gl.contract.Contract):
     @gl.public.write
     def recheck_developer(self, app_url: str) -> typing.Any:
         """PERMISSIONLESS. Validators read the listing's website again and the
-        identity file there. If the listing's website host changed, or the
-        file no longer names the verified wallet, the verification is REVOKED
-        (and recorded); the app falls back to v1 behaviour."""
+        identity file there, and REVOKE only on POSITIVE evidence:
+          - the listing page was read and links a DIFFERENT website host, or
+          - the identity file answered 200 and no longer names the wallet.
+        A failed read (listing page down, file missing or erroring, a listing
+        with no website link) changes nothing. History is kept; after a revoke
+        the app falls back to v1 behaviour and the developer may re-register
+        at once."""
         self._bank()
         now = self._now()
         if now <= 0:
@@ -4007,22 +4389,87 @@ class AppAuditV2(gl.contract.Contract):
         if not self._agreed(task, out):
             return self._refuse("validators could not agree; nothing changed")
         why = ""
-        if str(out["host"]) != str(cur.host):
-            why = ("the listing's website host is now '" + str(out["host"])
-                   + "', not '" + str(cur.host) + "'")
+        unread = ""
+        host = str(out["host"])
+        if not bool(out["page_ok"]):
+            unread = "the listing page could not be read"
+        elif host == "":
+            unread = "the listing shows no website link"
+        elif host != str(cur.host):
+            why = ("the listing's website host is now '" + host + "', not '"
+                   + str(cur.host) + "'")
         elif not bool(out["found"]):
-            why = "the identity file is gone"
+            unread = "the identity file did not load with HTTP 200"
         elif not bool(out["names"]):
-            why = "the identity file no longer names " + cur.wallet.as_hex
+            why = "the identity file loads and no longer names " + \
+                cur.wallet.as_hex
         self.dev_checked_at[key] = u64(now)
         if why == "":
             return {"status": "OK", "app_key": key, "still_verified": True,
-                    "wallet": cur.wallet.as_hex}
+                    "wallet": cur.wallet.as_hex,
+                    "note": (unread + "; a failed read is not evidence, "
+                             "nothing changed") if unread else "file checked"}
         self._dev_event(key, ID_REVOKED, cur.wallet, str(out["website"]),
                         str(out["host"]), str(out["body_hash"]), now, why)
         self.dev_current[key] = u32(0)
         return {"status": "OK", "app_key": key, "still_verified": False,
                 "revoked": why}
+
+    @gl.public.write
+    def confirm_filing(self, challenge_id: typing.Any) -> typing.Any:
+        """PERMISSIONLESS second witness of a filing capture, until judgment.
+        Validators read the listing(s) again; a listing whose state for the
+        case's data type (LABEL: the claim's rows) is the SAME as captured at
+        filing is confirmed. Only a confirmed capture can become CORRECTED -
+        a stale page read once at filing can never cost an honest developer.
+        (A paid snapshot taken before filing that shows the same state
+        confirms at filing, with no call.) One transaction, no pending state."""
+        self._bank()
+        ch, error = self._live(challenge_id)
+        if error:
+            return self._refuse(error)
+        cid = int(ch.challenge_id)
+        if str(ch.status) not in (S_FILED, S_RESPONDED):
+            return self._refuse("case #" + str(cid) + " has been judged; its "
+                                "filing capture can no longer be confirmed")
+        if self._confirmed(ch):
+            return self._refuse("case #" + str(cid) + "'s filing capture is "
+                                "already confirmed")
+        now = self._now()
+        sides = [(1, str(ch.app_key), str(ch.platform), str(ch.fetch_url))]
+        if str(ch.kind) == K_CROSS:
+            sides.append((2, str(ch.app_key2), P_APPSTORE, str(ch.fetch_url2)))
+        results = []
+        for side, key, platform, url in sides:
+            if (side == 1 and bool(ch.f_conf1)) or (side == 2 and bool(ch.f_conf2)):
+                continue
+            task = {"op": "snap", "platform": platform, "fetch_url": url}
+            out = self._consensus_v2(task)
+            if not self._agreed(task, out):
+                results.append((side, None, ""))
+                continue
+            f_state = str(ch.f_state) if side == 1 else str(ch.f_state2)
+            f_text = str(ch.f_text) if side == 1 else str(ch.f_text2)
+            same = self._witness(ch, side, str(out["state"]), str(out["text"])) \
+                == self._witness(ch, side, f_state, f_text)
+            results.append((side, same, str(out["hash"])))
+        # RULE 3: every refusal above; every write below.
+        report = []
+        for side, same, h in results:
+            if same is None:
+                report.append("listing " + str(side) + ": no agreed read")
+            elif same:
+                if side == 1:
+                    ch.f_conf1 = True
+                else:
+                    ch.f_conf2 = True
+                report.append("listing " + str(side) + ": same as filing")
+            else:
+                report.append("listing " + str(side) + ": DIFFERS from filing")
+        if self._confirmed(ch):
+            ch.confirmed_at = u64(now)
+        return {"status": "OK", "challenge_id": cid,
+                "confirmed": self._confirmed(ch), "reads": report}
 
     # --- owner --------------------------------------------------------------------
 
@@ -4137,6 +4584,10 @@ class AppAuditV2(gl.contract.Contract):
                 "policy_enum": str(ch.f_enum),
                 "quote_hash": str(ch.f_quote_hash),
                 "quote_len": int(ch.f_quote_len),
+                "policy_hash": str(ch.f_policy_hash),
+                "confirmed": self._confirmed(ch),
+                "confirmed_listings": [bool(ch.f_conf1), bool(ch.f_conf2)],
+                "confirmed_at": int(ch.confirmed_at),
                 "binding": {"why": str(ch.bind_why),
                             "play": {"title": str(ch.title1),
                                      "developer": str(ch.developer1),
@@ -4156,6 +4607,7 @@ class AppAuditV2(gl.contract.Contract):
                 "policy_enum": str(ch.j_enum),
                 "quote_hash": str(ch.j_quote_hash),
                 "quote_len": int(ch.j_quote_len),
+                "policy_hash": str(ch.j_policy_hash),
                 "filing_outcome": str(ch.filing_outcome),
                 "evidence_strength": int(ch.evidence_strength),
                 "case": str(ch.case),
@@ -4293,17 +4745,19 @@ class AppAuditV2(gl.contract.Contract):
                 + "\n<your wallet address, 0x + 40 hex>\n"}
 
     @gl.public.view
-    def timeline(self, app_url: str) -> typing.Any:
-        """Every snapshot of a listing, oldest first, each with the diff
-        against the previous READABLE snapshot, computed here by code."""
+    def timeline(self, app_url: str, offset: typing.Any = 0,
+                 limit: typing.Any = 20) -> typing.Any:
+        """Every snapshot of a listing, NEWEST FIRST and PAGINATED: `offset`
+        counts back from the newest, `limit` is at most MAX_SNAPSHOTS_VIEW.
+        Each row carries the diff against the previous READABLE snapshot,
+        computed here by code over the whole history, so no page can hide an
+        edit recorded on another."""
         key = _key_from_url(app_url)
         if key == "":
             return {"found": False, "error": "not a Google Play or App Store URL"}
         platform = key[:key.find(":")] if ":" in key else ""
         ids = self._ids(self.snaps_by_app.get(key))
-        if len(ids) > MAX_SNAPSHOTS_VIEW:
-            ids = ids[len(ids) - MAX_SNAPSHOTS_VIEW:]
-        out = []
+        rows = []
         prev = None
         for sid in ids:
             s = self.snapshots[sid - 1]
@@ -4311,21 +4765,32 @@ class AppAuditV2(gl.contract.Contract):
             row = {"snapshot_id": sid, "at": int(s.at), "source": str(s.source),
                    "case_id": int(s.case_id), "by": s.by.as_hex,
                    "page_state": str(s.page_state), "hash": str(s.hash),
-                   "label": str(s.text), "declared": sets,
-                   "changed": False, "diff": None}
+                   "declared": sets, "changed": False, "diff": None}
             if str(s.page_state) == PAGE_OK:
                 if prev is not None:
                     row["diff"] = _diff(prev["sets"], sets)
                     row["changed"] = str(s.hash) != prev["hash"]
                 prev = {"sets": sets, "hash": str(s.hash)}
-            out.append(row)
-        last = 0
-        if len(ids) > 0:
-            last = int(self.snapshots[ids[-1] - 1].at)
-        return {"found": len(out) > 0, "app_key": key,
+            rows.append(row)
+        total = len(rows)
+        off = _clamp(_as_int(offset, 0), 0, total)
+        lim = _clamp(_as_int(limit, 20), 1, MAX_SNAPSHOTS_VIEW)
+        page = []
+        i = total - 1 - off
+        while i >= 0 and len(page) < lim:
+            row = rows[i]
+            row["label"] = str(self.snapshots[int(row["snapshot_id"]) - 1].text)
+            page.append(row)
+            i -= 1
+        changes = 0
+        for r in rows:
+            if r["changed"]:
+                changes += 1
+        last = int(self.snapshots[ids[-1] - 1].at) if total > 0 else 0
+        return {"found": total > 0, "app_key": key,
                 "label": str(self.app_labels.get(key) or ""),
-                "count": len(self._ids(self.snaps_by_app.get(key))),
-                "last_snapshot_at": last, "items": out}
+                "count": total, "total": total, "offset": off, "limit": lim,
+                "changes": changes, "last_snapshot_at": last, "items": page}
 
     def _record(self, key: str) -> dict:
         """The app's record. Verdicts count once FINALIZED - until then they
@@ -4396,9 +4861,11 @@ class AppAuditV2(gl.contract.Contract):
 
     @gl.public.view
     def preview(self, kind: str, app_url: str, app_url2: str,
-                text_or_type: str, axis: str) -> typing.Any:
+                text_or_type: str, axis: str,
+                advocate: str = "") -> typing.Any:
         """Everything a filing would decide BEFORE its consensus round,
-        without staking: URLs, the data type, the axis, duplicates."""
+        without staking: URLs, the data type, the axis, and whether THIS
+        advocate (duplicates are per advocate) already has it live."""
         k = str(kind).strip().upper()
         problems = []
         out = {"kind": k}
@@ -4452,9 +4919,11 @@ class AppAuditV2(gl.contract.Contract):
                 problems.append("kind must be LABEL, CROSS_STORE or POLICY_LABEL")
                 live = ""
             out.update({"topic": topic, "axis": ax})
-        dup = int(self.live_claims.get(live) or 0) if live else 0
+        who = _lower(advocate)
+        dup = int(self.live_claims.get(live + "|" + who) or 0) \
+            if live and _is_addr(who) else 0
         if dup > 0:
-            problems.append("already live in case #" + str(dup))
+            problems.append("you already have this live in case #" + str(dup))
         out.update({"ok": len(problems) == 0, "problems": problems,
                     "duplicate_of": dup,
                     "min_stake_wei": str(int(self.min_stake_wei))})
@@ -4509,20 +4978,18 @@ class AppAuditV2(gl.contract.Contract):
                                    topic, axis)
                 note("judgment_status2", ch.j_status2, j2)
                 res = _cross_result(j1, j2)
-                readable = str(ch.page_state) == PAGE_OK and \
-                    str(ch.j_state2) == PAGE_OK
-                changed = str(ch.section_hash) != str(ch.f_hash) or \
-                    str(ch.j_hash2) != str(ch.f_hash2)
+                j = {"p_state": str(ch.page_state), "a_state": str(ch.j_state2),
+                     "p_status": j1, "a_status": j2, "result": res}
             else:
                 res = _policy_result(str(ch.j_policy_state), str(ch.j_enum), j1,
                                      axis)
-                readable = str(ch.page_state) == PAGE_OK and \
-                    str(ch.j_policy_state) == PS_OK
-                changed = str(ch.section_hash) != str(ch.f_hash)
+                j = {"state": str(ch.page_state), "status": j1, "result": res,
+                     "policy_state": str(ch.j_policy_state),
+                     "policy_hash": str(ch.j_policy_hash)}
             note("judgment_result", ch.j_result, res)
             if str(ch.contest_result) != C_HELD:
                 note("outcome", ch.outcome,
-                     _fixed(str(ch.f_result), res, readable, changed))
+                     _final_code(kind, self._filing(ch), j, self._confirmed(ch))[0])
         if int(ch.judged_at) > 0 and kind == K_LABEL:
             task = self._facts(ch, str(ch.contest_evidence)
                                if str(ch.contest_result) == C_FLIPPED else "")
@@ -4536,8 +5003,8 @@ class AppAuditV2(gl.contract.Contract):
             note("judgment_result", today, d["outcome"])
             note("content_hash", ch.content_hash, d["content_hash"])
             if str(ch.contest_result) != C_HELD:
-                note("outcome", ch.outcome, V_CORRECTED
-                     if str(ch.filing_outcome) == V_CONTRADICTED else d["outcome"])
+                note("outcome", ch.outcome,
+                     _label_final(task, str(ch.filing_outcome), d["outcome"]))
         s = _settle_v2(str(ch.outcome), int(ch.advocate_stake),
                        int(ch.respondent_stake), int(ch.winner_bps),
                        int(ch.protocol_bps), int(ch.contest_stake),
