@@ -17,17 +17,19 @@ function TimelineInner() {
   const first = params.get("app") ?? "https://play.google.com/store/apps/details?id=com.whatsapp";
   const [input, setInput] = useState(first.includes(":") && !first.startsWith("http") ? appUrlFromKey(first) : first);
   const [url, setUrl] = useState<string>(first.includes(":") && !first.startsWith("http") ? appUrlFromKey(first) : first);
-  const { data, error, mutate } = useTimeline(url);
+  const [offset, setOffset] = useState(0);
+  const LIMIT = 20;
+  const { data, error, mutate } = useTimeline(url, offset, LIMIT);
   const { data: config } = useConfig2();
   const [open, setOpen] = useState<number | null>(null);
   const fee = BigInt(config?.snapshot_fee_wei ?? "10000000000000000");
-  const items = [...(data?.items ?? [])].reverse();
+  const items = data?.items ?? [];   // newest first, one page
   return (
     <AppShell eyebrow="AppAudit v2" title="Label timeline"
-      blurb={<>Every canonical label validators agreed they read — at filings, judgments and paid snapshots — newest first. The diffs are computed by the contract, in a view: data types added or removed per declaration. Anyone can add a snapshot for {gen(fee.toString())} GEN (at most {config?.snapshot_cap_per_day ?? 4} per listing per UTC day).</>}>
+      blurb={<>Every canonical label validators agreed they read — paid snapshots always, filings and judgments only when the label changed — newest first, paginated. The diffs are computed by the contract, in a view: data types added or removed per declaration. Anyone can add a snapshot for {gen(fee.toString())} GEN (at most {config?.snapshot_cap_per_day ?? 4} per listing per UTC day).</>}>
       <div className="glass panel" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
         <input className="input" style={{ flex: 1, minWidth: 240 }} value={input} onChange={(e) => setInput(e.target.value)} />
-        <button className="btn btn-ghost" onClick={() => setUrl(input.trim())}><Search size={15} /> Show</button>
+        <button className="btn btn-ghost" onClick={() => { setOffset(0); setUrl(input.trim()); }}><Search size={15} /> Show</button>
         <TxButton label={`Snapshot now (${gen(fee.toString())} GEN)`} icon={<Camera size={15} />} waitingLabel="Validators reading the label…"
           run={(a) => tx2.snapshot(a, url, fee)} onDone={() => void mutate()} />
       </div>
@@ -36,7 +38,7 @@ function TimelineInner() {
       {data?.found && (
         <>
           <div className="mono muted" style={{ marginBottom: 14, fontSize: "0.8rem" }}>
-            {data.app_key} · {data.count} snapshot(s) · last {when(data.last_snapshot_at)} · <Link href={`/v2/app?key=${encodeURIComponent(data.app_key)}`} style={{ color: "var(--cyan)" }}>app record</Link>
+            {data.app_key} · {data.total} snapshot(s), {data.changes} with a change · showing {data.offset + 1}–{data.offset + items.length} · last {when(data.last_snapshot_at)} · <Link href={`/v2/app?key=${encodeURIComponent(data.app_key)}`} style={{ color: "var(--cyan)" }}>app record</Link>
           </div>
           <div style={{ display: "grid", gap: 0 }}>
             {items.map((s, i) => (
@@ -58,6 +60,10 @@ function TimelineInner() {
                 </div>
               </div>
             ))}
+          </div>
+          <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 8 }}>
+            <button className="btn btn-sm btn-ghost" disabled={offset === 0} onClick={() => setOffset(Math.max(0, offset - LIMIT))}>Newer</button>
+            <button className="btn btn-sm btn-ghost" disabled={offset + LIMIT >= data.total} onClick={() => setOffset(offset + LIMIT)}>Older</button>
           </div>
         </>
       )}

@@ -6,18 +6,9 @@
  * these; they let the page show what the chain already decided.
  */
 
-const FNV_OFFSET = 0xcbf29ce484222325n;
-const FNV_PRIME = 0x100000001b3n;
-const MASK = 0xffffffffffffffffn;
+import { createHash } from "node:crypto";
 
-export function fnv(s: string): string {
-  let h = FNV_OFFSET;
-  for (const ch of s) {
-    h ^= BigInt(ch.codePointAt(0) ?? 0);
-    h = (h * FNV_PRIME) & MASK;
-  }
-  return h.toString(16).padStart(16, "0");
-}
+export const sha256 = (s: string) => createHash("sha256").update(s, "utf8").digest("hex");
 
 export function qnorm(s: string): string {
   let out = "";
@@ -31,7 +22,52 @@ export function qnorm(s: string): string {
   return out.split(/\s+/).filter(Boolean).join(" ");
 }
 
-export const quoteHash = (q: string) => fnv("quote|" + qnorm(q));
+export const quoteHash = (q: string) => sha256("quote|" + qnorm(q));
+
+const OPENERS = "\"'([“‘•-*";
+
+/** Mirror of the contract's `_policy_sentences`. */
+export function policySentences(text: string): string[] {
+  const out: string[] = [];
+  for (const raw of text.split("\n")) {
+    const line = qnorm(raw);
+    if (!line) continue;
+    let start = 0;
+    let i = 0;
+    const n = line.length;
+    while (i < n) {
+      if (".!?".includes(line[i])) {
+        let j = i + 1;
+        while (j < n && "\"')]”’".includes(line[j])) j++;
+        if (j >= n) break;
+        const next = line[j + 1] ?? "";
+        if (line[j] === " " && j + 1 < n && (/^[\p{Lu}\p{Nd}]$/u.test(next) || OPENERS.includes(next))) {
+          const piece = line.slice(start, j).trim();
+          if (piece) out.push(piece);
+          start = j + 1;
+          i = j + 1;
+          continue;
+        }
+      }
+      i++;
+    }
+    const piece = line.slice(start).trim();
+    if (piece) out.push(piece);
+  }
+  return out;
+}
+
+/** The whole-sentence run (1 to 3 sentences) whose quote hash matches. */
+export function findQuote(text: string, hash: string, len: number): string | null {
+  const s = policySentences(text);
+  for (let k = 1; k <= 3; k++) {
+    for (let i = 0; i + k <= s.length; i++) {
+      const run = s.slice(i, i + k).join(" ");
+      if (run.length === len && quoteHash(run) === hash) return run;
+    }
+  }
+  return null;
+}
 
 const ENTITIES: Record<string, string> = { amp: "&", quot: '"', "#39": "'", "#x27": "'", lt: "<", gt: ">", nbsp: " ", rsquo: "’", lsquo: "‘", ldquo: "“", rdquo: "”", mdash: "—", ndash: "–" };
 
@@ -48,19 +84,6 @@ export function htmlToText(html: string): string {
       if (k.startsWith("#")) return String.fromCodePoint(parseInt(k.slice(1), 10));
       return m;
     });
-}
-
-/** Every word start in the normalised text is a candidate quote start. */
-export function findQuote(text: string, hash: string, len: number): string | null {
-  const t = qnorm(text);
-  const chars = Array.from(t);
-  for (let i = 0; i + len <= chars.length; i++) {
-    if (i > 0 && chars[i - 1] !== " ") continue;
-    if (chars[i] === " ") continue;
-    const cand = chars.slice(i, i + len).join("");
-    if (fnv("quote|" + cand) === hash) return cand;
-  }
-  return null;
 }
 
 export function fullHost(url: string): string {

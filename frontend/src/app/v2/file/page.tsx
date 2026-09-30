@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GitCompareArrows, Layers, ScrollText, Search } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { useWallet } from "@/components/WalletProvider";
 import { TxButton } from "@/components/TxButton";
 import { useConfig2 } from "@/lib/hooks2";
 import { gen, toWei } from "@/lib/format";
@@ -31,6 +32,7 @@ const HELP: Record<Mode, string> = {
 
 export default function FileV2() {
   const { data: config } = useConfig2();
+  const { account } = useWallet();
   const [mode, setMode] = useState<Mode>("CROSS_STORE");
   const [a, setA] = useState(EXAMPLES.CROSS_STORE.a);
   const [b, setB] = useState(EXAMPLES.CROSS_STORE.b);
@@ -52,7 +54,7 @@ export default function FileV2() {
 
   async function check() {
     setChecking(true);
-    try { setPreview(await v2.preview(mode, a.trim(), b.trim(), t.trim(), axis)); } finally { setChecking(false); }
+    try { setPreview(await v2.preview(mode, a.trim(), b.trim(), t.trim(), axis, account ?? "")); } finally { setChecking(false); }
   }
 
   const run = (acc: `0x${string}`) =>
@@ -116,9 +118,13 @@ export default function FileV2() {
                 <div key={k}><div className="label">{k}</div><span className="hash" style={{ overflowWrap: "anywhere" }}>{v}</span></div>
               ))}
             <p className="muted" style={{ margin: 0, fontSize: "0.8rem" }}>
-              {mode === "CROSS_STORE" ? "The two listings must be the same app (same first title word, and same developer name or website domain) or the filing is refused and your stake stays claimable."
+              {mode === "CROSS_STORE" ? "The two listings must be the same app — the same title exactly (after dropping case, punctuation and ™/®; a store subtitle after “:” or “ - ” may differ) AND the same developer (name, or the developer's own website host) — or the filing is refused and your stake stays claimable."
                 : mode === "POLICY_LABEL" ? "The policy link is read off the identity page. A policy over the size limit, unreadable, or unlinked is refused at filing — no stake is taken."
                   : "The claim must name a data type from the frozen list."}
+              {" "}Duplicates are refused per advocate: nobody can hold a question hostage by filing it first.
+            </p>
+            <p className="muted" style={{ margin: 0, fontSize: "0.8rem" }}>
+              A contradiction that is FIXED before judgment is CORRECTED (you win) only if the filing capture is confirmed by a second read: take a paid snapshot before filing, or press &ldquo;Confirm the filing capture&rdquo; on the case right after filing. Unconfirmed, a fixed contradiction is INCONCLUSIVE and both stakes come back.
             </p>
           </>)}
         </div>

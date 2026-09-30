@@ -16,8 +16,8 @@ export const useConsumerRecord = (url: string | null) =>
   useSWR(url ? ["v2-consumer", url] : null, () => v2.consumerRecord(url as string), STABLE);
 export const useDeveloper = (url: string | null) =>
   useSWR(url ? ["v2-dev", url] : null, () => v2.developer(url as string), STABLE);
-export const useTimeline = (url: string | null) =>
-  useSWR(url ? ["v2-timeline", url] : null, () => v2.timeline(url as string), STABLE);
+export const useTimeline = (url: string | null, offset = 0, limit = 20) =>
+  useSWR(url ? ["v2-timeline", url, offset, limit] : null, () => v2.timeline(url as string, offset, limit), STABLE);
 export const useByApp = (url: string | null) =>
   useSWR(url ? ["v2-byapp", url] : null, () => v2.byApp(url as string), STABLE);
 export const useBalance2 = (addr: string | null) =>

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { fullHost, listingMeta, parseListing } from "@/lib/mirror";
+import { guardedText } from "@/lib/safefetch";
 
 export const runtime = "nodejs";
 export const revalidate = 600;
@@ -12,11 +13,11 @@ export async function GET(req: Request) {
   const app = parseListing(url);
   if (!app) return NextResponse.json({ error: "not a Google Play or App Store listing URL" }, { status: 400 });
   try {
-    const res = await fetch(app.metaUrl, {
-      headers: { "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36", "accept-language": "en-US,en;q=0.9" },
-      signal: AbortSignal.timeout(15_000),
-    });
-    const meta = listingMeta(app.platform, (await res.text()).slice(0, 3_000_000));
+    // The URL is rebuilt from the app id on the store's own host; fetched
+    // through the same guard as every server-side fetch (fix 10).
+    const html = await guardedText(app.metaUrl);
+    if (html === null) return NextResponse.json({ ...app, error: "the listing could not be read" });
+    const meta = listingMeta(app.platform, html);
     const host = fullHost(meta.website);
     return NextResponse.json({ ...app, ...meta, host, file_url: host ? `https://${host}/.well-known/appaudit.txt` : "" });
   } catch (e) {

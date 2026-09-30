@@ -74,6 +74,10 @@ export type Evidence = {
   policy_enum: string;
   quote_hash: string;
   quote_len: number;
+  policy_hash?: string;
+  confirmed?: boolean;
+  confirmed_listings?: boolean[];
+  confirmed_at?: number;
   binding?: {
     why: string;
     play: { title: string; developer: string; website: string };
@@ -150,8 +154,8 @@ export type SnapshotRow = {
 };
 
 export type Timeline = {
-  found: boolean; app_key: string; label: string; count: number; last_snapshot_at: number;
-  items: SnapshotRow[]; error?: string;
+  found: boolean; app_key: string; label: string; count: number; total: number; offset: number;
+  limit: number; changes: number; last_snapshot_at: number; items: SnapshotRow[]; error?: string;
 };
 
 export type Stats2 = {
@@ -203,12 +207,12 @@ export const v2 = {
   apps: () => read<{ total: number; items: AppRecord[] }>("get_apps", [0, 200]),
   record: (url: string) => read<AppRecord>("app_record", [url]),
   developer: (url: string) => read<Developer>("get_developer", [url]),
-  timeline: (url: string) => read<Timeline>("timeline", [url]),
+  timeline: (url: string, offset = 0, limit = 20) => read<Timeline>("timeline", [url, offset, limit]),
   balance: (addr: string) => read<{ claimable_wei: string; fees_wei: string }>("get_balance", [addr]),
   verify: (id: number) => read<Verification2>("verify_case", [id]),
-  preview: (kind: string, a: string, b: string, t: string, axis: string) =>
+  preview: (kind: string, a: string, b: string, t: string, axis: string, advocate = "") =>
     read<{ ok: boolean; problems: string[]; app_key?: string; app_key2?: string; fetch_url?: string; fetch_url2?: string; identity_url?: string; identity_url2?: string; duplicate_of: number }>(
-      "preview", [kind, a, b, t, axis]),
+      "preview", [kind, a, b, t, axis, advocate]),
   consumerRecord: (url: string) => read<ConsumerRecord>("app_record", [url], V2_CONSUMER_ADDRESS),
 };
 
@@ -242,6 +246,7 @@ export const tx2 = {
   respond: (a: `0x${string}`, p: { id: number; text: string; stake: bigint }) =>
     write(a, "respond", [p.id, p.text, ""], p.stake),
   judge: (a: `0x${string}`, id: number) => write(a, "judge", [id]),
+  confirmFiling: (a: `0x${string}`, id: number) => write(a, "confirm_filing", [id]),
   defaultJudgment: (a: `0x${string}`, id: number) => write(a, "default_judgment", [id]),
   withdrawCase: (a: `0x${string}`, id: number) => write(a, "withdraw_challenge", [id]),
   contest: (a: `0x${string}`, p: { id: number; evidence: string; stake: bigint }) =>
